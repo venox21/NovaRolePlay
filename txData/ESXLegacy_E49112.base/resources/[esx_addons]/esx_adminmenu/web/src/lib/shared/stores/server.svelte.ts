@@ -1,0 +1,64 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2022-2026 ESX Framework
+ */
+
+import type { ServerEnvironmentState, ServerState } from "../types/server";
+
+const initialState: ServerState = {
+	currentPlayers: 0,
+	maxPlayers: 0,
+	uptimeSeconds: 0,
+	uptimeFormatted: "00:00:00",
+	environment: {
+		weather: "CLEAR",
+		hour: 12,
+		minute: 0,
+		blackout: false,
+		pvp: true,
+		densityEnabled: false,
+		pedDensity: 1,
+		vehicleDensity: 1,
+		randomVehicleDensity: 1,
+	},
+};
+
+export class ServerStore {
+	currentPlayers = $state(initialState.currentPlayers);
+	maxPlayers = $state(initialState.maxPlayers);
+	uptimeSeconds = $state(initialState.uptimeSeconds);
+	uptimeFormatted = $state(initialState.uptimeFormatted);
+	weather = $state(initialState.environment?.weather ?? "CLEAR");
+	hour = $state(initialState.environment?.hour ?? 12);
+	minute = $state(initialState.environment?.minute ?? 0);
+	blackout = $state(initialState.environment?.blackout ?? false);
+	pvp = $state(initialState.environment?.pvp ?? true);
+	densityEnabled = $state(initialState.environment?.densityEnabled ?? false);
+	pedDensity = $state(initialState.environment?.pedDensity ?? 1);
+	vehicleDensity = $state(initialState.environment?.vehicleDensity ?? 1);
+	randomVehicleDensity = $state(initialState.environment?.randomVehicleDensity ?? 1);
+
+	set(state: ServerState) {
+		this.currentPlayers = state.currentPlayers;
+		this.maxPlayers = state.maxPlayers;
+		this.uptimeSeconds = state.uptimeSeconds ?? 0;
+		this.uptimeFormatted = state.uptimeFormatted ?? initialState.uptimeFormatted;
+		this.setEnvironment(state.environment);
+	}
+
+	setEnvironment(environment?: Partial<ServerEnvironmentState> | null) {
+		if (!environment) return;
+
+		this.weather = environment.weather ?? this.weather;
+		this.hour = environment.hour ?? this.hour;
+		this.minute = environment.minute ?? this.minute;
+		this.blackout = environment.blackout ?? this.blackout;
+		this.pvp = environment.pvp ?? this.pvp;
+		this.densityEnabled = environment.densityEnabled ?? this.densityEnabled;
+		this.pedDensity = environment.pedDensity ?? this.pedDensity;
+		this.vehicleDensity = environment.vehicleDensity ?? this.vehicleDensity;
+		this.randomVehicleDensity = environment.randomVehicleDensity ?? this.randomVehicleDensity;
+	}
+}
+
+export const server = new ServerStore();

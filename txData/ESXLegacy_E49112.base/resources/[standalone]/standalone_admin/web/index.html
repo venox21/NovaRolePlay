@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Standalone Admin Panel</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="app" class="panel hidden">
+        <header class="panel-header">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <img src="logo.png" alt="NOVA Roleplay" style="height:48px;width:auto;object-fit:contain;" />
+                <div>
+                    <h1>NOVA ROLEPLAY · ADMIN PANEL</h1>
+                    <p id="self-info">Verbunden als Admin</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="btn-refresh" class="btn secondary">Aktualisieren</button>
+                <button id="btn-close" class="btn danger">Schließen (ESC)</button>
+            </div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="players">Online Spieler (<span id="player-count">0</span>)</button>
+            <button class="tab" data-tab="admins">Admin-Verwaltung (<span id="admin-count">0</span>)</button>
+        </nav>
+
+        <!-- TAB 1: SPIELER -->
+        <section id="tab-players" class="tab-content active">
+            <div class="toolbar">
+                <input id="player-search" type="text" placeholder="Suche nach ID, Name oder Identifier..." />
+                <input id="action-reason" type="text" placeholder="Grund für Kick / Ban..." />
+                <input id="ban-duration" type="number" min="0" value="0" title="0 = Permanent" placeholder="Ban-Stunden (0=Perm)" />
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Identifier</th>
+                            <th>Rang</th>
+                            <th>Ping</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="players-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TAB 2: ADMINS -->
+        <section id="tab-admins" class="tab-content">
+            <div class="toolbar">
+                <input id="new-admin-id" type="text" placeholder="Identifier (z.B. license:...) oder Server-ID" />
+                <select id="new-admin-rank">
+                    <option value="supporter">Supporter</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="admin" selected>Admin</option>
+                    <option value="superadmin">Superadmin</option>
+                    <option value="owner">Owner</option>
+                </select>
+                <button id="btn-add-admin" class="btn primary">Rang speichern</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Identifier</th>
+                            <th>Aktueller Rang</th>
+                            <th>Rang ändern / Entfernen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admins-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
