@@ -77,6 +77,8 @@ return {
 		blip = {
 			id = 110, colour = 69, scale = 0.8
 		}, inventory = {
+			{ name = 'armour_50', price = 1200 },
+			{ name = 'armour_100', price = 2500 },
 			{ name = 'ammo-9', price = 5, },
 			{ name = 'WEAPON_KNIFE', price = 200 },
 			{ name = 'WEAPON_BAT', price = 100 },

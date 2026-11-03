@@ -1,4 +1,4 @@
-﻿-- SPDX-License-Identifier: GPL-3.0-only
+-- SPDX-License-Identifier: GPL-3.0-only
 -- Copyright (C) 2022-2026 ESX Framework
 
 --- @module server.module.main
@@ -443,8 +443,14 @@ local function createPlayerRecord(src, xPlayer)
     jobGrade = "Admin"
   end
 
+  local charId = (xPlayer and (xPlayer.get and xPlayer.get('id') or xPlayer.charId))
+  if not charId and Player and Player(src) then
+    charId = Player(src).state and Player(src).state.charId
+  end
+
   return {
-    serverId = src,
+    serverId = charId or src,
+    sessionSource = src,
     name = sanitizeString(playerName, MAX_NAME_LEN, "Unknown"),
     job = jobName,
     jobLabel = jobLabel,

@@ -10,7 +10,7 @@ export default {
     extend: {
       colors: {
         orange: {
-          500: '#FF9800',
+          500: '#a855f7',
           600: '#F57C00',
         },
         neutral: {

@@ -359,14 +359,14 @@ export const VehicleDetails: React.FC<VehicleDetailsProps> = ({ vehicle, onClose
       } else if (mode === 'transfer') {
         const targetId = parseInt(value, 10);
         if (Number.isNaN(targetId)) {
-          showNotification('Enter a valid player ID', { type: 'error' });
+          showNotification('Gib eine gültige Spieler-ID ein', { type: 'error' });
           return;
         }
         await fetchNui(NuiCallbackType.TRANSFER_VEHICLE, { vehicleId: vehicle.id, targetId });
-        showNotification('Vehicle transferred', { type: 'success' });
+        showNotification('Fahrzeug erfolgreich übertragen', { type: 'success' });
       }
     } catch (e) {
-      showNotification(errorMessage(e, 'Action failed'), { type: 'error' });
+      showNotification(errorMessage(e, 'Aktion fehlgeschlagen'), { type: 'error' });
     }
     setMode(null);
   };
@@ -406,7 +406,7 @@ export const VehicleDetails: React.FC<VehicleDetailsProps> = ({ vehicle, onClose
           <StatHeader>
             <StatLabel>
               <EngineIcon />
-              Engine Health
+              Motorzustand
             </StatLabel>
             <StatValue>{vehicle.engine}%</StatValue>
           </StatHeader>
@@ -419,7 +419,7 @@ export const VehicleDetails: React.FC<VehicleDetailsProps> = ({ vehicle, onClose
           <StatHeader>
             <StatLabel>
               <BodyIcon />
-              Body Health
+              Karosseriezustand
             </StatLabel>
             <StatValue>{vehicle.body}%</StatValue>
           </StatHeader>
@@ -432,7 +432,7 @@ export const VehicleDetails: React.FC<VehicleDetailsProps> = ({ vehicle, onClose
           <StatHeader>
             <StatLabel>
               <FuelIcon />
-              Fuel Level
+              Tankfüllung
             </StatLabel>
             <StatValue>{vehicle.fuel}%</StatValue>
           </StatHeader>
@@ -445,14 +445,14 @@ export const VehicleDetails: React.FC<VehicleDetailsProps> = ({ vehicle, onClose
       <ActionsSection>
         <ActionsHeader>
           <MdSettings />
-          Vehicle Actions
+          Fahrzeug-Aktionen
         </ActionsHeader>
         {mode ? (
           <>
             <ActionInput
               autoFocus
               value={input}
-              placeholder={mode === 'transfer' ? 'Player ID' : 'New name'}
+              placeholder={mode === 'transfer' ? 'Spieler-ID' : 'Neuer Name'}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') confirmAction();
@@ -460,24 +460,24 @@ export const VehicleDetails: React.FC<VehicleDetailsProps> = ({ vehicle, onClose
               }}
             />
             <ActionButton $primary onClick={confirmAction}>
-              Confirm
+              Bestätigen
             </ActionButton>
             <ActionButton onClick={() => setMode(null)}>
-              Cancel
+              Abbrechen
             </ActionButton>
           </>
         ) : (
           <>
             {selectedGarage?.keys && (
               <ActionButton $primary onClick={handleGiveKeys}>
-                Give Keys
+                Schlüssel geben
               </ActionButton>
             )}
             <ActionButton onClick={openRename}>
-              Rename Vehicle
+              Fahrzeug umbenennen
             </ActionButton>
             <ActionButton onClick={openTransfer}>
-              Transfer Vehicle
+              Fahrzeug übertragen
             </ActionButton>
           </>
         )}
@@ -485,7 +485,7 @@ export const VehicleDetails: React.FC<VehicleDetailsProps> = ({ vehicle, onClose
 
       {canTake && (
         <SpawnButton onClick={handleSpawn} disabled={isSpawning || isLoading}>
-          {isSpawning ? 'Spawning...' : vehicle.impounded ? 'Retrieve' : isOut ? 'Recover' : 'Spawn Vehicle'}
+          {isSpawning ? 'Parke aus...' : vehicle.impounded ? 'Ausparken' : isOut ? 'Wiederholen' : 'Ausparken'}
           {(vehicle.impoundFee ?? 0) > 0 && ` ($${vehicle.impoundFee})`}
         </SpawnButton>
       )}

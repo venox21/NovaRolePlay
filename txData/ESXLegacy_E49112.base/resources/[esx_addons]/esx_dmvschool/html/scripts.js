@@ -1,95 +1,120 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * Copyright (C) 2022-2026 ESX Framework
+ * DMV Fahrschule Los Santos - Scripts (Theorieprüfung)
+ * UTF-8 Encoding
  */
 
-// question variables
 var questionNumber = 1;
 var userAnswer = [];
 var goodAnswer = [];
 var questionUsed = [];
-var nbQuestionToAnswer = 10; // don't forget to change the progress bar max value in html
-var nbAnswerNeeded = 5; // out of nbQuestionToAnswer
-var nbPossibleQuestions = 10; // number of questions in database questions.js
+var nbQuestionToAnswer = 10;
+var nbAnswerNeeded = 5;
+var nbPossibleQuestions = 10;
 var lastClick = 0;
 
 function getRandomQuestion() {
 	var random = Math.floor(Math.random() * nbPossibleQuestions);
-
 	while (true) {
 		if (questionUsed.indexOf(random) === -1) {
 			break;
 		}
-
 		random = Math.floor(Math.random() * nbPossibleQuestions);
 	}
-
 	questionUsed.push(random);
-
 	return random;
 }
 
-// Partial Functions
 function closeMain() {
 	$(".home").css("display", "none");
 }
+
 function openMain() {
 	$(".home").css("display", "block");
 }
+
 function closeAll() {
 	$(".body").css("display", "none");
 }
+
+function updateProgress() {
+	var pct = Math.round(((questionNumber - 1) / nbQuestionToAnswer) * 100);
+	$("#progress-fill").css("width", pct + "%");
+	$("#progress-percent").text(pct + "% Abgeschlossen");
+	$(".questionnaire-container .progression").val(questionNumber - 1);
+}
+
 function openQuestionnaire() {
+	closeAll();
 	$(".questionnaire-container").css("display", "block");
 	var randomQuestion = getRandomQuestion();
 
-	$("#questionNumero").html("Question: " + questionNumber);
-	$("#question").html(tableauQuestion[randomQuestion].question);
-	$(".answerA").html(tableauQuestion[randomQuestion].propositionA);
-	$(".answerB").html(tableauQuestion[randomQuestion].propositionB);
-	$(".answerC").html(tableauQuestion[randomQuestion].propositionC);
-	$(".answerD").html(tableauQuestion[randomQuestion].propositionD);
-	$('input[name=question]').attr('checked', false);
+	$("#questionNumero").text("Frage " + questionNumber + " von " + nbQuestionToAnswer);
+	$("#question").text(tableauQuestion[randomQuestion].question);
+	$(".answerA").text(tableauQuestion[randomQuestion].propositionA);
+	$(".answerB").text(tableauQuestion[randomQuestion].propositionB);
+	$(".answerC").text(tableauQuestion[randomQuestion].propositionC);
+	$(".answerD").text(tableauQuestion[randomQuestion].propositionD);
+
+	$('input[name=question]').prop('checked', false);
+	$('.option-card').removeClass('selected');
 
 	goodAnswer.push(tableauQuestion[randomQuestion].reponse);
-	$(".questionnaire-container .progression").val(questionNumber - 1);
-}
-function openResultGood() {
-	$(".resultGood").css("display", "block");
-}
-function openResultBad() {
-	$(".resultBad").css("display", "block");
-}
-function openContainer() {
-	$(".question-container").css("display", "block");
-}
-function closeContainer() {
-	$(".question-container").css("display", "none");
+	updateProgress();
 }
 
-// Listen for NUI Events
+function openResultGood() {
+	closeAll();
+	$("#progress-fill").css("width", "100%");
+	$("#progress-percent").text("100% Bestanden");
+	$(".resultGood").css("display", "block");
+}
+
+function openResultBad() {
+	closeAll();
+	$(".resultBad").css("display", "block");
+}
+
+function openContainer() {
+	$(".question-container").fadeIn(200);
+}
+
+function closeContainer() {
+	$(".question-container").fadeOut(150);
+}
+
+// Option Cards anklickbar machen
+$(document).on('click', '.option-card', function() {
+	$('.option-card').removeClass('selected');
+	$(this).addClass('selected');
+	$(this).find('input[type=radio]').prop('checked', true);
+});
+
+// NUI Messages empfangen
 window.addEventListener('message', function (event) {
 	var item = event.data;
 
-	// Open & Close main window
-	if (item.openQuestion == true) {
+	if (item.openQuestion === true) {
+		userAnswer = [];
+		goodAnswer = [];
+		questionUsed = [];
+		questionNumber = 1;
 		openContainer();
 		openMain();
 	}
 
-	if (item.openQuestion == false) {
+	if (item.openQuestion === false) {
 		closeContainer();
 		closeMain();
+		closeAll();
 	}
 
-	// Open sub-windows / partials
-	if (item.openSection == "question") {
+	if (item.openSection === "question") {
 		closeAll();
 		openQuestionnaire();
 	}
 });
 
-// Handle Button Presses
+// Buttons
 $(".btnQuestion").click(function () {
 	$.post(`https://${GetParentResourceName()}/question`, JSON.stringify({}));
 });
@@ -110,22 +135,30 @@ $(".btnKick").click(function () {
 	questionNumber = 1;
 });
 
-// Handle Form Submits
+// Form Submit (Antwort bestätigen)
 $("#question-form").submit(function (e) {
 	e.preventDefault();
 
-	if (questionNumber != nbQuestionToAnswer) {
-		//question 1 to 9: pushing answer in array
-		closeAll();
-		userAnswer.push($('input[name="question"]:checked').val());
+	var selected = $('input[name="question"]:checked').val();
+	if (!selected) {
+		// Visuelle Rückmeldung bei fehlender Auswahl
+		$('.options-grid').css('animation', 'none');
+		setTimeout(function() {
+			$('.options-grid').css('animation', 'shake 0.3s ease');
+		}, 10);
+		return false;
+	}
+
+	userAnswer.push(selected);
+
+	if (questionNumber < nbQuestionToAnswer) {
 		questionNumber++;
 		openQuestionnaire();
 	} else {
-		// question 10: comparing arrays and sending number of good answers
-		userAnswer.push($('input[name="question"]:checked').val());
+		// Prüfung beendet: Auswertung
 		var nbGoodAnswer = 0;
-		for (i = 0; i < nbQuestionToAnswer; i++) {
-			if (userAnswer[i] == goodAnswer[i]) {
+		for (var i = 0; i < nbQuestionToAnswer; i++) {
+			if (userAnswer[i] === goodAnswer[i]) {
 				nbGoodAnswer++;
 			}
 		}

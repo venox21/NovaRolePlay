@@ -6,4 +6,6 @@ return {
   ["drag_rotate_view"] = "Halte die linke Maustaste gedrückt und ziehe, um die Ansicht zu drehen.",
   ["skin"] = "Aussehen ändern",
   ["saveskin"] = "Aussehen abspeichern",
+
+    ['skin_save_failed'] = 'Speichern des Aussehens fehlgeschlagen.',
 }

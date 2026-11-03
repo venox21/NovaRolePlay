@@ -87,7 +87,7 @@ else
         player = lib.player:new(-1),
         autoreload = GetConvarBool('inventory:autoreload', false),
         screenblur = GetConvarBool('inventory:screenblur', true),
-        keys = json.decode(GetConvar('inventory:keys', '')) or { 'F2', 'K', 'TAB' },
+        keys = json.decode(GetConvar('inventory:keys', '')) or { 'I', 'K', 'TAB' },
         enablekeys = json.decode(GetConvar('inventory:enablekeys', '[249]')),
         aimedfiring = GetConvarBool('inventory:aimedfiring', false),
         giveplayerlist = GetConvarBool('inventory:giveplayerlist', false),
@@ -105,6 +105,12 @@ else
         enablestealcommand = GetConvarBool('inventory:enablestealcommand', true),
         gloveboxseatrestriction = GetConvarInt('inventory:gloveboxseatrestriction', 0) == 1
     }
+
+    if type(client.keys) ~= 'table' or #client.keys < 3 then
+        client.keys = { 'I', 'K', 'TAB' }
+    elseif client.keys[1] == 'F2' then
+        client.keys[1] = 'I'
+    end
 
     local ignoreweapons = table.create(0, (client.ignoreweapons and #client.ignoreweapons or 0) + 3)
 

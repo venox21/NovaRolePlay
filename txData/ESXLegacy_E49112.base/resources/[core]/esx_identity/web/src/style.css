@@ -9,9 +9,9 @@ html {
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    --brand: #fb9b04;
-    --brand-rgb: 251, 155, 4;
-    --brand-bright: #ffb435;
+    --brand: #a855f7;
+    --brand-rgb: 168, 85, 247;
+    --brand-bright: #06b6d4;
     --brand-soft: #fbd190;
     --surface: #171918;
     --panel: #1b1c1a;

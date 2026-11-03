@@ -203,7 +203,7 @@ unsupported('bantwitter', 'sd-phone moderates accounts from the admin panel: ope
 unsupported('blockSquawk', 'sd-phone moderates posting from the admin panel: open /phoneadmin and mute the account.')
 unsupported('blockSnapgram', 'sd-phone moderates posting from the admin panel: open /phoneadmin and mute the account.')
 unsupported('blockAdd', 'sd-phone moderates posting from the admin panel: open /phoneadmin and mute the account.')
-unsupported('adminauth', 'sd-phone gates its admin panel on an ace rather than an in-game toggle. Grant the ace and open /phoneadmin.')
+RegisterCommand('adminauth', function() end, false)
 unsupported('chargephone', 'sd-phone battery is a cosmetic status-bar counter with no stored charge, so there is nothing to set.')
 unsupported('charge', 'sd-phone battery is a cosmetic status-bar counter with no stored charge, so there is nothing to set.')
 unsupported('endcharge', 'sd-phone models no charging, so there is no charging process to stop.')

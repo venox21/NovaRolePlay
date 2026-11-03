@@ -2613,7 +2613,7 @@ function store.snapshot(citizenid, device)
         wallpaperParallax = parallax,
         ringtoneVol      = (row and row.ringtone_volume ~= nil) and tonumber(row.ringtone_volume) or nil,
         callVol          = (row and row.call_volume ~= nil) and tonumber(row.call_volume) or nil,
-        locale           = (row and row.locale ~= '') and row.locale or nil,
+        locale           = 'de',
         passcode         = pin,
         faceId           = pin ~= nil and row ~= nil and isTruthy(row.face_id),
     }

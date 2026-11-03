@@ -96,15 +96,7 @@ end
 
 ---@return boolean
 local function hudUsesKmh()
-    if type(GetResourceState) ~= "function" or GetResourceState(HUD_RESOURCE_NAME) ~= "started" then
-        return false
-    end
-
-    local ok, _, kmh = pcall(function()
-        return exports[HUD_RESOURCE_NAME]:GetCurrentMileage()
-    end)
-
-    return ok and kmh == true
+    return true
 end
 
 local function sweepGaragePeds()

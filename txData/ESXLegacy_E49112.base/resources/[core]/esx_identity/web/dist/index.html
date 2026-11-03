@@ -1,19 +1,643 @@
 <!doctype html>
-<!--
-  SPDX-License-Identifier: GPL-3.0-only
-  Copyright (C) 2022-2026 ESX Framework
--->
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOVA ROLEPLAY · EINREISE-TERMINAL</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap');
 
-<html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ESX · Crea tu identidad</title>
-      <script type="module" crossorigin src="./assets/index-C7PCh3uG.js"></script>
-      <link rel="stylesheet" crossorigin href="./assets/index-D2y46P4p.css">
-    </head>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+      }
 
-    <body>
-        <div id="app"></div>
-    </body>
+      html, body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: transparent !important;
+        font-family: 'Outfit', sans-serif;
+        color: #f8fafc;
+      }
+
+      #nova-identity {
+        position: fixed;
+        inset: 0;
+        display: none;
+        place-items: center;
+        background: transparent !important;
+      }
+
+      #nova-identity.active {
+        display: grid;
+      }
+
+      .id-terminal {
+        width: 920px;
+        max-width: 94vw;
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        border-radius: 28px;
+        background: rgba(11, 9, 23, 0.94);
+        border: 1px solid rgba(168, 85, 247, 0.42);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.9), 0 0 44px rgba(168, 85, 247, 0.22);
+        overflow: hidden;
+      }
+
+      /* LEFT COLUMN: LIVE HOLOGRAM CITIZEN CARD */
+      .id-preview-col {
+        padding: 32px 28px;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(168, 85, 247, 0.28), transparent 60%),
+          radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.22), transparent 60%),
+          rgba(16, 13, 34, 0.95);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .id-brand-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .id-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        object-fit: contain;
+        background: rgba(168, 85, 247, 0.18);
+        border: 1px solid rgba(168, 85, 247, 0.45);
+        padding: 3px;
+      }
+
+      .id-logo-fb {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #a855f7, #06b6d4);
+        place-items: center;
+        font-weight: 900;
+        font-size: 20px;
+        color: #fff;
+      }
+
+      .id-brand-sub {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2.2px;
+        color: #22d3ee;
+        text-transform: uppercase;
+      }
+
+      .id-brand-title {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        color: #fff;
+      }
+
+      /* HOLOGRAM PASSPORT CARD */
+      .holo-card {
+        margin: 24px 0;
+        padding: 22px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(15, 13, 32, 0.92), rgba(6, 182, 212, 0.2));
+        border: 1px solid rgba(6, 182, 212, 0.45);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65), 0 0 24px rgba(6, 182, 212, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .holo-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .holo-chip {
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: rgba(6, 182, 212, 0.18);
+        border: 1px solid rgba(6, 182, 212, 0.45);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 800;
+        color: #67e8f9;
+      }
+
+      .holo-avatar-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .holo-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #a855f7, #6366f1, #06b6d4);
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        font-weight: 900;
+        color: #fff;
+        box-shadow: 0 0 18px rgba(168, 85, 247, 0.5);
+      }
+
+      .holo-name {
+        font-size: 19px;
+        font-weight: 900;
+        color: #fff;
+        word-break: break-word;
+      }
+
+      .holo-role {
+        font-size: 11px;
+        font-weight: 700;
+        color: #c4b5fd;
+        margin-top: 2px;
+      }
+
+      .holo-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .holo-cell {
+        padding: 9px 11px;
+        border-radius: 12px;
+        background: rgba(9, 8, 20, 0.68);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .holo-cell span {
+        display: block;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        color: #94a3b8;
+        text-transform: uppercase;
+      }
+
+      .holo-cell strong {
+        display: block;
+        font-size: 13px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-top: 3px;
+      }
+
+      .id-hint-box {
+        font-size: 12px;
+        color: #94a3b8;
+        line-height: 1.5;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      /* RIGHT COLUMN: REGISTRATION FORM */
+      .id-form-col {
+        padding: 34px 36px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .id-form-head {
+        margin-bottom: 22px;
+      }
+
+      .id-form-head h2 {
+        font-size: 24px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 0.5px;
+      }
+
+      .id-form-head p {
+        font-size: 13px;
+        color: #a5b4fc;
+        margin-top: 4px;
+      }
+
+      .form-row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        color: #cbd5e1;
+        margin-bottom: 7px;
+      }
+
+      .cyber-input {
+        width: 100%;
+        height: 46px;
+        padding: 0 14px;
+        border-radius: 13px;
+        border: 1px solid rgba(168, 85, 247, 0.28);
+        background: rgba(19, 16, 38, 0.9);
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        outline: none;
+        transition: all 0.18s ease;
+        user-select: text;
+      }
+
+      .cyber-input:focus {
+        border-color: #06b6d4;
+        box-shadow: 0 0 16px rgba(6, 182, 212, 0.28);
+      }
+
+      .gender-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .gender-card {
+        height: 48px;
+        border-radius: 13px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(19, 16, 38, 0.85);
+        color: #cbd5e1;
+        font-family: 'Outfit', sans-serif;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.18s ease;
+      }
+
+      .gender-card.active {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(6, 182, 212, 0.28));
+        border-color: #06b6d4;
+        color: #fff;
+        box-shadow: 0 0 18px rgba(6, 182, 212, 0.3);
+      }
+
+      .height-slider-wrap {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .height-range {
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 8px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.12);
+        outline: none;
+      }
+
+      .height-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #06b6d4, #a855f7);
+        border: 2px solid #fff;
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.75);
+        cursor: pointer;
+      }
+
+      .height-pill {
+        padding: 8px 14px;
+        border-radius: 11px;
+        background: rgba(168, 85, 247, 0.18);
+        border: 1px solid rgba(168, 85, 247, 0.4);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        font-weight: 800;
+        color: #e9d5ff;
+      }
+
+      .id-error {
+        display: none;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(244, 63, 94, 0.16);
+        border: 1px solid rgba(244, 63, 94, 0.45);
+        color: #fda4af;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+
+      .id-submit-btn {
+        height: 54px;
+        border: none;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #06b6d4 100%);
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 14px 30px rgba(168, 85, 247, 0.42), 0 0 20px rgba(6, 182, 212, 0.25);
+        transition: all 0.2s ease;
+        margin-top: 6px;
+      }
+
+      .id-submit-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 36px rgba(168, 85, 247, 0.6), 0 0 24px rgba(6, 182, 212, 0.42);
+      }
+
+      .id-submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nova-identity">
+      <div class="id-terminal">
+        <!-- LEFT: LIVE HOLOGRAM CITIZEN CARD -->
+        <div class="id-preview-col">
+          <div class="id-brand-row">
+            <img
+              class="id-logo"
+              src="./logo.png"
+              alt=""
+              onerror="this.style.display='none';document.getElementById('id-logo-fb').style.display='grid';"
+            />
+            <div id="id-logo-fb" class="id-logo-fb">N</div>
+            <div>
+              <div class="id-brand-sub">NOVA ROLEPLAY</div>
+              <div class="id-brand-title">MELDEBEHÖRDE</div>
+            </div>
+          </div>
+
+          <div class="holo-card">
+            <div class="holo-top">
+              <span style="font-size:10px;font-weight:800;letter-spacing:1.8px;color:#e9d5ff;">BÜRGERAUSWEIS · SAN ANDREAS</span>
+              <span class="holo-chip">NOVA-ID</span>
+            </div>
+            <div class="holo-avatar-row">
+              <div id="prev-initials" class="holo-avatar">NR</div>
+              <div>
+                <div id="prev-name" class="holo-name">Vorname Nachname</div>
+                <div class="holo-role">Verifizierter Staatsbürger</div>
+              </div>
+            </div>
+            <div class="holo-grid">
+              <div class="holo-cell">
+                <span>🎂 GEBURTSDATUM</span>
+                <strong id="prev-dob">—</strong>
+              </div>
+              <div class="holo-cell">
+                <span>⚧️ GESCHLECHT</span>
+                <strong id="prev-sex">Männlich</strong>
+              </div>
+              <div class="holo-cell">
+                <span>📏 KÖRPERGRÖSSE</span>
+                <strong id="prev-height">180 cm</strong>
+              </div>
+              <div class="holo-cell">
+                <span>🟢 STATUS</span>
+                <strong style="color:#34d399;">NEUEINREISE</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="id-hint-box">
+            💡 Bitte gib deine Charakterdaten wahrheitsgemäß ein. Nach der Ausstellung deines Bürgerausweises gelangst du direkt in das <b>NOVA Charakter-Studio</b>.
+          </div>
+        </div>
+
+        <!-- RIGHT: FORM -->
+        <form id="id-form" class="id-form-col" novalidate>
+          <div class="id-form-head">
+            <h2>Charakter-Registrierung</h2>
+            <p>Erstelle deine offizielle Identität für NOVA Roleplay</p>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="inp-fname">Vorname <span>*</span></label>
+              <input id="inp-fname" class="cyber-input" type="text" placeholder="z. B. Leon" maxlength="19" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label for="inp-lname">Nachname <span>*</span></label>
+              <input id="inp-lname" class="cyber-input" type="text" placeholder="z. B. Vance" maxlength="19" autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inp-dob">Geburtsdatum (Mindestalter 18 Jahre) <span>*</span></label>
+            <input id="inp-dob" class="cyber-input" type="date" value="2000-01-01" />
+          </div>
+
+          <div class="form-group">
+            <label>Geschlecht <span>*</span></label>
+            <div class="gender-cards">
+              <button type="button" class="gender-card active" data-gender="m">♂ Männlich</button>
+              <button type="button" class="gender-card" data-gender="f">♀ Weiblich</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inp-height">Körpergröße</label>
+            <div class="height-slider-wrap">
+              <input id="inp-height" class="height-range" type="range" min="120" max="220" step="1" value="180" />
+              <span id="height-display" class="height-pill">180 cm</span>
+            </div>
+          </div>
+
+          <div id="id-error-box" class="id-error"></div>
+
+          <button id="id-submit" class="id-submit-btn" type="submit">
+            🪪 AUSWEIS AUSSTELLEN & WEITER
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const resName = typeof window.GetParentResourceName === 'function'
+          ? window.GetParentResourceName()
+          : 'esx_identity';
+
+        const rootEl = document.getElementById('nova-identity');
+        const fnameInp = document.getElementById('inp-fname');
+        const lnameInp = document.getElementById('inp-lname');
+        const dobInp = document.getElementById('inp-dob');
+        const heightInp = document.getElementById('inp-height');
+        const heightDisp = document.getElementById('height-display');
+        const errBox = document.getElementById('id-error-box');
+        const submitBtn = document.getElementById('id-submit');
+
+        let gender = 'm';
+        let pending = false;
+        let settings = {
+          maxNameLength: 20,
+          minHeight: 120,
+          maxHeight: 220,
+          maxAge: 100,
+          dateFormat: 'DD/MM/YYYY'
+        };
+
+        async function postNui(event, data = {}) {
+          const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
+          const resp = await fetch(`${protocol}://${resName}/${event}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+            body: JSON.stringify(data)
+          });
+          return await resp.json();
+        }
+
+        function formatDob(iso, fmt) {
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || '')) return '';
+          const [y, m, d] = iso.split('-');
+          if (fmt === 'MM/DD/YYYY') return `${m}/${d}/${y}`;
+          if (fmt === 'YYYY/MM/DD') return `${y}/${m}/${d}`;
+          return `${d}/${m}/${y}`;
+        }
+
+        function updatePreview() {
+          const fn = fnameInp.value.trim() || 'Vorname';
+          const ln = lnameInp.value.trim() || 'Nachname';
+          document.getElementById('prev-name').textContent = `${fn} ${ln}`;
+          document.getElementById('prev-initials').textContent = ((fn[0] || 'N') + (ln[0] || 'R')).toUpperCase();
+          document.getElementById('prev-dob').textContent = formatDob(dobInp.value, 'DD/MM/YYYY') || '—';
+          document.getElementById('prev-sex').textContent = gender === 'm' ? 'Männlich' : 'Weiblich';
+          document.getElementById('prev-height').textContent = `${heightInp.value} cm`;
+          heightDisp.textContent = `${heightInp.value} cm`;
+        }
+
+        fnameInp.addEventListener('input', updatePreview);
+        lnameInp.addEventListener('input', updatePreview);
+        dobInp.addEventListener('input', updatePreview);
+        heightInp.addEventListener('input', updatePreview);
+
+        document.querySelectorAll('.gender-card').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            gender = btn.dataset.gender;
+            document.querySelectorAll('.gender-card').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            updatePreview();
+          });
+        });
+
+        function showError(msg) {
+          if (!msg) {
+            errBox.style.display = 'none';
+            errBox.textContent = '';
+          } else {
+            errBox.style.display = 'block';
+            errBox.textContent = msg;
+          }
+        }
+
+        document.getElementById('id-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (pending) return;
+          showError('');
+
+          const fn = fnameInp.value.trim();
+          const ln = lnameInp.value.trim();
+          if (!fn || !ln) {
+            showError('Bitte gib sowohl einen Vor- als auch einen Nachnamen ein.');
+            return;
+          }
+          if (!/^[\p{L} -]+$/u.test(fn) || !/^[\p{L} -]+$/u.test(ln)) {
+            showError('Vor- und Nachname dürfen nur aus Buchstaben bestehen.');
+            return;
+          }
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(dobInp.value)) {
+            showError('Bitte wähle ein gültiges Geburtsdatum aus.');
+            return;
+          }
+          const year = Number(dobInp.value.split('-')[0]);
+          const curYear = new Date().getFullYear();
+          if (year < curYear - settings.maxAge || year > curYear - 18) {
+            showError(`Das Geburtsjahr muss zwischen ${curYear - settings.maxAge} und ${curYear - 18} liegen.`);
+            return;
+          }
+
+          pending = true;
+          submitBtn.disabled = true;
+          try {
+            const payload = {
+              firstname: fn,
+              lastname: ln,
+              dateofbirth: formatDob(dobInp.value, settings.dateFormat),
+              sex: gender,
+              height: Number(heightInp.value)
+            };
+            const res = await postNui('register', payload);
+            if (!res || !res.ok) {
+              showError(res?.error || 'Registrierung fehlgeschlagen. Bitte überprüfe deine Angaben.');
+            }
+          } catch {
+            showError('Verbindungsfehler zum Server.');
+          } finally {
+            pending = false;
+            submitBtn.disabled = false;
+          }
+        });
+
+        window.addEventListener('message', (event) => {
+          const data = event.data;
+          if (!data || data.type !== 'enableui') return;
+          if (data.settings) {
+            settings = { ...settings, ...data.settings };
+            heightInp.min = settings.minHeight || 120;
+            heightInp.max = settings.maxHeight || 220;
+          }
+          if (data.enable) {
+            rootEl.classList.add('active');
+            updatePreview();
+            setTimeout(() => fnameInp.focus(), 50);
+          } else {
+            rootEl.classList.remove('active');
+          }
+        });
+
+        postNui('ready', {}).catch(() => {});
+        updatePreview();
+      })();
+    </script>
+  </body>
 </html>

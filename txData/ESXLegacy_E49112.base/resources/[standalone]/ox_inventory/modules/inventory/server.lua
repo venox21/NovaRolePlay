@@ -426,7 +426,9 @@ function Inventory.SetSlot(inv, item, count, metadata, slot)
 	local newWeight = currentSlot and inv.weight - currentSlot.weight or inv.weight
 
 	if currentSlot and newCount < 1 then
-		TriggerClientEvent('ox_inventory:itemNotify', inv.id, { currentSlot, 'ui_removed', currentSlot.count })
+		if not inv.suppressNotify then
+			TriggerClientEvent('ox_inventory:itemNotify', inv.id, { currentSlot, 'ui_removed', currentSlot.count })
+		end
 		currentSlot = nil
 	else
 		currentSlot = {name = item.name, label = item.label, weight = item.weight, slot = slot, count = newCount, description = item.description, metadata = metadata, stack = item.stack, close = item.close}
@@ -434,7 +436,9 @@ function Inventory.SetSlot(inv, item, count, metadata, slot)
 		currentSlot.weight = slotWeight
 		newWeight += slotWeight
 
-		TriggerClientEvent('ox_inventory:itemNotify', inv.id, { currentSlot, count < 0 and 'ui_removed' or 'ui_added', math.abs(count) })
+		if not inv.suppressNotify then
+			TriggerClientEvent('ox_inventory:itemNotify', inv.id, { currentSlot, count < 0 and 'ui_removed' or 'ui_added', math.abs(count) })
+		end
 	end
 
 	inv.weight = newWeight
@@ -1177,7 +1181,18 @@ function Inventory.AddItem(inv, item, count, metadata, slot, cb)
 		local items = inv.items
 		slotMetadata, slotCount = Items.Metadata(inv.id, item, metadata and table.clone(metadata) or {}, count)
 
-		for i = 1, inv.slots do
+		-- NOVA: Schutzwesten niemals standardmaessig in Schnellslots (1-5) platzieren
+		local isVest = inv.player and (item.name == 'armour' or string.sub(item.name, 1, 6) == 'armour' or string.sub(item.name, 1, 5) == 'armor')
+		local slotOrder = {}
+		if isVest and inv.slots > 5 then
+			for i = 6, inv.slots do slotOrder[#slotOrder + 1] = i end
+			for i = 1, 5 do slotOrder[#slotOrder + 1] = i end
+		else
+			for i = 1, inv.slots do slotOrder[#slotOrder + 1] = i end
+		end
+
+		for idx = 1, #slotOrder do
+			local i = slotOrder[idx]
 			local slotData = items[i]
 
 			if item.stack and slotData ~= nil and slotData.name == item.name and table.matches(slotData.metadata, slotMetadata) then
@@ -1409,7 +1424,9 @@ function Inventory.RemoveItem(inv, item, count, metadata, slot, ignoreTotal, str
 		for k, v in pairs(itemSlots) do
 			if removed < total then
 				if v == count then
-					TriggerClientEvent('ox_inventory:itemNotify', inv.id, { inv.items[k], 'ui_removed', v })
+					if not inv.suppressNotify then
+						TriggerClientEvent('ox_inventory:itemNotify', inv.id, { inv.items[k], 'ui_removed', v })
+					end
 
 					removed = total
 					inv.weight -= inv.items[k].weight
@@ -1426,7 +1443,9 @@ function Inventory.RemoveItem(inv, item, count, metadata, slot, ignoreTotal, str
 					removed = total
 					count = v - count
 				else
-					TriggerClientEvent('ox_inventory:itemNotify', inv.id, { inv.items[k], 'ui_removed', v })
+					if not inv.suppressNotify then
+						TriggerClientEvent('ox_inventory:itemNotify', inv.id, { inv.items[k], 'ui_removed', v })
+					end
 
 					removed = removed + v
 					count = count - v
@@ -2233,7 +2252,18 @@ function Inventory.GetSlotForItem(inv, itemName, metadata)
 	local items = inventory.items
 	local emptySlot
 
-	for i = 1, inventory.slots do
+	-- NOVA: Schutzwesten niemals standardmaessig in Schnellslots (1-5) platzieren
+	local isVest = inventory.player and (item.name == 'armour' or string.sub(item.name, 1, 6) == 'armour' or string.sub(item.name, 1, 5) == 'armor')
+	local slotOrder = {}
+	if isVest and inventory.slots > 5 then
+		for i = 6, inventory.slots do slotOrder[#slotOrder + 1] = i end
+		for i = 1, 5 do slotOrder[#slotOrder + 1] = i end
+	else
+		for i = 1, inventory.slots do slotOrder[#slotOrder + 1] = i end
+	end
+
+	for idx = 1, #slotOrder do
+		local i = slotOrder[idx]
 		local slotData = items[i]
 
 		if not slotData and not emptySlot then
@@ -2662,14 +2692,30 @@ local function updateWeapon(source, action, value, slot, specialAmmo)
                     local safeValue = math.max(0, math.min(100, math.floor(value)))
                     weapon.metadata.durability = safeValue
                     weapon.metadata.ammo = safeValue
-				elseif value < weapon.metadata.ammo then
-					local durability = Items(weapon.name).durability * math.abs((weapon.metadata.ammo or 0.1) - value)
-					weapon.metadata.ammo = value
-					weapon.metadata.durability = weapon.metadata.durability - durability
-					weapon.weight = Inventory.SlotWeight(item, weapon)
+				else
+					local ammoName = item.ammoname
+					local invAmmo = ammoName and Inventory.GetItemCount(inventory, ammoName) or 0
+					local curMetaAmmo = weapon.metadata.ammo or 0
+					local totalBefore = invAmmo + curMetaAmmo
+					if value < totalBefore then
+						local fired = totalBefore - value
+						local durability = (Items(weapon.name).durability or 0) * 0.1 * fired -- NOVA: 10x mehr Haltbarkeit
+						if invAmmo > 0 and ammoName then
+							local toRemove = math.min(invAmmo, fired)
+							inventory.suppressNotify = true
+							Inventory.RemoveItem(inventory, ammoName, toRemove)
+							inventory.suppressNotify = nil
+							fired = fired - toRemove
+						end
+						if fired > 0 then
+							weapon.metadata.ammo = math.max(0, curMetaAmmo - fired)
+						end
+						weapon.metadata.durability = (weapon.metadata.durability or 100) - durability
+						weapon.weight = Inventory.SlotWeight(item, weapon)
+					end
 				end
 			elseif action == 'melee' then
-				weapon.metadata.durability = weapon.metadata.durability - ((Items(weapon.name).durability or 1) * value)
+				weapon.metadata.durability = weapon.metadata.durability - ((Items(weapon.name).durability or 1) * 0.1 * value) -- NOVA: 10x mehr Haltbarkeit
 			end
 
             if (weapon.metadata.durability or 0) < 0 then

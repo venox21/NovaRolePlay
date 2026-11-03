@@ -782,3 +782,15 @@ lib.registerHook('ox_lib:setPlayerState', nil, {
 lib.registerHook('ox_lib:setPlayerState', nil, {
     key = 'canSteal'
 })
+
+-- NOVA: Rucksack An-/Ausziehen Tragekapazitaet
+RegisterNetEvent('ox_inventory:equipBackpack', function()
+    local src = source
+    Inventory.SetMaxWeight(src, 50000)
+end)
+
+RegisterNetEvent('ox_inventory:unequipBackpack', function()
+    local src = source
+    Inventory.SetMaxWeight(src, 30000)
+    Inventory.AddItem(src, 'backpack', 1)
+end)

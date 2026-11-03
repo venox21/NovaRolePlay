@@ -4,7 +4,7 @@ WorkshopUI.catalog = (() => {
   const { create, forItem } = WorkshopUI.icons;
   const colors = {
     black: '#151515', white: '#f2f2f2', grey: '#969696', red: '#d44242', pink: '#ea8db6',
-    blue: '#4981bb', yellow: '#e9cb54', green: '#54955d', orange: '#fb9b04', brown: '#81563a',
+    blue: '#4981bb', yellow: '#e9cb54', green: '#54955d', orange: '#a855f7', brown: '#81563a',
     purple: '#8f6bb0', chrome: '#c5cbd0', gold: '#c8a451'
   };
   const identity = (item) => JSON.stringify([item?.modType, item?.modNum, item?.wheelType]);

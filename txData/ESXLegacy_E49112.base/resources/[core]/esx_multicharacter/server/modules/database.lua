@@ -171,7 +171,7 @@ function Database:GetPlayerInfo(identifier, slots)
     end
 
     return MySQL.query.await(
-        ('SELECT identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier IN (%s)'):format(
+        ('SELECT id, identifier, accounts, job, job_grade, firstname, lastname, dateofbirth, sex, skin, disabled FROM users WHERE identifier IN (%s)'):format(
             table.concat(placeholders, ', ')
         ),
         identifiers

@@ -6,17 +6,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
 :root {
-	--background: rgba(20, 20, 20, 0.9);
-	--text-color: #ffffff;
-	--text-secondary: rgba(255, 255, 255, 0.7);
-	--success-color: #2ecc71;
-	--success-border: #1f9c4d;
-	--error-color: #e74c3c;
-	--error-border: #c0392b;
-	--info-color: #3498db;
-	--info-border: #2980b9;
-	--warning-color: #f39c12;
-	--warning-border: #d35400;
+	--background: rgba(12, 10, 24, 0.92);
+	--text-color: #f9fafb;
+	--text-secondary: rgba(233, 213, 255, 0.85);
+	--success-color: #10b981;
+	--success-border: #10b981;
+	--error-color: #ef4444;
+	--error-border: #ef4444;
+	--info-color: #a855f7;
+	--info-border: #a855f7;
+	--warning-color: #06b6d4;
+	--warning-border: #06b6d4;
 }
 
 * {
@@ -88,15 +88,16 @@ body {
 
 .notify {
 	display: flex;
-	width: 300px;
-	background: var(--background);
-	border-radius: 8px;
+	width: 325px;
+	background: linear-gradient(145deg, rgba(16, 13, 32, 0.94), rgba(10, 9, 20, 0.96));
+	border-radius: 16px;
 	overflow: hidden;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 18px rgba(168, 85, 247, 0.18);
+	border: 1px solid rgba(168, 85, 247, 0.35);
 	position: relative;
-	padding: 12px;
+	padding: 14px 16px;
 	align-items: center;
-	border-left: 4px solid #555;
+	border-left: 4px solid #a855f7;
 }
 
 .notify-success {

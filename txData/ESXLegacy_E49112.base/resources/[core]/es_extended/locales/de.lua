@@ -419,4 +419,13 @@ return {
     ["tint_metallic_blue"] = "metallisches Blau",
     ["tint_metallic_white_aqua"] = "metallisches Weiß-Aqua",
     ["tint_metallic_red_yellow"] = "metallisches Rot-Gelb",
+
+    ['command_refreshitems'] = 'Gegenstandsliste aus Datenbank neu laden',
+    ['command_refreshitems_success'] = 'Gegenstandsliste erfolgreich aktualisiert.',
+    ['command_giveammo'] = 'Einem Spieler Munition geben',
+    ['weapon_tecpistol'] = 'Taktische Maschinenpistole',
+    ['weapon_battlerifle'] = 'Kampfgewehr',
+    ['weapon_snowlauncher'] = 'Schneeballwerfer',
+    ['weapon_hackingdevice'] = 'Hacking-Gerät',
+    ['weapon_stunrod'] = 'Elektroschockstab',
 }

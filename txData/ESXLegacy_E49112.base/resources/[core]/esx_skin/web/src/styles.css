@@ -15,7 +15,7 @@
   --skin-orange: #f6a000;
   --panel-bg: #151515;
   --rail-bg: #242424;
-  --control-bg: #383838;
+  --control-bg: #1f1a3d;
 }
 
 * {
@@ -373,7 +373,7 @@ button {
 
 .gender-toggle button.active,
 .submit-button {
-  color: #383838;
+  color: #1f1a3d;
   background: #ffffff;
 }
 

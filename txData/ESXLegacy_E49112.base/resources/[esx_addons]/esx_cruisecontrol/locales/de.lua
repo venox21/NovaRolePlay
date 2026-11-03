@@ -2,14 +2,14 @@
 -- Copyright (C) 2022-2026 ESX Framework
 
 Locales['de'] = { 
-  ['activated']   = 'Fahrkontrolle aktiviert',
-  ['deactivated'] = 'Fahrkontrolle deaktiviert',
+  ['activated']   = 'Tempomat aktiviert',
+  ['deactivated'] = 'Tempomat deaktiviert',
   ['increaseSpeed'] = 'Geschwindigkeit erhöhen',
-  ['decreaseSpeed'] = 'Geschwindigkeit verniedrigeren',
-  ['cruiseControl'] = 'Fahrkontrolle',
+  ['decreaseSpeed'] = 'Geschwindigkeit verringern',
+  ['cruiseControl'] = 'Tempomat',
   
   --Seatbelt
-  ['toggleSeatbelt'] = "Toggle Seatbelt",
-  ["seatbeltOn"] = "Seatbelt ON",
-  ["seatbeltOff"] = "Seatbelt OFF"
+  ['toggleSeatbelt'] = "Sicherheitsgurt",
+  ["seatbeltOn"] = "Sicherheitsgurt angelegt",
+  ["seatbeltOff"] = "Sicherheitsgurt abgelegt"
 }

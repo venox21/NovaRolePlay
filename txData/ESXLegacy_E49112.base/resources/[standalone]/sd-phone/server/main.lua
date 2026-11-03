@@ -170,20 +170,11 @@ end
 ---@param preferred string|nil last-used frame colour hint
 ---@return string|nil color frame colour to open with, nil when no phone item is owned
 local function ResolveOwnedColor(source, preferred)
-    local items = config.Phone.Items or {}
-    if preferred then
-        for _, entry in ipairs(items) do
-            if entry.color == preferred and inv.count(source, entry.item) > 0 then
-                return entry.color
-            end
-        end
+    -- NOVA: Jeder Spieler hat das Handy immer dabei (auch ohne Item im Inventar)
+    if preferred and type(preferred) == 'string' then
+        return preferred
     end
-    for _, entry in ipairs(items) do
-        if inv.count(source, entry.item) > 0 then
-            return entry.color
-        end
-    end
-    return nil
+    return config.Phone.DefaultColor or 'black'
 end
 
 ---Keybind open request: may this player open a phone, and in which colour? Returns the bare

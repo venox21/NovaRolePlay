@@ -1,18 +1,966 @@
 <!doctype html>
-<!--
-  SPDX-License-Identifier: GPL-3.0-only
-  Copyright (C) 2022-2026 ESX Framework
--->
-
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ESX Skin</title>
-    <script type="module" crossorigin src="./assets/index-C69xinbj.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Cb_1l9TP.css">
+    <title>NOVA ROLEPLAY · CHARAKTER-STUDIO</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap');
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+      }
+
+      html, body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: transparent !important;
+        font-family: 'Outfit', sans-serif;
+        color: #f8fafc;
+      }
+
+      ::-webkit-scrollbar { width: 5px; height: 5px; }
+      ::-webkit-scrollbar-track { background: rgba(11, 9, 23, 0.5); }
+      ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #06b6d4); border-radius: 99px; }
+
+      #nova-skin-studio {
+        position: fixed;
+        inset: 0;
+        display: none;
+        background: transparent !important;
+      }
+
+      #nova-skin-studio.active {
+        display: block;
+      }
+
+      /* BACKGROUND DRAG ROTATION SURFACE */
+      .studio-drag-zone {
+        position: absolute;
+        inset: 0;
+        cursor: grab;
+        z-index: 1;
+      }
+
+      .studio-drag-zone.dragging {
+        cursor: grabbing;
+      }
+
+      /* 1. TOP CENTER CATEGORY DOCK */
+      .studio-top-nav {
+        position: absolute;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 22px;
+        background: rgba(11, 9, 23, 0.92);
+        border: 1px solid rgba(168, 85, 247, 0.35);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 28px rgba(168, 85, 247, 0.18);
+      }
+
+      .studio-brand-badge {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-right: 14px;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .studio-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        object-fit: contain;
+        background: rgba(168, 85, 247, 0.18);
+        border: 1px solid rgba(168, 85, 247, 0.45);
+        padding: 3px;
+      }
+
+      .studio-logo-fb {
+        display: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #a855f7, #06b6d4);
+        place-items: center;
+        font-weight: 900;
+        font-size: 18px;
+        color: #fff;
+      }
+
+      .studio-brand-lbl {
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #fff, #e9d5ff, #67e8f9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .studio-cat-btn {
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(21, 18, 42, 0.78);
+        color: #cbd5e1;
+        font-family: 'Outfit', sans-serif;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.18s ease;
+      }
+
+      .studio-cat-btn:hover {
+        border-color: rgba(168, 85, 247, 0.45);
+        color: #fff;
+        transform: translateY(-1px);
+      }
+
+      .studio-cat-btn.active {
+        background: linear-gradient(135deg, #a855f7, #6366f1, #06b6d4);
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.42);
+      }
+
+      /* 2. BOTTOM CENTER CAMERA & ROTATION DOCK */
+      .studio-cam-dock {
+        position: absolute;
+        bottom: 26px;
+        left: 38%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 20px;
+        background: rgba(11, 9, 23, 0.92);
+        border: 1px solid rgba(6, 182, 212, 0.35);
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.8), 0 0 24px rgba(6, 182, 212, 0.16);
+      }
+
+      .cam-pill {
+        height: 36px;
+        padding: 0 13px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(21, 18, 42, 0.85);
+        color: #cbd5e1;
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+      }
+
+      .cam-pill:hover {
+        border-color: rgba(6, 182, 212, 0.5);
+        color: #fff;
+      }
+
+      .cam-pill.active {
+        background: rgba(6, 182, 212, 0.22);
+        border-color: #06b6d4;
+        color: #67e8f9;
+        box-shadow: 0 0 14px rgba(6, 182, 212, 0.35);
+      }
+
+      .cam-sep {
+        width: 1px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.12);
+        margin: 0 4px;
+      }
+
+      /* 3. RIGHT SIDE INSPECTOR PANEL */
+      .studio-inspector {
+        position: absolute;
+        top: 90px;
+        right: 34px;
+        bottom: 26px;
+        width: 440px;
+        z-index: 10;
+        border-radius: 26px;
+        background:
+          radial-gradient(circle at 100% 0%, rgba(168, 85, 247, 0.22), transparent 50%),
+          rgba(11, 9, 23, 0.93);
+        border: 1px solid rgba(168, 85, 247, 0.38);
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.88), 0 0 36px rgba(168, 85, 247, 0.18);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .inspector-head {
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .inspector-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .inspector-title {
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: #fff;
+      }
+
+      .inspector-count {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        color: #67e8f9;
+        padding: 4px 10px;
+        border-radius: 99px;
+        background: rgba(6, 182, 212, 0.14);
+        border: 1px solid rgba(6, 182, 212, 0.35);
+      }
+
+      .subcat-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .subcat-btn {
+        padding: 6px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(21, 18, 42, 0.78);
+        color: #94a3b8;
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .subcat-btn:hover {
+        color: #f8fafc;
+        border-color: rgba(168, 85, 247, 0.4);
+      }
+
+      .subcat-btn.active {
+        background: rgba(168, 85, 247, 0.25);
+        border-color: #a855f7;
+        color: #f3e8ff;
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.32);
+      }
+
+      .inspector-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .control-card {
+        padding: 13px 15px;
+        border-radius: 16px;
+        background: rgba(20, 17, 38, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        transition: all 0.18s ease;
+      }
+
+      .control-card.focused {
+        border-color: rgba(6, 182, 212, 0.55);
+        background: rgba(25, 21, 48, 0.95);
+        box-shadow: 0 0 18px rgba(6, 182, 212, 0.15);
+      }
+
+      .control-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .control-lbl {
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #e2e8f0;
+      }
+
+      .control-badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        color: #c4b5fd;
+        background: rgba(168, 85, 247, 0.16);
+        border: 1px solid rgba(168, 85, 247, 0.35);
+        padding: 2px 9px;
+        border-radius: 8px;
+      }
+
+      .control-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .step-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(13, 11, 26, 0.9);
+        color: #f8fafc;
+        font-size: 13px;
+        font-weight: 900;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition: all 0.15s ease;
+        flex-shrink: 0;
+      }
+
+      .step-btn:hover {
+        background: linear-gradient(135deg, #a855f7, #06b6d4);
+        border-color: transparent;
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.45);
+      }
+
+      .cyber-range {
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 7px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.1);
+        outline: none;
+        cursor: pointer;
+      }
+
+      .cyber-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #06b6d4, #a855f7);
+        border: 2px solid #ffffff;
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.75);
+        cursor: pointer;
+      }
+
+      .gender-switch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .gender-pill {
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(13, 11, 26, 0.85);
+        color: #cbd5e1;
+        font-family: 'Outfit', sans-serif;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.18s ease;
+      }
+
+      .gender-pill.active {
+        background: linear-gradient(135deg, #a855f7, #06b6d4);
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 0 16px rgba(168, 85, 247, 0.45);
+      }
+
+      .inspector-footer {
+        padding: 16px 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        gap: 10px;
+        background: rgba(9, 8, 18, 0.9);
+      }
+
+      .btn-cancel-skin {
+        height: 50px;
+        padding: 0 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        background: rgba(244, 63, 94, 0.14);
+        color: #fda4af;
+        font-family: 'Outfit', sans-serif;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.18s ease;
+      }
+
+      .btn-cancel-skin:hover {
+        background: rgba(244, 63, 94, 0.28);
+        color: #fff;
+      }
+
+      .btn-save-skin {
+        flex: 1;
+        height: 50px;
+        border-radius: 14px;
+        border: none;
+        background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #06b6d4 100%);
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 12px 26px rgba(168, 85, 247, 0.4), 0 0 18px rgba(6, 182, 212, 0.25);
+        transition: all 0.18s ease;
+      }
+
+      .btn-save-skin:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 32px rgba(168, 85, 247, 0.58), 0 0 22px rgba(6, 182, 212, 0.4);
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="nova-skin-studio">
+      <!-- 360° MOUSE DRAG ROTATION LAYER -->
+      <div id="studio-drag-layer" class="studio-drag-zone"></div>
+
+      <!-- TOP HORIZONTAL STUDIO NAVIGATION -->
+      <nav class="studio-top-nav">
+        <div class="studio-brand-badge">
+          <img
+            class="studio-logo"
+            src="./logo.png"
+            alt=""
+            onerror="this.style.display='none';document.getElementById('studio-logo-fb').style.display='grid';"
+          />
+          <div id="studio-logo-fb" class="studio-logo-fb">N</div>
+          <span class="studio-brand-lbl">NOVA STUDIO</span>
+        </div>
+        <div id="studio-cat-bar" style="display:flex;gap:8px;"></div>
+      </nav>
+
+      <!-- BOTTOM CAMERA & ROTATION BAR -->
+      <div class="studio-cam-dock">
+        <button class="cam-pill active" data-cam="full" type="button">🧍 Ganzkörper</button>
+        <button class="cam-pill" data-cam="face" type="button">😀 Gesicht</button>
+        <button class="cam-pill" data-cam="torso" type="button">👕 Oberkörper</button>
+        <button class="cam-pill" data-cam="legs" type="button">👖 Beine</button>
+        <button class="cam-pill" data-cam="shoes" type="button">👟 Schuhe</button>
+        <div class="cam-sep"></div>
+        <button id="cam-rot-left" class="cam-pill" type="button" title="Links drehen">↺ Links</button>
+        <button id="cam-rot-right" class="cam-pill" type="button" title="Rechts drehen">↻ Rechts</button>
+        <button id="cam-reset" class="cam-pill" type="button" title="Ansicht zurücksetzen">⟲ Reset</button>
+      </div>
+
+      <!-- RIGHT SIDE INSPECTOR PANEL -->
+      <section class="studio-inspector">
+        <div class="inspector-head">
+          <div class="inspector-title-row">
+            <span id="inspector-cat-title" class="inspector-title">Identität & Erbgut</span>
+            <span id="inspector-count" class="inspector-count">0 Optionen</span>
+          </div>
+          <div id="inspector-subcats" class="subcat-tabs"></div>
+        </div>
+
+        <div id="inspector-controls" class="inspector-body"></div>
+
+        <div class="inspector-footer">
+          <button id="skin-cancel-btn" class="btn-cancel-skin" type="button">Abbrechen</button>
+          <button id="skin-submit-btn" class="btn-save-skin" type="button">✨ Charakter Speichern</button>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      (function () {
+        const resName = typeof window.GetParentResourceName === 'function'
+          ? window.GetParentResourceName()
+          : 'esx_skin';
+
+        const LABELS_DE = {
+          sex: 'GESCHLECHT',
+          mom: 'MUTTER (GESICHT 1)',
+          dad: 'VATER (GESICHT 2)',
+          grandparents: 'GROSSELTERN (GESICHT 3)',
+          face_md_weight: 'GESICHTS-MISCHUNG (1/2)',
+          face_g_weight: 'ERBGUT-MISCHUNG (3)',
+          skin_md_weight: 'HAUTTON / TEINT',
+          nose_1: 'NASENBREITE',
+          nose_2: 'NASENSPITZEN-HÖHE',
+          nose_3: 'NASENSPITZEN-LÄNGE',
+          nose_4: 'NASENBEIN-HÖHE',
+          nose_5: 'NASENSPITZEN-NEIGUNG',
+          nose_6: 'NASENBEIN-DREHUNG',
+          cheeks_1: 'WANGENHÖHE',
+          cheeks_2: 'WANGENBREITE',
+          cheeks_3: 'WANGENFÜLLE',
+          lip_thickness: 'LIPPENFÜLLE',
+          jaw_1: 'KIEFERBREITE',
+          jaw_2: 'KIEFERLÄNGE',
+          chin_1: 'KINNHÖHE',
+          chin_2: 'KINNLÄNGE',
+          chin_3: 'KINNBREITE',
+          chin_4: 'KINNGRÜBCHEN',
+          neck_thickness: 'HALSDICKE',
+          hair_1: 'HAARSCHNITT / FRISUR',
+          hair_2: 'HAAR-VARIATION',
+          hair_color_1: 'HAARFARBE',
+          hair_color_2: 'STRÄHNCHEN-FARBE',
+          beard_1: 'BART-STIL',
+          beard_2: 'BART-DICHTE',
+          beard_3: 'BARTFARBE 1',
+          beard_4: 'BARTFARBE 2',
+          eye_color: 'AUGENFARBE',
+          eye_squint: 'AUGENÖFFNUNG',
+          eyebrows_1: 'AUGENBRAUEN-FORM',
+          eyebrows_2: 'AUGENBRAUEN-DICHTE',
+          eyebrows_3: 'BRAUENFARBE 1',
+          eyebrows_4: 'BRAUENFARBE 2',
+          eyebrows_5: 'BRAUENHÖHE',
+          eyebrows_6: 'BRAUENTIEFE',
+          makeup_1: 'MAKE-UP STIL',
+          makeup_2: 'MAKE-UP INTENSITÄT',
+          makeup_3: 'MAKE-UP FARBE 1',
+          makeup_4: 'MAKE-UP FARBE 2',
+          lipstick_1: 'LIPPENSTIFT-ART',
+          lipstick_2: 'LIPPENSTIFT-DECKKRAFT',
+          lipstick_3: 'LIPPENFARBE 1',
+          lipstick_4: 'LIPPENFARBE 2',
+          blemishes_1: 'HAUTUNREINHEITEN',
+          blemishes_2: 'INTENSITÄT',
+          age_1: 'HAUTALTERUNG / FALTEN',
+          age_2: 'FALTEN-TIEFE',
+          blush_1: 'ROUGE-STIL',
+          blush_2: 'ROUGE-STÄRKE',
+          blush_3: 'ROUGE-FARBE',
+          complexion_1: 'TEINT-MERKMALE',
+          complexion_2: 'INTENSITÄT',
+          sun_1: 'SONNENMERKMALE',
+          sun_2: 'INTENSITÄT',
+          moles_1: 'SOMMERSPROSSEN & MALE',
+          moles_2: 'INTENSITÄT',
+          bodyb_1: 'KÖRPERMERKMALE',
+          bodyb_2: 'INTENSITÄT',
+          bodyb_3: 'KÖRPERZEICHNUNG',
+          bodyb_4: 'INTENSITÄT',
+          chest_1: 'BRUSTBEHAARUNG',
+          chest_2: 'DICHTE',
+          chest_3: 'FARBE',
+          tshirt_1: 'UNTERHEMD / SHIRT',
+          tshirt_2: 'SHIRT-FARBE',
+          torso_1: 'OBERTEIL / JACKE',
+          torso_2: 'OBERTEIL-FARBE',
+          decals_1: 'ABZEICHEN / LOGOS',
+          decals_2: 'ABZEICHEN-VARIANTE',
+          arms: 'ARME & HANDSCHUHE',
+          arms_2: 'HANDSCHUH-FARBE',
+          mask_1: 'MASKE',
+          mask_2: 'MASKEN-FARBE',
+          bproof_1: 'SCHUTZWESTE',
+          bproof_2: 'WESTEN-FARBE',
+          chain_1: 'KETTE & HALSSCHMUCK',
+          chain_2: 'KETTEN-FARBE',
+          bags_1: 'RUCKSACK & TASCHE',
+          bags_2: 'TASCHEN-FARBE',
+          pants_1: 'HOSE',
+          pants_2: 'HOSEN-FARBE',
+          shoes_1: 'SCHUHE',
+          shoes_2: 'SCHUH-FARBE',
+          helmet_1: 'KOPFBEDECKUNG / HUT',
+          helmet_2: 'HUT-FARBE',
+          glasses_1: 'BRILLE',
+          glasses_2: 'BRILLEN-FARBE',
+          watches_1: 'ARMBANDUHR',
+          watches_2: 'UHR-FARBE',
+          bracelets_1: 'ARMBAND',
+          bracelets_2: 'ARMBAND-FARBE',
+          ears_1: 'OHRSCHMUCK',
+          ears_2: 'OHRSCHMUCK-FARBE'
+        };
+
+        const STUDIO_CATEGORIES = [
+          {
+            id: 'identity',
+            title: '🧬 Identität',
+            cam: 'face',
+            subcats: [
+              { id: 'heritage', title: 'Erbgut & Geschlecht', names: ['sex', 'mom', 'dad', 'grandparents', 'face_md_weight', 'face_g_weight', 'skin_md_weight'] }
+            ]
+          },
+          {
+            id: 'face',
+            title: '🧔 Gesicht & Haare',
+            cam: 'face',
+            subcats: [
+              { id: 'hair', title: 'Haare', names: ['hair_1', 'hair_2', 'hair_color_1', 'hair_color_2'] },
+              { id: 'beard', title: 'Bart', names: ['beard_1', 'beard_2', 'beard_3', 'beard_4'] },
+              { id: 'shape', title: 'Gesichtsform', names: ['cheeks_1', 'cheeks_2', 'cheeks_3', 'jaw_1', 'jaw_2', 'lip_thickness'] },
+              { id: 'nose', title: 'Nase', names: ['nose_1', 'nose_2', 'nose_3', 'nose_4', 'nose_5', 'nose_6'] },
+              { id: 'chin', title: 'Kinn & Hals', names: ['chin_1', 'chin_2', 'chin_3', 'chin_4', 'neck_thickness'] }
+            ]
+          },
+          {
+            id: 'eyes',
+            title: '👁️ Augen & Brauen',
+            cam: 'face',
+            subcats: [
+              { id: 'eyes', title: 'Augen', names: ['eye_color', 'eye_squint'] },
+              { id: 'eyebrows', title: 'Augenbrauen', names: ['eyebrows_1', 'eyebrows_2', 'eyebrows_3', 'eyebrows_4', 'eyebrows_5', 'eyebrows_6'] }
+            ]
+          },
+          {
+            id: 'makeup',
+            title: '💄 Haut & Make-Up',
+            cam: 'face',
+            subcats: [
+              { id: 'skin-marks', title: 'Hautmerkmale', names: ['blemishes_1', 'blemishes_2', 'age_1', 'age_2', 'complexion_1', 'complexion_2', 'sun_1', 'sun_2', 'moles_1', 'moles_2'] },
+              { id: 'makeup', title: 'Make-Up & Rouge', names: ['makeup_1', 'makeup_2', 'makeup_3', 'makeup_4', 'blush_1', 'blush_2', 'blush_3'] },
+              { id: 'lipstick', title: 'Lippenstift', names: ['lipstick_1', 'lipstick_2', 'lipstick_3', 'lipstick_4'] },
+              { id: 'body-details', title: 'Körperdetails', names: ['chest_1', 'chest_2', 'chest_3', 'bodyb_1', 'bodyb_2', 'bodyb_3', 'bodyb_4'] }
+            ]
+          },
+          {
+            id: 'clothing',
+            title: '👕 Kleidung & Outfit',
+            cam: 'torso',
+            subcats: [
+              { id: 'tops', title: 'Oberteile & Jacken', names: ['torso_1', 'torso_2', 'tshirt_1', 'tshirt_2', 'arms', 'arms_2', 'bproof_1', 'bproof_2', 'decals_1', 'decals_2'] },
+              { id: 'pants', title: 'Hosen', names: ['pants_1', 'pants_2'] },
+              { id: 'shoes', title: 'Schuhe', names: ['shoes_1', 'shoes_2'] },
+              { id: 'accessories', title: 'Accessoires & Hüte', names: ['helmet_1', 'helmet_2', 'glasses_1', 'glasses_2', 'mask_1', 'mask_2', 'chain_1', 'chain_2', 'bags_1', 'bags_2', 'watches_1', 'watches_2', 'bracelets_1', 'bracelets_2', 'ears_1', 'ears_2'] }
+            ]
+          }
+        ];
+
+        const studioEl = document.getElementById('nova-skin-studio');
+        const catBarEl = document.getElementById('studio-cat-bar');
+        const subcatsEl = document.getElementById('inspector-subcats');
+        const controlsEl = document.getElementById('inspector-controls');
+        const catTitleEl = document.getElementById('inspector-cat-title');
+        const countEl = document.getElementById('inspector-count');
+        const submitBtn = document.getElementById('skin-submit-btn');
+        const cancelBtn = document.getElementById('skin-cancel-btn');
+
+        let visible = false;
+        let elements = [];
+        let activeCategoryId = 'identity';
+        let activeSubcatId = 'heritage';
+        let activeElementName = 'sex';
+
+        function sendNui(action, payload = {}) {
+          return fetch(`https://${resName}/${action}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+            body: JSON.stringify(payload)
+          }).catch(() => null);
+        }
+
+        function wrapVal(val, min, max) {
+          min = Number(min ?? 0);
+          max = Number(max ?? 0);
+          if (max < min) max = min;
+          val = Math.round(Number(val) || 0);
+          if (val > max) return min;
+          if (val < min) return max;
+          return val;
+        }
+
+        function getLabel(el) {
+          return LABELS_DE[el.name] || String(el.label || el.name).replace(/_/g, ' ').toUpperCase();
+        }
+
+        function getAvailableCategories() {
+          const elMap = new Map(elements.map((e) => [e.name, e]));
+          const built = [];
+          const assigned = new Set();
+
+          STUDIO_CATEGORIES.forEach((cat) => {
+            const subcats = [];
+            cat.subcats.forEach((sub) => {
+              const items = sub.names.map((n) => elMap.get(n)).filter(Boolean);
+              items.forEach((i) => assigned.add(i.name));
+              if (items.length > 0) {
+                subcats.push({ ...sub, items });
+              }
+            });
+            if (subcats.length > 0) {
+              built.push({ ...cat, subcats });
+            }
+          });
+
+          const leftovers = elements.filter((e) => !assigned.has(e.name));
+          if (leftovers.length > 0) {
+            built.push({
+              id: 'other',
+              title: '✨ Weitere',
+              cam: 'full',
+              subcats: [{ id: 'misc', title: 'Sonstiges', items: leftovers }]
+            });
+          }
+
+          return built;
+        }
+
+        function updateValue(name, newVal) {
+          const el = elements.find((e) => e.name === name);
+          if (!el) return;
+          const next = wrapVal(newVal, el.min, el.max);
+          el.value = next;
+          activeElementName = name;
+          sendNui('skinMenu:change', { name, value: next });
+          renderInspector();
+        }
+
+        function renderStudio() {
+          const cats = getAvailableCategories();
+          if (cats.length === 0) return;
+
+          let currentCat = cats.find((c) => c.id === activeCategoryId) || cats[0];
+          activeCategoryId = currentCat.id;
+
+          let currentSub = currentCat.subcats.find((s) => s.id === activeSubcatId) || currentCat.subcats[0];
+          activeSubcatId = currentSub.id;
+
+          catBarEl.innerHTML = '';
+          cats.forEach((cat) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'studio-cat-btn' + (cat.id === activeCategoryId ? ' active' : '');
+            btn.textContent = cat.title;
+            btn.addEventListener('click', () => {
+              activeCategoryId = cat.id;
+              activeSubcatId = cat.subcats[0].id;
+              const firstEl = cat.subcats[0].items[0];
+              if (firstEl) {
+                activeElementName = firstEl.name;
+                sendNui('skinMenu:focus', { name: firstEl.name });
+              }
+              renderStudio();
+            });
+            catBarEl.appendChild(btn);
+          });
+
+          catTitleEl.textContent = currentCat.title.replace(/^[^\s]+\s/, '');
+          subcatsEl.innerHTML = '';
+          currentCat.subcats.forEach((sub) => {
+            const sBtn = document.createElement('button');
+            sBtn.type = 'button';
+            sBtn.className = 'subcat-btn' + (sub.id === activeSubcatId ? ' active' : '');
+            sBtn.textContent = sub.title;
+            sBtn.addEventListener('click', () => {
+              activeSubcatId = sub.id;
+              const firstEl = sub.items[0];
+              if (firstEl) {
+                activeElementName = firstEl.name;
+                sendNui('skinMenu:focus', { name: firstEl.name });
+              }
+              renderStudio();
+            });
+            subcatsEl.appendChild(sBtn);
+          });
+
+          renderInspector();
+        }
+
+        function renderInspector() {
+          const cats = getAvailableCategories();
+          const currentCat = cats.find((c) => c.id === activeCategoryId) || cats[0];
+          if (!currentCat) return;
+          const currentSub = currentCat.subcats.find((s) => s.id === activeSubcatId) || currentCat.subcats[0];
+          if (!currentSub) return;
+
+          countEl.textContent = `${currentSub.items.length} OPTIONEN`;
+          controlsEl.innerHTML = '';
+
+          currentSub.items.forEach((el) => {
+            const card = document.createElement('div');
+            card.className = 'control-card' + (activeElementName === el.name ? ' focused' : '');
+
+            if (el.name === 'sex') {
+              card.innerHTML = `
+                <div class="control-top">
+                  <span class="control-lbl">⚧️ GESCHLECHT</span>
+                  <span class="control-badge">${el.value === 0 ? 'MÄNNLICH' : 'WEIBLICH'}</span>
+                </div>
+                <div class="gender-switch">
+                  <button type="button" class="gender-pill ${el.value === 0 ? 'active' : ''}" data-sex="0">♂ Männlich</button>
+                  <button type="button" class="gender-pill ${el.value === 1 ? 'active' : ''}" data-sex="1">♀ Weiblich</button>
+                </div>
+              `;
+              card.querySelectorAll('.gender-pill').forEach((b) => {
+                b.addEventListener('click', () => updateValue('sex', Number(b.dataset.sex)));
+              });
+            } else {
+              const min = Number(el.min ?? 0);
+              const max = Number(el.max ?? 0);
+              card.innerHTML = `
+                <div class="control-top">
+                  <span class="control-lbl">${getLabel(el)}</span>
+                  <span class="control-badge">${el.value} / ${max}</span>
+                </div>
+                <div class="control-row">
+                  <button type="button" class="step-btn prev">◀</button>
+                  <input type="range" class="cyber-range" min="${min}" max="${max}" step="1" value="${el.value}" />
+                  <button type="button" class="step-btn next">▶</button>
+                </div>
+              `;
+              card.querySelector('.prev').addEventListener('click', () => updateValue(el.name, el.value - 1));
+              card.querySelector('.next').addEventListener('click', () => updateValue(el.name, el.value + 1));
+              const rangeInput = card.querySelector('.cyber-range');
+              rangeInput.addEventListener('input', (e) => {
+                const v = Number(e.target.value);
+                el.value = v;
+                card.querySelector('.control-badge').textContent = `${v} / ${max}`;
+                activeElementName = el.name;
+                sendNui('skinMenu:change', { name: el.name, value: v });
+              });
+              card.addEventListener('click', () => {
+                if (activeElementName !== el.name) {
+                  activeElementName = el.name;
+                  sendNui('skinMenu:focus', { name: el.name });
+                }
+              });
+            }
+
+            controlsEl.appendChild(card);
+          });
+        }
+
+        // Camera preset buttons
+        document.querySelectorAll('[data-cam]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-cam]').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            sendNui('skinMenu:camera', { preset: btn.dataset.cam });
+          });
+        });
+
+        document.getElementById('cam-rot-left').addEventListener('click', () => sendNui('skinMenu:rotate', { direction: 'left' }));
+        document.getElementById('cam-rot-right').addEventListener('click', () => sendNui('skinMenu:rotate', { direction: 'right' }));
+        document.getElementById('cam-reset').addEventListener('click', () => sendNui('skinMenu:reset', {}));
+
+        submitBtn.addEventListener('click', () => {
+          visible = false;
+          studioEl.classList.remove('active');
+          sendNui('skinMenu:submit', { name: activeElementName });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+          visible = false;
+          studioEl.classList.remove('active');
+          sendNui('skinMenu:cancel', { name: activeElementName });
+        });
+
+        // 360° Pointer Drag rotation
+        const dragLayer = document.getElementById('studio-drag-layer');
+        let isDragging = false;
+        let lastX = 0;
+
+        dragLayer.addEventListener('pointerdown', (e) => {
+          if (e.button !== 0) return;
+          isDragging = true;
+          lastX = e.clientX;
+          dragLayer.classList.add('dragging');
+          dragLayer.setPointerCapture(e.pointerId);
+        });
+
+        dragLayer.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const dx = e.clientX - lastX;
+          lastX = e.clientX;
+          if (dx !== 0) {
+            sendNui('skinMenu:drag', { delta: dx / Math.max(window.innerWidth, 1) });
+          }
+        });
+
+        const stopDrag = () => {
+          isDragging = false;
+          dragLayer.classList.remove('dragging');
+        };
+        dragLayer.addEventListener('pointerup', stopDrag);
+        dragLayer.addEventListener('pointercancel', stopDrag);
+
+        window.addEventListener('keydown', (e) => {
+          if (!visible) return;
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            cancelBtn.click();
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const cur = elements.find((el) => el.name === activeElementName);
+            if (cur) updateValue(cur.name, cur.value - 1);
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            const cur = elements.find((el) => el.name === activeElementName);
+            if (cur) updateValue(cur.name, cur.value + 1);
+          }
+        });
+
+        window.addEventListener('message', (event) => {
+          const data = event.data;
+          if (!data || typeof data.action !== 'string') return;
+
+          if (data.action === 'skinMenu:close') {
+            visible = false;
+            studioEl.classList.remove('active');
+            return;
+          }
+
+          if (data.action === 'skinMenu:open') {
+            const wasOpen = visible;
+            elements = Array.isArray(data.elements) ? data.elements : [];
+            if (data.active) activeElementName = data.active;
+            submitBtn.textContent = data.creating ? '✨ CHARAKTER ERSTELLEN' : '✨ OUTFIT SPEICHERN';
+            visible = true;
+            studioEl.classList.add('active');
+            if (!wasOpen) {
+              activeCategoryId = 'identity';
+              activeSubcatId = 'heritage';
+              renderStudio();
+            } else {
+              renderStudio();
+            }
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

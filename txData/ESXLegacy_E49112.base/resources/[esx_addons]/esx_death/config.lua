@@ -26,7 +26,7 @@ Config.zoom = {
 Config.MedalClip = true
 
 Config.EarlyRespawnTimer          = 60000 * 1  -- time til respawn is available
-Config.BleedoutTimer              = 60000 * 10 -- time til the player bleeds out
+Config.BleedoutTimer              = 60000 * 1  -- time til the player bleeds out (NOVA: gesamt 2 Minuten)
 
 Config.RemoveWeaponsAfterRPDeath  = true
 Config.RemoveCashAfterRPDeath     = true

@@ -209,7 +209,8 @@ function CanReceiveWeapon(source, xPlayer, weaponName)
 			return false
 		end
 
-		if count > 0 then
+		local isWeapon = string.sub(string.upper(weaponName), 1, 7) == 'WEAPON_'
+		if isWeapon and count > 0 then
 			xPlayer.showNotification(TranslateCap('already_owned'))
 			return false
 		end

@@ -1,0 +1,22 @@
+# FiveM Caches
+**/cache/
+txData/ESXLegacy_E49112.base/cache/
+
+# FiveM & txAdmin Logs & History
+**/logs/
+*.log
+*.history
+
+# LevelDB & Database runtime files
+txData/ESXLegacy_E49112.base/db/
+*.sst
+*.ldb
+MANIFEST-*
+OPTIONS-*
+
+# Windows System folders
+$RECYCLE.BIN/
+System Volume Information/
+
+# Backup files
+*.backup.json

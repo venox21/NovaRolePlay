@@ -55,6 +55,17 @@ local function getUiText()
 end
 
 local function getClockData()
+    local year, month, dayOfWeek, day, hour, minute, second = GetLocalTime()
+    if year and hour then
+        return {
+            hour = hour,
+            minute = minute,
+            second = second,
+            day = day,
+            month = month,
+            year = year
+        }
+    end
     return {
         hour = GetClockHours(),
         minute = GetClockMinutes(),

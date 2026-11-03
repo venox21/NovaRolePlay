@@ -115,9 +115,50 @@ return {
 	},
 
 	['identification'] = {
-		label = 'Identification',
+		label = 'Personalausweis',
+		weight = 5,
+		stack = false,
+		close = true,
+		consume = 0,
 		client = {
-			image = 'card_id.png'
+			image = 'card_id.png',
+			event = 'nova_interaction:useIdCard'
+		}
+	},
+
+	['id_card'] = {
+		label = 'Personalausweis',
+		weight = 5,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			image = 'card_id.png',
+			event = 'nova_interaction:useIdCard'
+		}
+	},
+
+	['driver_license'] = {
+		label = 'Führerschein',
+		weight = 5,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			image = 'driver_license.png',
+			event = 'nova_interaction:useDriverLicense'
+		}
+	},
+
+	['weapon_license'] = {
+		label = 'Waffenschein',
+		weight = 5,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			image = 'weapon_license.png',
+			event = 'nova_interaction:useWeaponLicense'
 		}
 	},
 
@@ -138,23 +179,23 @@ return {
 		weight = 160,
 	},
 
+	['tablet'] = {
+		label = 'NOVA Tablet',
+		weight = 450,
+		stack = false,
+		consume = 0,
+		client = {
+			export = 'nova_tablet.openTablet'
+		}
+	},
+
 	['phone'] = {
-		label = 'Phone',
+		label = 'Smartphone',
 		weight = 190,
 		stack = false,
 		consume = 0,
 		client = {
-			add = function(total)
-				if total > 0 then
-					pcall(function() return exports.npwd:setPhoneDisabled(false) end)
-				end
-			end,
-
-			remove = function(total)
-				if total < 1 then
-					pcall(function() return exports.npwd:setPhoneDisabled(true) end)
-				end
-			end
+			export = 'sd-phone.phone'
 		}
 	},
 
@@ -201,6 +242,36 @@ return {
 		client = {
 			anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
 			usetime = 3500
+		}
+	},
+
+	['armour_50'] = {
+		label = 'Leichte Schutzweste (50%)',
+		weight = 2000,
+		stack = true,
+		client = {
+			anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
+			usetime = 3500
+		}
+	},
+
+	['armour_100'] = {
+		label = 'Schwere Schutzweste (100%)',
+		weight = 4000,
+		stack = true,
+		client = {
+			anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
+			usetime = 4500
+		}
+	},
+
+	['backpack'] = {
+		label = 'Rucksack (+20 KG)',
+		weight = 500,
+		stack = false,
+		client = {
+			anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
+			usetime = 2000
 		}
 	},
 
@@ -549,5 +620,49 @@ return {
 		weight = 1,
 		stack = true,
 		close = true,
+	},
+
+	['identification'] = {
+		label = 'Personalausweis',
+		weight = 10,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			event = 'nova_interaction:useIdCard'
+		}
+	},
+
+	['id_card'] = {
+		label = 'Personalausweis',
+		weight = 10,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			event = 'nova_interaction:useIdCard'
+		}
+	},
+
+	['driver_license'] = {
+		label = 'Führerschein',
+		weight = 10,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			event = 'nova_interaction:useDriverLicense'
+		}
+	},
+
+	['weapon_license'] = {
+		label = 'Waffenschein',
+		weight = 10,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			event = 'nova_interaction:useWeaponLicense'
+		}
 	},
 }

@@ -100,14 +100,94 @@ Item('bandage', function(data, slot)
 end)
 
 Item('armour', function(data, slot)
-	if GetPedArmour(cache.ped) < 100 then
+	if GetPedArmour(cache.ped) < 100 or GetPedDrawableVariation(cache.ped, 9) <= 0 then
 		ox_inventory:useItem(data, function(data)
 			if data then
 				SetPlayerMaxArmour(PlayerData.id, 100)
 				SetPedArmour(cache.ped, 100)
+				local model = GetEntityModel(cache.ped)
+				if model == `mp_m_freemode_01` then
+					SetPedComponentVariation(cache.ped, 9, 12, 1, 2)
+				elseif model == `mp_f_freemode_01` then
+					SetPedComponentVariation(cache.ped, 9, 11, 1, 2)
+				end
+				SendNUIMessage({
+					action = 'grandStats',
+					data = { armor = 100 }
+				})
+				lib.notify({ type = 'success', description = 'Schutzweste angelegt (100%)' })
 			end
 		end)
+	else
+		lib.notify({ type = 'error', description = 'Deine Weste ist bereits vollständig intakt (100%)!' })
 	end
+end)
+
+Item('armour_50', function(data, slot)
+	if GetPedArmour(cache.ped) < 50 or GetPedDrawableVariation(cache.ped, 9) <= 0 then
+		ox_inventory:useItem(data, function(data)
+			if data then
+				SetPlayerMaxArmour(PlayerData.id, 100)
+				SetPedArmour(cache.ped, 50)
+				local model = GetEntityModel(cache.ped)
+				if model == `mp_m_freemode_01` then
+					SetPedComponentVariation(cache.ped, 9, 12, 1, 2)
+				elseif model == `mp_f_freemode_01` then
+					SetPedComponentVariation(cache.ped, 9, 11, 1, 2)
+				end
+				SendNUIMessage({
+					action = 'grandStats',
+					data = { armor = 50 }
+				})
+				lib.notify({ type = 'success', description = 'Leichte Schutzweste angelegt (50%)' })
+			end
+		end)
+	else
+		lib.notify({ type = 'error', description = 'Du hast bereits 50% oder mehr Rüstungsschutz!' })
+	end
+end)
+
+Item('armour_100', function(data, slot)
+	if GetPedArmour(cache.ped) < 100 or GetPedDrawableVariation(cache.ped, 9) <= 0 then
+		ox_inventory:useItem(data, function(data)
+			if data then
+				SetPlayerMaxArmour(PlayerData.id, 100)
+				SetPedArmour(cache.ped, 100)
+				local model = GetEntityModel(cache.ped)
+				if model == `mp_m_freemode_01` then
+					SetPedComponentVariation(cache.ped, 9, 12, 1, 2)
+				elseif model == `mp_f_freemode_01` then
+					SetPedComponentVariation(cache.ped, 9, 11, 1, 2)
+				end
+				SendNUIMessage({
+					action = 'grandStats',
+					data = { armor = 100 }
+				})
+				lib.notify({ type = 'success', description = 'Schwere Schutzweste angelegt (100%)' })
+			end
+		end)
+	else
+		lib.notify({ type = 'error', description = 'Deine Weste ist bereits vollständig intakt (100%)!' })
+	end
+end)
+
+Item('backpack', function(data, slot)
+	local curBag = GetPedDrawableVariation(cache.ped, 5)
+	if curBag > 0 then
+		return lib.notify({ type = 'error', description = 'Du trägst bereits einen Rucksack!' })
+	end
+
+	ox_inventory:useItem(data, function(data)
+		if data then
+			SetPedComponentVariation(cache.ped, 5, 45, 0, 2)
+			TriggerServerEvent('ox_inventory:equipBackpack')
+			SendNUIMessage({
+				action = 'grandStats',
+				data = { hasBag = true }
+			})
+			lib.notify({ type = 'success', description = 'Rucksack angelegt (+20 KG Tragekapazität)!' })
+		end
+	end)
 end)
 
 client.parachute = false

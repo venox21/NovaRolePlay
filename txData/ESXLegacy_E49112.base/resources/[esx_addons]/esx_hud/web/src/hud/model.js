@@ -54,4 +54,4 @@ export const statusItems = [
     ["staminaBar", "bolt", "stamina"],
     ["oxygenBar", "lungs", "oxygen"],
 ];
-export const statusColors = { healthBar: "#f2f2f2", armorBar: "#9dafff", foodBar: "#fb9b04", drinkBar: "#70c9e9", staminaBar: "#d5e6a5", oxygenBar: "#70c9e9" };
+export const statusColors = { healthBar: "#f2f2f2", armorBar: "#9dafff", foodBar: "#a855f7", drinkBar: "#70c9e9", staminaBar: "#d5e6a5", oxygenBar: "#70c9e9" };

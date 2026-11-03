@@ -12,4 +12,9 @@ Locales['de'] = {
   ['save_in_dressing'] = 'Willst du dieses Outfit in deiner Umkleide speichern?',
   ['name_outfit'] = 'Bennene dein Outfit',
   ['saved_outfit'] = 'Das Outfit wurde gespeichert!',
+
+    ['save_failed'] = 'Speichern des Outfits fehlgeschlagen.',
+    ['outfit_name'] = 'Outfit-Name',
+    ['outfit_placeholder'] = 'Gib einen Namen für das Outfit ein...',
+    ['confirm'] = 'Bestätigen',
 }

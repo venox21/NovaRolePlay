@@ -32,3 +32,19 @@ xLib.interactions.register('open_weaponshop', function()
 end, function()
 	return GetNearbyZone() ~= nil and not IsUIOpen()
 end)
+
+-- Fallback direct key listener for [E] (Control 38)
+CreateThread(function()
+	while true do
+		local sleep = 500
+		local zone = GetNearbyZone()
+		if zone and not IsUIOpen() then
+			sleep = 0
+			if IsControlJustPressed(0, 38) then
+				OpenNearbyShop()
+				Wait(1000)
+			end
+		end
+		Wait(sleep)
+	end
+end)

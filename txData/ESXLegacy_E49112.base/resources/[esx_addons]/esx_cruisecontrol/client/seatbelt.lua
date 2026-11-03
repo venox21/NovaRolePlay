@@ -85,6 +85,17 @@ SB = {
             while self.seatbelt do
                 SetPedConfigFlag(Utils.ped, 32, false)
                 DisableControlAction(0, 75, true)
+                if IsDisabledControlJustPressed(0, 75) or IsControlJustPressed(0, 75) then
+                    local veh = Utils.vehicle or GetVehiclePedIsIn(Utils.ped, false)
+                    local speed = (veh and veh ~= 0 and DoesEntityExist(veh)) and (GetEntitySpeed(veh) * 3.6) or 0.0
+                    if speed < 15.0 then
+                        self:SetState(false)
+                        TaskLeaveVehicle(Utils.ped, veh, 0)
+                        break
+                    else
+                        ESX.ShowNotification('Sicherheitsgurt ist angelegt! Drücke [B] zum Abschnallen.')
+                    end
+                end
                 Wait(0)
             end
         end)

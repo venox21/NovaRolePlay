@@ -350,8 +350,8 @@
         <svg class="flow-svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           <defs>
             <linearGradient id="flowArea" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stop-color="#fb9b04" stop-opacity="0.38" />
-              <stop offset="100%" stop-color="#fb9b04" stop-opacity="0" />
+              <stop offset="0%" stop-color="#a855f7" stop-opacity="0.38" />
+              <stop offset="100%" stop-color="#a855f7" stop-opacity="0" />
             </linearGradient>
           </defs>
           <line class="flow-grid" x1="${padding}" y1="${padding}" x2="${width - padding}" y2="${padding}" />

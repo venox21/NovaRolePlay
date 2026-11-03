@@ -333,4 +333,11 @@ Locales['de'] = {
   ['purchase_invalid_changes'] = 'The purchase contains invalid changes.',
   ['purchase_vehicle_mismatch'] = 'The purchase does not match the vehicle.',
   ['tuning_applied'] = 'Tuning applied for %s%s.',
+
+    ['motorcycle2'] = 'Motorrad (Spezial)',
+    ['dragster'] = 'Dragster-Felgen',
+    ['street'] = 'Street-Felgen',
+    ['bennys'] = 'Bennys Original',
+    ['bennysv2'] = 'Bennys Bespoke',
+    ['rally'] = 'Rallye-Felgen',
 }

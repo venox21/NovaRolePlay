@@ -44,7 +44,7 @@ function setGuiState(state)
         guiEnabled = state
 
         if state then
-            SetTimecycleModifier(timecycleModifier)
+            ClearTimecycleModifier()
         else
             ClearTimecycleModifier()
         end

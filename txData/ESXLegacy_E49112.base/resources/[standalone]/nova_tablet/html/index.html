@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOVA Tablet</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="tablet-frame" class="tablet-frame hidden">
+    <!-- IPAD BEZEL -->
+    <div class="bezel-top">
+      <div class="camera-lens"></div>
+    </div>
+
+    <!-- MAIN SCREEN -->
+    <div class="tablet-screen">
+      <!-- TOP STATUS BAR -->
+      <div class="status-bar">
+        <div class="status-left">
+          <span id="status-clock">19:20, Sonntag, 01. November</span>
+        </div>
+        <div class="status-right">
+          <!-- Signal -->
+          <svg class="status-icon" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="2" y="16" width="3" height="5" rx="1"/>
+            <rect x="7" y="12" width="3" height="9" rx="1"/>
+            <rect x="12" y="8" width="3" height="13" rx="1"/>
+            <rect x="17" y="4" width="3" height="17" rx="1"/>
+          </svg>
+          <!-- Wifi -->
+          <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+            <line x1="12" y1="20" x2="12.01" y2="20"/>
+          </svg>
+          <!-- Battery -->
+          <span class="battery-label">100%</span>
+          <div class="battery-icon">
+            <div class="battery-fill"></div>
+            <div class="battery-cap"></div>
+          </div>
+          <!-- Power / Close button -->
+          <button id="btn-power" class="btn-power" title="Tablet ausschalten">✕</button>
+        </div>
+      </div>
+
+      <!-- DESKTOP / HOMESCREEN -->
+      <div id="home-view" class="home-view">
+        <!-- APP GRID -->
+        <div class="app-grid">
+          <!-- 1. FRAKTION APP -->
+          <div class="app-item" id="app-faction">
+            <div class="app-squircle squircle-faction">
+              <div class="badge-ring">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <circle cx="12" cy="11" r="3"/>
+                </svg>
+              </div>
+            </div>
+            <span class="app-label" id="label-faction">Los Santos Police Department</span>
+          </div>
+
+          <!-- 2. FAMILIE APP -->
+          <div class="app-item" id="app-family">
+            <div class="app-squircle squircle-family">
+              <div class="badge-ring">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+            </div>
+            <span class="app-label" id="label-family">Familie</span>
+          </div>
+
+          <!-- 3. MEIN HAUS APP -->
+          <div class="app-item" id="app-house">
+            <div class="app-squircle squircle-house">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/>
+              </svg>
+            </div>
+            <span class="app-label">Mein Haus</span>
+          </div>
+
+          <!-- 4. MEIN GESCHÄFT APP -->
+          <div class="app-item" id="app-business">
+            <div class="app-squircle squircle-business">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+                <circle cx="12" cy="4" r="1.5" fill="currentColor"/>
+                <circle cx="18" cy="10" r="1.5" fill="currentColor"/>
+                <circle cx="6" cy="14" r="1.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <span class="app-label">Mein Geschäft</span>
+          </div>
+
+          <!-- 5. MARKTPLATZ APP -->
+          <div class="app-item" id="app-market">
+            <div class="app-squircle squircle-market">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 4H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h.2a3 3 0 0 0 5.6 0h2.4a3 3 0 0 0 5.6 0H19a3 3 0 0 0 3-3V5a1 1 0 0 0-1-1zm-1 8v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a4.98 4.98 0 0 0 3 1c1.2 0 2.29-.43 3.14-1.15A4.98 4.98 0 0 0 13 13c1.2 0 2.29-.43 3.14-1.15A4.98 4.98 0 0 0 20 12z"/>
+              </svg>
+            </div>
+            <span class="app-label">Marktplatz</span>
+          </div>
+
+          <!-- 6. 2048 APP -->
+          <div class="app-item" id="app-2048">
+            <div class="app-squircle squircle-2048">
+              <span class="logo-2048">2048</span>
+            </div>
+            <span class="app-label">2048</span>
+          </div>
+                    <!-- 8. BEWERBUNGEN APP -->
+          <div class="app-item" id="app-apply">
+            <div class="app-squircle squircle-apply">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <polyline points="9 15 11 17 15 13"></polyline>
+              </svg>
+            </div>
+            <span class="app-label">Bewerbungen</span>
+          </div>
+
+          <!-- 7. ADMIN APP (NUR FÜR ADMINS) -->
+          <div class="app-item hidden" id="app-admin">
+            <div class="app-squircle squircle-admin">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polygon points="12 6 13.5 9 17 9.5 14.5 12 15 15.5 12 13.8 9 15.5 9.5 12 7 9.5 10.5 9 12 6" fill="currentColor"/>
+              </svg>
+            </div>
+            <span class="app-label">Admin</span>
+          </div>
+        </div>
+
+        <!-- DOCK -->
+        <div class="dock-wrapper">
+          <div class="tablet-dock">
+            <div class="dock-item" data-launch="app-business">
+              <div class="app-squircle squircle-business small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                  <circle cx="12" cy="4" r="1.5" fill="currentColor"/>
+                  <circle cx="18" cy="10" r="1.5" fill="currentColor"/>
+                  <circle cx="6" cy="14" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+            <div class="dock-item" data-launch="app-house">
+              <div class="app-squircle squircle-house small">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="dock-item" data-launch="app-market">
+              <div class="app-squircle squircle-market small">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 4H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h.2a3 3 0 0 0 5.6 0h2.4a3 3 0 0 0 5.6 0H19a3 3 0 0 0 3-3V5a1 1 0 0 0-1-1zm-1 8v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a4.98 4.98 0 0 0 3 1c1.2 0 2.29-.43 3.14-1.15A4.98 4.98 0 0 0 13 13c1.2 0 2.29-.43 3.14-1.15A4.98 4.98 0 0 0 20 12z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IN-APP WINDOW CONTAINER -->
+      <div id="window-layer" class="window-layer hidden">
+        <div class="app-window">
+          <!-- APP HEADER -->
+          <div class="window-header">
+            <button class="win-back-btn" id="win-btn-back">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <span>Zurück</span>
+            </button>
+            <h2 class="window-title" id="win-title">App</h2>
+            <div class="win-actions">
+              <button class="win-close-btn" id="win-btn-close">✕</button>
+            </div>
+          </div>
+
+          <!-- APP CONTENTS -->
+          <div class="window-body">
+            <!-- 1. FRAKTION CONTENT -->
+            <div id="content-faction" class="win-content hidden">
+              <div class="hero-card">
+                <div class="hero-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                  <h3 id="faction-detail-name">Fraktion</h3>
+                  <p id="faction-detail-rank">Rang: Rekrut</p>
+                </div>
+                <div class="hero-status">Im Dienst</div>
+              </div>
+
+              <div class="section-title">Kollegen &amp; Beamte im Dienst</div>
+              <div class="roster-list" id="faction-roster">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- 2. FAMILIE CONTENT -->
+            <div id="content-family" class="win-content hidden">
+              <div class="hero-card family-hero">
+                <div class="hero-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div>
+                  <h3 id="family-detail-name">Familie</h3>
+                  <p id="family-detail-rank">Status: Mitglied</p>
+                </div>
+                <div class="hero-status active">Aktiv</div>
+              </div>
+
+              <div class="section-title">Familien-Verwaltung &amp; Mitglieder</div>
+              <div class="roster-list" id="family-roster">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- 3. MEIN HAUS CONTENT -->
+            <div id="content-house" class="win-content hidden">
+              <div class="house-grid" id="house-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- 4. MEIN GESCHÄFT CONTENT -->
+            <div id="content-business" class="win-content hidden">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <span class="kpi-lbl">Bankkonto</span>
+                  <span class="kpi-val money" id="biz-bank">$0</span>
+                </div>
+                <div class="kpi-box">
+                  <span class="kpi-lbl">Bargeld</span>
+                  <span class="kpi-val money" id="biz-cash">$0</span>
+                </div>
+              </div>
+
+              <div class="card-box">
+                <h4>Blitz-Überweisung</h4>
+                <div class="form-row">
+                  <input type="number" id="transfer-target" placeholder="Empfänger ID (z.B. 1)">
+                  <input type="number" id="transfer-amount" placeholder="Betrag in $">
+                  <button class="btn-primary" id="btn-transfer">Senden</button>
+                </div>
+                <p class="form-hint">Echtzeit-Transaktion über das NOVA Bankennetzwerk.</p>
+              </div>
+
+              <div class="section-title">Online Bürger</div>
+              <div class="roster-list" id="biz-player-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- 5. MARKTPLATZ CONTENT -->
+            <div id="content-market" class="win-content hidden">
+              <div class="market-banner">
+                <h3>Los Santos Marktplatz</h3>
+                <p>Kaufen und verkaufen Sie Immobilien, Luxusfahrzeuge und Dienstleistungen.</p>
+              </div>
+              <div class="market-grid">
+                <div class="market-card">
+                  <div class="market-tag">Fahrzeug</div>
+                  <h4>Karin Sultan RS Custom</h4>
+                  <p class="market-seller">Verkäufer: Michael S. · Tel: 555-0192</p>
+                  <div class="market-footer">
+                    <span class="market-price">$125.000</span>
+                    <button class="btn-subtle" onclick="alert('Kontakt: 555-0192')">Anrufen</button>
+                  </div>
+                </div>
+                <div class="market-card">
+                  <div class="market-tag tag-realestate">Immobilie</div>
+                  <h4>Vinewood Hills Villa #12</h4>
+                  <p class="market-seller">Verkäufer: Luxury Living · Tel: 555-8831</p>
+                  <div class="market-footer">
+                    <span class="market-price">$1.850.000</span>
+                    <button class="btn-subtle" onclick="alert('Kontakt: 555-8831')">Anrufen</button>
+                  </div>
+                </div>
+                <div class="market-card">
+                  <div class="market-tag">Tuning</div>
+                  <h4>Bennys Motoren-Upgrade Stufe 4</h4>
+                  <p class="market-seller">Verkäufer: Los Santos Customs</p>
+                  <div class="market-footer">
+                    <span class="market-price">$45.000</span>
+                    <button class="btn-subtle" onclick="alert('Besuchen Sie LSC!')">Info</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. 2048 CONTENT -->
+            <div id="content-2048" class="win-content hidden">
+              <div class="game-container">
+                <div class="game-header">
+                  <div class="game-title">2048</div>
+                  <div class="scores-container">
+                    <div class="score-container"><span class="score-label">PUNKTE</span><span id="score-val">0</span></div>
+                    <div class="best-container"><span class="score-label">BESTE</span><span id="best-val">0</span></div>
+                  </div>
+                </div>
+                <div class="game-actions">
+                  <p class="game-intro">Verbinde die Zahlen, um die <strong>2048 Kachel</strong> zu erreichen!</p>
+                  <button class="restart-button" id="restart-2048">Neues Spiel</button>
+                </div>
+                <div class="grid-container" id="grid-2048">
+                  <!-- 16 tiles (4x4) -->
+                </div>
+                <div class="game-controls-hint">
+                  Benutze die <strong>Pfeiltasten (↑ ↓ ← →)</strong> oder wische mit der Maus!
+                </div>
+              </div>
+            </div>
+                        <!-- 8. BEWERBUNGEN APP CONTENT -->
+            <div id="content-apply" class="win-content hidden">
+              <div class="apply-hero-card" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h3>🏛️ Offizielles Bewerbungsportal San Andreas</h3>
+                  <p class="form-hint">Bewirb dich direkt bei den Behörden &amp; Organisationen des Staates San Andreas.</p>
+                </div>
+                <button class="f-btn-secondary" id="btn-refresh-apply" style="font-size:0.8rem; padding:0.4rem 0.75rem; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:0.5rem; cursor:pointer;">🔄 Aktualisieren</button>
+              </div>
+
+              <!-- Sektion 1: Fraktion / Organisation wählen -->
+              <div class="section-title">1. Wähle die gewünschte Fraktion / Organisation</div>
+              <div class="apply-factions-grid" id="apply-factions-list">
+                <!-- Dynamisch befüllt mit allen Behörden -->
+              </div>
+
+              <!-- Sektion 2: Bewerbungsformular -->
+              <div class="card-box" id="apply-form-box" style="margin-top: 1.2rem; display:none;">
+                <h4 id="apply-selected-title">Bewerbung einreichen bei: Behörde</h4>
+                <input type="hidden" id="apply-selected-faction">
+                <div class="form-row" style="margin-top:0.8rem;">
+                  <div class="form-group" style="flex:1;">
+                    <label>Telefonnummer für Rückfragen</label>
+                    <input type="text" id="apply-phone" placeholder="z.B. 555-0142">
+                  </div>
+                  <div class="form-group" style="flex:1;">
+                    <label>Führerschein vorhanden?</label>
+                    <select id="apply-drive-lic" class="f-select">
+                      <option value="1">Ja, gültiger Führerschein vorhanden</option>
+                      <option value="0">Nein, kein Führerschein</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="flex:1;">
+                    <label>Waffenschein vorhanden?</label>
+                    <select id="apply-weapon-lic" class="f-select">
+                      <option value="0">Nein, kein Waffenschein</option>
+                      <option value="1">Ja, Waffenschein vorhanden</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-top:0.8rem;">
+                  <label>Anschreiben &amp; Motivation (Warum möchtest du beitreten?)</label>
+                  <textarea id="apply-letter" rows="4" style="width:100%; border:1px solid #cbd5e1; border-radius:0.6rem; padding:0.6rem; font-family:inherit; font-size:0.88rem;" placeholder="Beschreibe deine Motivation, deine Stärken und warum die Behörde dich einstellen sollte..."></textarea>
+                </div>
+
+                <div class="form-group" style="margin-top:0.8rem;">
+                  <label>Vorerfahrungen im Dienst (optional)</label>
+                  <input type="text" id="apply-exp" placeholder="z.B. Ehemaliger Streifenpolizist in Liberty City...">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:1rem;">
+                  <button class="f-btn-primary" id="btn-submit-application">Offizielle Bewerbung abschicken</button>
+                </div>
+              </div>
+
+              <!-- Sektion 3: Meine Bewerbungen -->
+              <div class="section-title" style="margin-top: 1.5rem;">Meine eingereichten Bewerbungen</div>
+              <div class="ranks-table-wrapper" style="margin-top:0.5rem;">
+                <table class="ranks-table">
+                  <thead>
+                    <tr>
+                      <th style="width:140px;">Datum</th>
+                      <th>Behörde</th>
+                      <th>Telefon</th>
+                      <th>Status</th>
+                      <th>Prüfer</th>
+                    </tr>
+                  </thead>
+                  <tbody id="my-applications-tbody">
+                    <!-- Dynamisch befüllt -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 7. ADMIN CONTENT -->
+            <div id="content-admin" class="win-content hidden">
+              <div class="admin-hero-card">
+                <div class="admin-hero-left">
+                  <div class="admin-badge-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                      <polygon points="12 6 13.5 9 17 9.5 14.5 12 15 15.5 12 13.8 9 15.5 9.5 12 7 9.5 10.5 9 12 6" fill="#ffffff"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 id="admin-panel-role">NOVA Administration</h3>
+                    <p id="admin-panel-level">Berechtigungsstufe: Vollzugriff</p>
+                  </div>
+                </div>
+                <button class="btn-open-full-admin" id="btn-launch-full-admin">
+                  <span>Vollbild Admin-Panel öffnen (F9)</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
+
+              <div class="section-title">Schnell-Aktionen</div>
+              <div class="admin-quick-grid">
+                <button class="admin-quick-btn" id="btn-admin-heal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  <span>Selbst Heilen</span>
+                </button>
+                <button class="admin-quick-btn" id="btn-admin-revive">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="8 11 12 15 16 11"/></svg>
+                  <span>Wiederbeleben</span>
+                </button>
+                <button class="admin-quick-btn" id="btn-admin-noclip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  <span>NoClip (F5)</span>
+                </button>
+                <button class="admin-quick-btn" id="btn-admin-weather">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                  <span>Berlin Wetter</span>
+                </button>
+              </div>
+
+              <div class="card-box" style="margin-top: 1.2rem;">
+                <h4>Globale Server-Ankündigung</h4>
+                <div class="form-row">
+                  <input type="text" id="admin-announce-input" placeholder="Wichtige Nachricht an alle Spieler auf dem Server senden...">
+                  <button class="btn-primary" id="btn-admin-announce">Senden</button>
+                </div>
+              </div>
+
+              <div class="section-title">Online Bürger &amp; Moderation</div>
+              <div class="roster-list" id="admin-players-list">
+                <!-- Dynamisch befüllt -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- FACTION & FAMILY MANAGEMENT DASHBOARD (MEDIA 1793642487766) -->
+      <div id="faction-dashboard" class="faction-dashboard hidden">
+        <div class="faction-card">
+          <!-- TOP HEADER -->
+          <div class="faction-header">
+            <h1 class="faction-org-title" id="f-dash-org-name">Organisation</h1>
+            <div class="faction-user-meta">
+              <div class="faction-user-text">
+                <span class="f-user-name" id="f-dash-user-name">Benutzername</span>
+                <span class="f-user-rank" id="f-dash-user-rank">Leader|</span>
+              </div>
+              <div class="faction-avatar-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+              <button class="faction-close-btn" id="f-dash-close-btn" title="Dashboard schließen">✕</button>
+            </div>
+          </div>
+
+          <!-- 13 ACTION TILES (GRID VIEW) -->
+          <div class="faction-grid" id="f-dash-grid">
+            <!-- 1. Hinweis -->
+            <div class="f-tile" id="f-tile-notice" data-panel="notice">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <circle cx="32" cy="32" r="28"/>
+                  <rect x="29" y="26" width="6" height="20" rx="3" fill="#ffffff"/>
+                  <circle cx="32" cy="18" r="3.5" fill="#ffffff"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Hinweis</span>
+            </div>
+
+            <!-- 2. Kollegen -->
+            <div class="f-tile" id="f-tile-roster" data-panel="roster">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <circle cx="32" cy="18" r="9"/>
+                  <path d="M16 50c0-8.84 7.16-16 16-16s16 7.16 16 16v2H16v-2z"/>
+                  <circle cx="15" cy="24" r="6"/>
+                  <path d="M4 50c0-6.08 4.92-11 11-11 1.7 0 3.3.39 4.73 1.09C17.38 42.45 16 45.98 16 50v2H4v-2z"/>
+                  <circle cx="49" cy="24" r="6"/>
+                  <path d="M60 50c0-6.08-4.92-11-11-11-1.7 0-3.3.39-4.73 1.09C46.62 42.45 48 45.98 48 50v2h12v-2z"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Kollegen</span>
+            </div>
+
+            <!-- 3. Ränge & Berechtigungen -->
+            <div class="f-tile f-tile-highlight" id="f-tile-ranks" data-panel="ranks">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <path d="M10 46h44v6a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2v-6z"/>
+                  <path d="M12 42l4-22 12 10 4-14 4 14 12-10 4 22H12z"/>
+                  <circle cx="16" cy="18" r="3" fill="#ffffff"/>
+                  <circle cx="32" cy="14" r="3" fill="#ffffff"/>
+                  <circle cx="48" cy="18" r="3" fill="#ffffff"/>
+                  <circle cx="32" cy="34" r="3" fill="#ffffff"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Ränge</span>
+            </div>
+
+            <!-- 4. Autos & Fuhrpark -->
+            <div class="f-tile" id="f-tile-vehicles" data-panel="vehicles">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <path d="M12 36l3.5-10.5A6 6 0 0 1 21.2 21h21.6a6 6 0 0 1 5.7 4.5L52 36c2.2 0 4 1.8 4 4v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4H16v4a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V40c0-2.2 1.8-4 4-4zm6-6h28l-2.6-7.8a2 2 0 0 0-1.9-1.2H22.5c-.8 0-1.5.5-1.8 1.2L18 30zm-2 14a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm32 0a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Autos</span>
+            </div>
+
+            <!-- 5. Guthaben verwalten -->
+            <div class="f-tile" id="f-tile-vault" data-panel="vault">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <rect x="10" y="10" width="44" height="44" rx="7"/>
+                  <circle cx="32" cy="32" r="13" fill="#ffffff"/>
+                  <circle cx="32" cy="32" r="9" fill="currentColor"/>
+                  <rect x="30.5" y="25" width="3" height="7" rx="1.5" fill="#ffffff"/>
+                  <circle cx="16" cy="16" r="2.5" fill="#ffffff"/>
+                  <circle cx="16" cy="48" r="2.5" fill="#ffffff"/>
+                  <rect x="44" y="27" width="5" height="10" rx="2" fill="#ffffff"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Guthaben verwalten</span>
+            </div>
+
+            <!-- 6. Einstellungen -->
+            <div class="f-tile" id="f-tile-settings" data-panel="settings">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <path d="M57.6 27.2l-4.8-.8c-.4-1.6-1-3.1-1.8-4.5l3-3.8c.8-1 .7-2.5-.2-3.4l-3.5-3.5c-1-.9-2.4-1-3.4-.2l-3.8 3c-1.4-.8-2.9-1.4-4.5-1.8l-.8-4.8c-.2-1.3-1.3-2.4-2.6-2.4h-5c-1.3 0-2.4 1.1-2.6 2.4l-.8 4.8c-1.6.4-3.1 1-4.5 1.8l-3.8-3c-1-.8-2.4-.7-3.4.2l-3.5 3.5c-.9 1-1 2.4-.2 3.4l3 3.8c-.8 1.4-1.4 2.9-1.8 4.5l-4.8.8c-1.3.2-2.4 1.3-2.4 2.6v5c0 1.3 1.1 2.4 2.4 2.6l4.8.8c.4 1.6 1 3.1 1.8 4.5l-3 3.8c-.8 1-.7 2.5.2 3.4l3.5 3.5c1 .9 2.4 1 3.4.2l3.8-3c1.4.8 2.9 1.4 4.5 1.8l.8 4.8c.2 1.3 1.3 2.4 2.6 2.4h5c1.3 0 2.4-1.1 2.6-2.4l.8-4.8c1.6-.4 3.1-1 4.5-1.8l3.8 3c1 .8 2.4.7 3.4-.2l3.5-3.5c.9-1 1-2.4.2-3.4l-3-3.8c.8-1.4 1.4-2.9 1.8-4.5l4.8-.8c1.3-.2 2.4-1.3 2.4-2.6v-5c0-1.3-1.1-2.4-2.4-2.6zM32 42c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z"/>
+                  <path d="M37 27a4 4 0 0 0-4.5-1.2l-4.5 4.5-2-.2-.2-2 4.5-4.5A4 4 0 0 0 29 19c-2.2 0-4 1.8-4 4 0 1 .4 1.9 1 2.6l-6.8 6.8c-.8.8-.8 2 0 2.8l1.4 1.4c.8.8 2 .8 2.8 0l6.8-6.8c.7.6 1.6 1 2.6 1 2.2 0 4-1.8 4.2-3.8z" fill="#ffffff"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Einstellungen</span>
+            </div>
+
+            <!-- 7. Protokolle -->
+            <div class="f-tile" id="f-tile-logs" data-panel="logs">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <path d="M12 28h40v26a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4V28z"/>
+                  <rect x="24" y="34" width="16" height="4" rx="2" fill="#ffffff"/>
+                  <rect x="18" y="8" width="28" height="24" rx="3" fill="#ffffff" stroke="currentColor" stroke-width="4"/>
+                  <rect x="26" y="5" width="12" height="6" rx="2"/>
+                  <line x1="24" y1="18" x2="40" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="24" y1="23" x2="36" y2="23" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Protokolle</span>
+            </div>
+
+            <!-- 8. Prämierung -->
+            <div class="f-tile" id="f-tile-bonus" data-panel="bonus">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <rect x="18" y="10" width="28" height="20" rx="3" fill="#ffffff" stroke="currentColor" stroke-width="4"/>
+                  <circle cx="32" cy="20" r="4" fill="currentColor"/>
+                  <path d="M10 24h44v28a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V24z"/>
+                  <polygon points="10,24 32,38 54,24" fill="#111111" stroke="#ffffff" stroke-width="2.5"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Prämierung</span>
+            </div>
+
+            <!-- 9. DYNAMISCH 1 (Verträge / MDC) -->
+            <div class="f-tile" id="f-tile-dyn-1" data-panel="contracts">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <path d="M14 8h24l12 12v32a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"/>
+                  <circle cx="44" cy="44" r="11" fill="#ffffff"/>
+                  <circle cx="44" cy="44" r="9" fill="currentColor"/>
+                  <text x="44" y="49" font-size="13" font-weight="900" text-anchor="middle" fill="#ffffff" font-family="sans-serif">$</text>
+                </svg>
+              </div>
+              <span class="f-tile-label">Verträge</span>
+            </div>
+
+            <!-- 10. DYNAMISCH 2 (Blacklist / Justiz) -->
+            <div class="f-tile" id="f-tile-dyn-2" data-panel="blacklist">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <circle cx="32" cy="22" r="9"/>
+                  <path d="M18 52c0-7.7 6.3-14 14-14s14 6.3 14 14v2H18v-2z"/>
+                  <circle cx="32" cy="32" r="23" fill="none" stroke="currentColor" stroke-width="5"/>
+                  <line x1="16" y1="16" x2="48" y2="48" stroke="currentColor" stroke-width="5"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Blacklist</span>
+            </div>
+
+            <!-- 11. DYNAMISCH 3 (Verbesserungen / Logistik) -->
+            <div class="f-tile" id="f-tile-dyn-3" data-panel="upgrades">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <rect x="10" y="10" width="44" height="44" rx="10"/>
+                  <circle cx="24" cy="32" r="5" fill="#ffffff"/>
+                  <circle cx="40" cy="22" r="4" fill="#ffffff"/>
+                  <circle cx="40" cy="42" r="4" fill="#ffffff"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Verbesserungen</span>
+            </div>
+
+            <!-- 12. DYNAMISCH 4 (Territorien / Funk) -->
+            <div class="f-tile" id="f-tile-dyn-4" data-panel="territories">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <path d="M52 12l-7 1-6 6 8 8 6-6 1-7-2-2zM45 25l-21 21-3-3 21-21 3 3zM16 48l-4 4-2-2 4-4 2 2zM12 12l7 1 6 6-8 8-6-6-1-7 2-2zM19 25l21 21 3-3-21-21-3 3z"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Territoriale Kontrolle</span>
+            </div>
+
+            <!-- 13. DYNAMISCH 5 (Einfluss / Blacklist) -->
+            <div class="f-tile" id="f-tile-dyn-5" data-panel="influence">
+              <div class="f-tile-icon">
+                <svg viewBox="0 0 64 64" width="56" height="56" fill="currentColor">
+                  <circle cx="32" cy="32" r="28"/>
+                  <polygon points="32,15 33.8,20.5 39.5,20.5 34.8,24 36.6,29.5 32,26 27.4,29.5 29.2,24 24.5,20.5 30.2,20.5" fill="#ffffff"/>
+                </svg>
+              </div>
+              <span class="f-tile-label">Einfluss</span>
+            </div>
+          </div>
+
+          <!-- SUBVIEW CONTAINER (WENN EINE DER 11 KACHELN GEKLICKT WIRD) -->
+          <div class="f-subview-wrapper hidden" id="f-subview-wrapper">
+            <div class="f-subview-header">
+              <button class="f-btn-back" id="f-btn-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>Zurück</span>
+              </button>
+              <h2 class="f-subview-title" id="f-subview-title">Hinweis</h2>
+              <div class="f-subview-spacer"></div>
+            </div>
+
+            <div class="f-subview-body">
+              <!-- PANEL 1: HINWEIS -->
+              <div class="f-panel hidden" id="panel-notice">
+                <div class="notice-card">
+                  <div class="notice-badge">WICHTIGE MITTEILUNG</div>
+                  <p class="notice-content" id="notice-display-text">Lade Ankündigung...</p>
+                  <div class="notice-meta" id="notice-meta-author">Fraktionsführung</div>
+                </div>
+
+                <div class="leader-only-box" id="notice-leader-box">
+                  <h4>Ankündigung bearbeiten (Leader)</h4>
+                  <textarea id="notice-input" rows="4" placeholder="Neue Bekanntmachung für alle Mitglieder schreiben..."></textarea>
+                  <button class="f-btn-primary" id="btn-save-notice">Mitteilung veröffentlichen</button>
+                </div>
+              </div>
+
+              <!-- PANEL 2: KOLLEGEN -->
+              <div class="f-panel hidden" id="panel-roster">
+                <div class="roster-topbar">
+                  <div class="roster-kpis">
+                    <span class="badge-kpi">Gesamt: <strong id="roster-count-total">0</strong></span>
+                    <span class="badge-kpi badge-online">Im Dienst: <strong id="roster-count-online">0</strong></span>
+                  </div>
+                  <input type="text" id="roster-search" class="f-input-search" placeholder="Kollegen suchen...">
+                </div>
+
+                <div class="roster-table-wrap">
+                  <table class="roster-table">
+                    <thead>
+                      <tr>
+                        <th>Status</th>
+                        <th>Bürger-ID</th>
+                        <th>Name</th>
+                        <th>Rang</th>
+                        <th>Abteilung</th>
+                        <th>Disziplin</th>
+                        <th style="text-align: right;">Aktionen</th>
+                      </tr>
+                    </thead>
+                    <tbody id="roster-table-body">
+                      <!-- Dynamisch befüllt -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="leader-only-box" id="roster-invite-box">
+                  <h4>Neues Mitglied einstellen (Leader)</h4>
+                  <div class="form-row">
+                    <input type="number" id="invite-player-id" placeholder="Bürger-ID oder Server-ID">
+                    <button class="f-btn-primary" id="btn-invite-member">Einstellen</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PANEL 3: EINSTELLUNGEN -->
+              <div class="f-panel hidden" id="panel-settings">
+                <div class="settings-grid">
+                  <div class="settings-card">
+                    <h4>Allgemeine Information</h4>
+                    <p class="settings-row"><span>Organisation:</span> <strong id="set-info-name">-</strong></p>
+                    <p class="settings-row"><span>Fraktions-ID:</span> <strong id="set-info-id">-</strong></p>
+                    <p class="settings-row"><span>Typ:</span> <strong id="set-info-type">Staatlich</strong></p>
+                    <p class="settings-row"><span>Amtierender Leader:</span> <strong id="set-info-leader">-</strong></p>
+                  </div>
+
+                  <div class="settings-card">
+                    <h4>Organisationseinstellungen</h4>
+                    <div class="form-group">
+                      <label>Offizielle Funkfrequenz (MHz)</label>
+                      <input type="text" id="set-input-radio" placeholder="z.B. 100.5">
+                    </div>
+                    <div class="form-group toggle-group">
+                      <label>Bewerbungs- &amp; Rekrutierungsstatus</label>
+                      <select id="set-select-recruit" class="f-select">
+                        <option value="open">Offen für Bewerber</option>
+                        <option value="closed">Geschlossen</option>
+                      </select>
+                    </div>
+                    <button class="f-btn-primary" id="btn-save-settings">Einstellungen speichern</button>
+                  </div>
+
+                  <!-- Ränge & Dienstgrade verwalten -->
+                  <div class="settings-card full-width" id="settings-ranks-card">
+                    <div class="ranks-card-head">
+                      <div>
+                        <h4>Dienstgrade &amp; Ränge verwalten</h4>
+                        <p class="form-hint">Erstelle neue Ränge, passe Bezeichnungen und Gehälter an oder verwalte bestehende Stufen.</p>
+                      </div>
+                    </div>
+
+                    <div class="ranks-table-wrapper">
+                      <table class="ranks-table">
+                        <thead>
+                          <tr>
+                            <th style="width: 80px;">Stufe</th>
+                            <th>Rang-Bezeichnung</th>
+                            <th>System-Code</th>
+                            <th style="width: 120px;">Gehalt</th>
+                            <th style="text-align: right; width: 150px;">Aktionen</th>
+                          </tr>
+                        </thead>
+                        <tbody id="ranks-table-body">
+                          <!-- Dynamisch befüllt -->
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div class="create-rank-box" id="create-rank-box">
+                      <h5>➕ Neuen Rang erstellen</h5>
+                      <div class="form-row-3">
+                        <div class="form-group">
+                          <label>Rang-Bezeichnung</label>
+                          <input type="text" id="rank-input-label" placeholder="z.B. Sergeant, Ausbilder, Capo...">
+                        </div>
+                        <div class="form-group">
+                          <label>Gehalt pro Payday ($)</label>
+                          <input type="number" id="rank-input-salary" placeholder="z.B. 450" min="0" max="10000" value="350">
+                        </div>
+                        <div class="form-group">
+                          <label>Position / Einordnung</label>
+                          <select id="rank-select-position" class="f-select">
+                            <option value="before_boss">Vor Leitungsrang (Empfohlen)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-actions-right">
+                        <button class="f-btn-primary" id="btn-create-rank">Rang erstellen</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PANEL 4: PROTOKOLLE -->
+              <div class="f-panel hidden" id="panel-logs">
+                <div class="logs-container" id="f-logs-list">
+                  <!-- Dynamisch befüllt -->
+                </div>
+              </div>
+
+              <!-- PANEL 5: GUTHABEN VERWALTEN -->
+              <div class="f-panel hidden" id="panel-vault">
+                <div class="vault-hero">
+                  <span class="vault-hero-sub">Aktueller Kassenbestand</span>
+                  <div class="vault-hero-val" id="vault-display-val">$0</div>
+                </div>
+
+                <div class="vault-actions-grid">
+                  <div class="vault-box">
+                    <h4>Guthaben einzahlen</h4>
+                    <p class="form-hint">Unterstütze deine Organisation durch eine freiwillige Einzahlung.</p>
+                    <div class="quick-chips">
+                      <button class="chip-btn" data-amt="5000">+$5.000</button>
+                      <button class="chip-btn" data-amt="10000">+$10.000</button>
+                      <button class="chip-btn" data-amt="50000">+$50.000</button>
+                    </div>
+                    <div class="form-row">
+                      <input type="number" id="vault-input-deposit" placeholder="Betrag in $">
+                      <button class="f-btn-primary" id="btn-vault-deposit">Einzahlen</button>
+                    </div>
+                  </div>
+
+                  <!-- EINGEGANGENE BEWERBUNGEN (LEADER) -->
+                  <div class="leader-only-box" id="roster-applications-box" style="margin-top: 1.2rem; display:none;">
+                    <h4>📥 Eingegangene Bewerbungen für diese Organisation</h4>
+                    <p class="form-hint">Prüfe Bewerbungen und lade Bürger zum persönlichen Vorstellungsgespräch ein.</p>
+                    <div class="ranks-table-wrapper" style="margin-top:0.6rem;">
+                      <table class="ranks-table">
+                        <thead>
+                          <tr>
+                            <th>Bürger</th>
+                            <th>Telefon</th>
+                            <th>Lizenzen</th>
+                            <th>Anschreiben</th>
+                            <th style="text-align: right; width: 160px;">Entscheidung</th>
+                          </tr>
+                        </thead>
+                        <tbody id="faction-applications-tbody">
+                          <!-- Dynamisch befüllt -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="vault-box" id="vault-withdraw-box">
+                    <h4>Guthaben abheben (Leader)</h4>
+                    <p class="form-hint">Auszahlung direkt auf das private Bankkonto des Leaders.</p>
+                    <div class="form-row">
+                      <input type="number" id="vault-input-withdraw" placeholder="Betrag in $">
+                      <button class="f-btn-danger" id="btn-vault-withdraw">Auszahlen</button>
+                    </div>
+                                    <div class="vault-box full-width" id="vault-mass-payout-box" style="grid-column: span 2; margin-top: 0.8rem;">
+                    <h4>👥 Massenauszahlung &amp; Staatsfinanzierung</h4>
+                    <p class="form-hint">Schütte einen einheitlichen Gehaltsbonus aus der Fraktionskasse an alle aktiven Beamten der Organisation aus.</p>
+                    <div class="form-row">
+                      <input type="number" id="vault-input-mass-amt" placeholder="Bonusbetrag pro Mitglied in $" value="500">
+                      <button class="f-btn-primary" id="btn-vault-mass-payout">An alle Mitglieder ausschütten</button>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+
+              <!-- PANEL 6: PRÄMIERUNG -->
+              <div class="f-panel hidden" id="panel-bonus">
+                <div class="bonus-form-card">
+                  <h4>Mitarbeiter-Prämierung &amp; Boni</h4>
+                  <p class="form-hint">Zahle verdienten Mitgliedern Leistungsprämien direkt aus der Fraktionskasse aus.</p>
+                  <div class="form-group">
+                    <label>Empfänger auswählen</label>
+                    <select id="bonus-select-target" class="f-select">
+                      <option value="">-- Mitglied auswählen --</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Prämienhöhe in $</label>
+                    <input type="number" id="bonus-input-amt" placeholder="z.B. 15000">
+                  </div>
+                  <div class="form-group">
+                    <label>Anlass / Grund</label>
+                    <input type="text" id="bonus-input-reason" placeholder="z.B. Hervorragende Schichtleistung &amp; Einsatz">
+                  </div>
+                  <button class="f-btn-primary" id="btn-submit-bonus">Prämie jetzt überweisen</button>
+                </div>
+              </div>
+
+              <!-- PANEL 7: VERTRÄGE -->
+              <div class="f-panel hidden" id="panel-contracts">
+                <div class="contracts-grid" id="contracts-grid">
+                  <!-- Dynamisch befüllt -->
+                </div>
+              </div>
+
+              <!-- PANEL 8: BLACKLIST -->
+              <div class="f-panel hidden" id="panel-blacklist">
+                <div class="blacklist-header">
+                  <p class="form-hint">Hausverbot und gesperrte Personen für diese Organisation.</p>
+                </div>
+                <div class="blacklist-list" id="blacklist-items">
+                  <!-- Dynamisch befüllt -->
+                </div>
+                <div class="leader-only-box" id="blacklist-add-box">
+                  <h4>Person auf Blacklist setzen (Leader)</h4>
+                  <div class="form-row">
+                    <input type="text" id="blacklist-name" placeholder="Name oder Bürger-ID">
+                    <input type="text" id="blacklist-reason" placeholder="Grund für Eintragung">
+                    <button class="f-btn-danger" id="btn-add-blacklist">Sperren</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PANEL 9: VERBESSERUNGEN -->
+              <div class="f-panel hidden" id="panel-upgrades">
+                <div class="upgrades-grid" id="upgrades-grid">
+                  <!-- Dynamisch befüllt -->
+                </div>
+              </div>
+
+              <!-- PANEL 10: TERRITORIALE KONTROLLE -->
+              <div class="f-panel hidden" id="panel-territories">
+                <div class="territories-grid" id="territories-grid">
+                  <!-- Dynamisch befüllt -->
+                </div>
+              </div>
+
+              
+              <!-- STATE PANEL: DATENBANK & AKTEN (MDC) -->
+              <div class="f-panel hidden" id="panel-state-mdc">
+                <div class="state-sub-header">
+                  <div>
+                    <h4>Polizeidatenbank &amp; Strafregister (MDC)</h4>
+                    <p class="form-hint">Einsicht in alle registrierten Vorstrafen, Fahndungen und Straftaten der Landesbehörden.</p>
+                  </div>
+                </div>
+
+                <!-- MDC TABS: AKTEN VS FAHNDUNGEN -->
+                <div class="mdc-tab-bar">
+                  <button class="mdc-tab active" id="tab-btn-records">📋 Strafregister &amp; Akten</button>
+                  <button class="mdc-tab" id="tab-btn-wanteds">⭐ Aktive Fahndungen &amp; Wanteds (ALPR)</button>
+                </div>
+
+                <!-- TAB 1: AKTEN -->
+                <div id="mdc-view-records">
+                  <div class="mdc-search-bar">
+                    <input type="text" id="mdc-search-input" placeholder="Nach Bürger-ID oder Namen suchen...">
+                    <button class="f-btn-primary" id="btn-mdc-new-record">➕ Neue Strafakte anlegen</button>
+                  </div>
+
+                <!-- Neue Akte Formular (Toggle) -->
+                <div class="create-rank-box hidden" id="mdc-create-form-box" style="margin-bottom: 1.2rem;">
+                  <h5>➕ Neuen Eintrag ins Strafregister eintragen</h5>
+                  <div class="form-row-3">
+                    <div class="form-group">
+                      <label>Bürger-ID (z.B. #1)</label>
+                      <input type="number" id="mdc-input-charid" placeholder="Bürger-ID (z.B. 1)">
+                    </div>
+                    <div class="form-group">
+                      <label>Bußgeld ($)</label>
+                      <input type="number" id="mdc-input-fine" placeholder="z.B. 2500" value="0">
+                    </div>
+                    <div class="form-group">
+                      <label>Haftzeit (Min.)</label>
+                      <input type="number" id="mdc-input-jail" placeholder="z.B. 15" value="0">
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-top:0.6rem;">
+                    <label>Straftat / Paragraf / Grund</label>
+                    <input type="text" id="mdc-input-reason" placeholder="z.B. §127 Schwerer Raub &amp; Waffenbesitz">
+                  </div>
+                  <div class="form-actions-right" style="margin-top:0.6rem; gap:0.5rem; display:flex;">
+                    <button class="f-btn-secondary" id="btn-cancel-mdc">Abbrechen</button>
+                    <button class="f-btn-primary" id="btn-submit-mdc-record">Akte im Strafregister speichern</button>
+                  </div>
+                </div>
+
+                <div class="ranks-table-wrapper">
+                  <table class="ranks-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 130px;">Datum &amp; Zeit</th>
+                        <th>Bürger</th>
+                        <th>Verstoß / Grund</th>
+                        <th style="width: 100px;">Bußgeld</th>
+                        <th style="width: 90px;">Haft</th>
+                        <th>Sachbearbeiter</th>
+                        <th style="text-align: right; width: 80px;">Aktion</th>
+                      </tr>
+                    </thead>
+                    <tbody id="mdc-records-table-body">
+                      <!-- Dynamisch befüllt -->
+                    </tbody>
+                  </table>
+                </div>
+                </div>
+
+                <!-- TAB 2: AKTIve FAHNDUNGEN & WANTEDS -->
+                <div id="mdc-view-wanteds" class="hidden">
+                  <div class="mdc-search-bar">
+                    <input type="text" id="wanteds-search-input" placeholder="Nach Kennzeichen, Bürger-ID oder Namen suchen...">
+                    <button class="f-btn-danger" id="btn-new-wanted-toggle" style="background:#dc2626; color:#fff; border:none; border-radius:0.55rem; padding:0.6rem 1rem; font-weight:700; cursor:pointer;">➕ Neue Fahndung ausschreiben</button>
+                  </div>
+
+                  <!-- Formular Neue Fahndung -->
+                  <div class="create-rank-box hidden" id="wanted-create-form-box" style="margin-bottom: 1.2rem;">
+                    <h5>🚨 Offizielle Fahndung ausschreiben (ALPR-Bordcomputer)</h5>
+                    <div class="form-row-3">
+                      <div class="form-group">
+                        <label>Bürger-ID (optional)</label>
+                        <input type="number" id="wanted-input-charid" placeholder="z.B. 1">
+                      </div>
+                      <div class="form-group">
+                        <label>KFZ-Kennzeichen (für Scanner)</label>
+                        <input type="text" id="wanted-input-plate" placeholder="z.B. NV434017">
+                      </div>
+                      <div class="form-group">
+                        <label>Wanteds (Sterne)</label>
+                        <select id="wanted-input-stars" class="f-select">
+                          <option value="1">⭐ 1 Stern (Leichtes Vergehen)</option>
+                          <option value="2">⭐⭐ 2 Sterne (Flucht vor Polizei)</option>
+                          <option value="3" selected>⭐⭐⭐ 3 Sterne (Schwerer Raub)</option>
+                          <option value="4">⭐⭐⭐⭐ 4 Sterne (Angriff auf Beamte)</option>
+                          <option value="5">⭐⭐⭐⭐⭐ 5 Sterne (Staatsfeind / Terror)</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row" style="margin-top:0.6rem;">
+                      <div class="form-group" style="flex:2;">
+                        <label>Fahndungsgrund</label>
+                        <input type="text" id="wanted-input-reason" placeholder="z.B. Mordversuch an Officer &amp; Flucht im schwarzen Sportwagen">
+                      </div>
+                      <div class="form-group" style="flex:1;">
+                        <label>Gefährdungsgrad</label>
+                        <select id="wanted-input-danger" class="f-select">
+                          <option value="Normal">Normal</option>
+                          <option value="Erhöht">Erhöht</option>
+                          <option value="Schwer bewaffnet &amp; gefährlich">Schwer bewaffnet &amp; gefährlich</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-actions-right" style="margin-top:0.6rem; gap:0.5rem; display:flex;">
+                      <button class="f-btn-secondary" id="btn-cancel-wanted">Abbrechen</button>
+                      <button class="f-btn-primary" id="btn-submit-wanted">Fahndung im System erfassen</button>
+                    </div>
+                  </div>
+
+                  <div class="ranks-table-wrapper">
+                    <table class="ranks-table">
+                      <thead>
+                        <tr>
+                          <th style="width: 100px;">Sterne</th>
+                          <th>Gesuchte Person</th>
+                          <th>KFZ-Kennzeichen</th>
+                          <th>Fahndungsgrund</th>
+                          <th>Gefahr</th>
+                          <th>Ausgestellt von</th>
+                          <th style="text-align: right; width: 80px;">Aktion</th>
+                        </tr>
+                      </thead>
+                      <tbody id="wanteds-table-body">
+                        <!-- Dynamisch befüllt -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STATE PANEL: JUSTIZ, INHAFTIERUNG & LIZENZEN -->
+              <div class="f-panel hidden" id="panel-state-justice">
+                <div class="state-sub-header">
+                  <div>
+                    <h4>Justiz, Sanktionen &amp; Lizenzen</h4>
+                    <p class="form-hint">Verhänge rechtskräftige Geldstrafen, führe Inhaftierungen durch und verwalte Waffen- sowie Führerscheine.</p>
+                  </div>
+                </div>
+
+                <div class="settings-grid">
+                  <!-- CARD 1: GELDSTRAFE -->
+                  <div class="settings-card">
+                    <h4>💳 Geldstrafe / Bußgeld ausstellen</h4>
+                    <p class="form-hint">Stellt einen offiziellen Justizbescheid über das staatliche Billing-System aus.</p>
+                    <div class="form-group">
+                      <label>Bürger-ID des Beschuldigten</label>
+                      <input type="number" id="fine-input-charid" placeholder="z.B. 1">
+                    </div>
+                    <div class="form-group">
+                      <label>Bußgeldbetrag in $</label>
+                      <input type="number" id="fine-input-amt" placeholder="z.B. 5000">
+                    </div>
+                    <div class="form-group">
+                      <label>Grund / Tatbestand</label>
+                      <input type="text" id="fine-input-reason" placeholder="z.B. Fahren ohne Fahrerlaubnis">
+                    </div>
+                    <button class="f-btn-primary" id="btn-issue-fine">Geldstrafe ausstellen</button>
+                  </div>
+
+                  <!-- CARD 2: INHAFTIERUNG -->
+                  <div class="settings-card">
+                    <h4>🔒 Personen inhaftieren</h4>
+                    <p class="form-hint">Überstellt den Tatverdächtigen direkt in den Zellentrakt oder die Staatsvollzugsanstalt.</p>
+                    <div class="form-group">
+                      <label>Bürger-ID des Häftlings</label>
+                      <input type="number" id="jail-input-charid" placeholder="z.B. 1">
+                    </div>
+                    <div class="form-group">
+                      <label>Haftzeit in Minuten (Standard max. 50 Min.)</label>
+                      <input type="number" id="jail-input-minutes" placeholder="z.B. 25" min="1" max="180">
+                    </div>
+                    <div class="form-group">
+                      <label>Urteilsbegründung / Vorwurf</label>
+                      <input type="text" id="jail-input-reason" placeholder="z.B. Bewaffneter Überfall auf Staatsbedienstete">
+                    </div>
+                    <button class="f-btn-danger" id="btn-issue-jail" style="background:#dc2626; color:#fff; border:none; border-radius:0.55rem; padding:0.6rem 1rem; font-weight:700; cursor:pointer;">Inhaftierung vollstrecken</button>
+                  </div>
+
+                  <!-- CARD 3: LIZENZEN VERWALTEN (FULL WIDTH) -->
+                  <div class="settings-card full-width">
+                    <h4>🪪 Lizenz-Verwaltung (Waffen- &amp; Führerscheine)</h4>
+                    <p class="form-hint">Berechtigte Beamte können staatliche Erlaubnisse erteilen oder bei schweren Vergehen entziehen.</p>
+                    <div class="form-row-3">
+                      <div class="form-group">
+                        <label>Bürger auswählen</label>
+                        <select id="lic-select-target" class="f-select">
+                          <option value="">-- Bürger auswählen --</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Lizenz-Typ</label>
+                        <select id="lic-select-type" class="f-select">
+                          <option value="weapon">Waffenschein (Weapons License)</option>
+                          <option value="drive">Führerschein Klasse B (Drive)</option>
+                          <option value="drive_bike">Motorradführerschein (Bike)</option>
+                          <option value="drive_truck">LKW-Führerschein (Truck)</option>
+                          <option value="dmv">Theoriebescheinigung (DMV)</option>
+                        </select>
+                      </div>
+                      <div class="form-group" style="justify-content: flex-end; display:flex; gap:0.5rem; flex-direction:row; align-items:flex-end;">
+                        <button class="f-btn-primary" id="btn-give-license" style="flex:1;">Ausstellen</button>
+                        <button class="btn-rank-del" id="btn-revoke-license" style="flex:1; padding:0.6rem 0.8rem; font-weight:700;">Entziehen</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STATE PANEL: FUHRPARK & LOGISTIK -->
+              <div class="f-panel hidden" id="panel-state-logistics">
+                <div class="state-sub-header">
+                  <div>
+                    <h4>Fuhrpark, Logistik &amp; Einsatzmittel</h4>
+                    <p class="form-hint">Verwalte Dienstfahrzeuge, bestelle Nachschub für Schutzwesten &amp; Munition und greife aufs Lager zu.</p>
+                  </div>
+                </div>
+
+                <div class="settings-grid">
+                  <div class="settings-card">
+                    <h4>🚓 Fraktionsfahrzeuge verwalten</h4>
+                    <p class="form-hint">Zieht alle unbesetzten und verlassenen Einsatzfahrzeuge im Staatsgebiet ein und parkt sie zurück in die Garage.</p>
+                    <button class="f-btn-primary" id="btn-respawn-vehicles" style="margin-top:0.8rem; padding:0.75rem 1rem;">🔄 Alle Fraktionsfahrzeuge respawnen</button>
+                  </div>
+
+                  <div class="settings-card">
+                    <h4>📦 Einsatzmaterialien &amp; Ausrüstung bestellen</h4>
+                    <p class="form-hint">Bestellt frische Schutzwesten, Munitionsreserven und Medkits für das Fraktionslager.</p>
+                    <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem;">
+                      <button class="chip-btn btn-order-mat" data-type="armor" data-cost="5000" style="padding:0.6rem; text-align:left; font-size:0.85rem;">🛡️ Schutzwesten-Lieferung bestellen ($5.000)</button>
+                      <button class="chip-btn btn-order-mat" data-type="ammo" data-cost="10000" style="padding:0.6rem; text-align:left; font-size:0.85rem;">🎯 Munitionskisten-Nachschub bestellen ($10.000)</button>
+                      <button class="chip-btn btn-order-mat" data-type="meds" data-cost="4000" style="padding:0.6rem; text-align:left; font-size:0.85rem;">🩹 Sanitäts- &amp; Notfallkoffer bestellen ($4.000)</button>
+                    </div>
+                  </div>
+
+                  <div class="settings-card full-width">
+                    <h4>🏭 Fraktionslager &amp; Crafting</h4>
+                    <p class="form-hint">Greife auf das gemeinsame Hauptlager und die Werkbänke deiner Behörde zu.</p>
+                    <div style="display:flex; gap:1rem; margin-top:0.6rem;">
+                      <button class="f-btn-primary" id="btn-open-state-storage" style="flex:1;">📦 Fraktionslager öffnen</button>
+                      <button class="f-btn-secondary" id="btn-open-state-crafting" style="flex:1;">🔨 Dienstausrüstung craften</button>
+                      <button class="f-btn-primary" id="btn-request-airdrop" style="flex:1; background:#d97706; border:none; color:#fff;">📦 Airdrop anfordern ($20.000)</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STATE PANEL: GNEWS & DEPARTMENTFUNK -->
+              <div class="f-panel hidden" id="panel-state-comms">
+                <div class="state-sub-header">
+                  <div>
+                    <h4>GNews &amp; Departmentfunk</h4>
+                    <p class="form-hint">Offizielle Staatsmeldungen an alle Bürger und landesweiter Funkverkehr.</p>
+                  </div>
+                </div>
+
+                <div class="settings-grid">
+                  <div class="settings-card">
+                    <h4>📢 Staatliche GNews-Meldung ausstrahlen</h4>
+                    <p class="form-hint">Sendet eine landesweite Mitteilung an alle Bürger im Staat.</p>
+                    <div class="form-group">
+                      <label>Nachrichtentext</label>
+                      <textarea id="gnews-input-text" rows="3" style="width:100%; border:1px solid #cbd5e1; border-radius:0.6rem; padding:0.6rem; font-family:inherit; font-size:0.88rem;" placeholder="z.B. Das LSPD sucht Zeugen zum Banküberfall..."></textarea>
+                    </div>
+                    <button class="f-btn-primary" id="btn-broadcast-gnews">GNews-Meldung senden</button>
+                  </div>
+
+                  <div class="settings-card">
+                    <h4>📻 Departmentfunk (D-Funk)</h4>
+                    <p class="form-hint">Gemeinsamer Koordinationsfunk aller Landesbehörden (LSPD, FIB, Sheriffs, SANG, EMS, GOV).</p>
+                    <div class="settings-row" style="margin-top:0.5rem;">
+                      <span>Staatsfunk-Kanal:</span>
+                      <strong>100.0 MHz</strong>
+                    </div>
+                    <div class="settings-row">
+                      <span>Status:</span>
+                      <strong style="color:#16a34a;">Verschlüsselt &amp; Aktiv</strong>
+                    </div>
+                    <button class="f-btn-secondary" id="btn-connect-dept-radio" style="margin-top:1rem;">📻 Auf Departmentfunk verbinden</button>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- PANEL 11: EINFLUSS -->
+              <div class="f-panel hidden" id="panel-influence">
+                <div class="influence-hero">
+                  <div class="influence-score-circle">
+                    <span class="influence-num" id="influence-display-num">85</span>
+                    <span class="influence-sub">EINFLUSS</span>
+                  </div>
+                  <div class="influence-info">
+                    <h3 id="influence-standing">Einflussreiche Großmacht</h3>
+                    <div class="influence-stars">★★★★★</div>
+                    <p class="influence-desc">Deine Organisation genießt höchstes Ansehen und territoriale Souveränität im Staat San Andreas.</p>
+                  </div>
+                </div>
+
+                <div class="influence-stats-grid">
+                  <div class="inf-stat-box">
+                    <span class="inf-stat-lbl">Territorien</span>
+                    <span class="inf-stat-val" id="inf-val-territories">7 Gebiete</span>
+                  </div>
+                  <div class="inf-stat-box">
+                    <span class="inf-stat-lbl">Erfüllte Verträge</span>
+                    <span class="inf-stat-val" id="inf-val-contracts">100%</span>
+                  </div>
+                  <div class="inf-stat-box">
+                    <span class="inf-stat-lbl">Kassenstärke</span>
+                    <span class="inf-stat-val" id="inf-val-vault">Sehr Hoch</span>
+                  </div>
+                  <div class="inf-stat-box">
+                    <span class="inf-stat-lbl">Rang in Los Santos</span>
+                    <span class="inf-stat-val">#1 Top Organisation</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PANEL: RÄNGE & BERECHTIGUNGEN -->
+              <div class="f-panel hidden" id="panel-ranks">
+                <div class="panel-header-simple" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                  <div>
+                    <h3 style="margin:0; font-size:1.25rem; font-weight:700;">👑 Rang-Übersicht &amp; Berechtigungen</h3>
+                    <p class="form-hint" style="margin:0.25rem 0 0 0;">Hier siehst du alle Dienstgrade deiner Organisation und kannst für jeden Rang Berechtigungen individuell konfigurieren.</p>
+                  </div>
+                  <button class="f-btn-primary" id="btn-toggle-create-rank" style="display:flex; align-items:center; gap:0.4rem; padding:0.55rem 1.1rem; font-weight:700;">
+                    <span>➕ Neuer Rang</span>
+                  </button>
+                </div>
+
+                <!-- STATS LEISTE -->
+                <div class="ranks-stats-bar" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:1rem; margin-bottom:1.5rem;">
+                  <div class="stat-mini-card" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:0.75rem; padding:1rem; text-align:center;">
+                    <div style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Eingerichtete Ränge</div>
+                    <div style="font-size:1.5rem; font-weight:800; color:#38bdf8; margin-top:0.25rem;" id="ranks-stat-total">0</div>
+                  </div>
+                  <div class="stat-mini-card" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:0.75rem; padding:1rem; text-align:center;">
+                    <div style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Höchster Rang (Leitung)</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#f59e0b; margin-top:0.4rem;" id="ranks-stat-boss">-</div>
+                  </div>
+                  <div class="stat-mini-card" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:0.75rem; padding:1rem; text-align:center;">
+                    <div style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Einstiegsstufe</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#10b981; margin-top:0.4rem;" id="ranks-stat-base">-</div>
+                  </div>
+                </div>
+
+                <!-- NEUER RANG ERSTELLEN BOX (EXPANDABLE) -->
+                <div class="create-rank-box hidden" id="ranks-create-box" style="margin-bottom:1.5rem; background:rgba(30,41,59,0.7); border:1px solid rgba(56,189,248,0.3); border-radius:0.85rem; padding:1.25rem;">
+                  <h5 style="margin:0 0 1rem 0; font-size:1.05rem; font-weight:700; color:#38bdf8;">➕ Neuen Rang zur Organisation hinzufügen</h5>
+                  <div class="form-row-3" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:1rem;">
+                    <div class="form-group">
+                      <label style="display:block; font-size:0.8rem; color:#94a3b8; margin-bottom:0.35rem;">Rang-Bezeichnung</label>
+                      <input type="text" id="ranks-new-label" placeholder="z.B. Capo, Sergeant, Ausbilder..." style="width:100%; box-sizing:border-box; background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.1); border-radius:0.5rem; padding:0.6rem 0.8rem; color:#fff;">
+                    </div>
+                    <div class="form-group">
+                      <label style="display:block; font-size:0.8rem; color:#94a3b8; margin-bottom:0.35rem;">Gehalt pro Payday ($)</label>
+                      <input type="number" id="ranks-new-salary" placeholder="z.B. 450" min="0" max="10000" value="350" style="width:100%; box-sizing:border-box; background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.1); border-radius:0.5rem; padding:0.6rem 0.8rem; color:#fff;">
+                    </div>
+                    <div class="form-group">
+                      <label style="display:block; font-size:0.8rem; color:#94a3b8; margin-bottom:0.35rem;">Einordnung / Stufe</label>
+                      <select id="ranks-new-position" class="f-select" style="width:100%; box-sizing:border-box; background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.1); border-radius:0.5rem; padding:0.6rem 0.8rem; color:#fff;">
+                        <option value="before_boss">Vor Leitungsrang (Empfohlen)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div style="margin-top:1rem; display:flex; justify-content:flex-end; gap:0.6rem;">
+                    <button class="f-btn-secondary" id="btn-cancel-ranks-create" style="padding:0.5rem 1rem;">Abbrechen</button>
+                    <button class="f-btn-primary" id="btn-submit-ranks-create" style="padding:0.5rem 1.2rem;">Rang erstellen</button>
+                  </div>
+                </div>
+
+                <!-- RANKS LIST / CARDS CONTAINER -->
+                <div id="ranks-overview-list" style="display:flex; flex-direction:column; gap:0.9rem;">
+                  <!-- Dynamically populated rank cards -->
+                </div>
+              </div>
+
+              <!-- PANEL 12: AUTOS & FUHRPARK -->
+              <div class="f-panel hidden" id="panel-vehicles">
+                <div class="panel-header-simple" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                  <div>
+                    <h3 style="margin:0; font-size:1.2rem; font-weight:700;">🚗 Fraktionsfuhrpark</h3>
+                    <p class="form-hint" style="margin:0.2rem 0 0 0;">Parke offizielle Autos und Motorräder deiner Fraktion aus.</p>
+                  </div>
+                  <button class="f-btn-danger" id="btn-tablet-park-in" style="background:#dc2626; color:#fff; border:none; border-radius:0.55rem; padding:0.5rem 1rem; font-weight:700; cursor:pointer;">🅿️ Fahrzeug einparken</button>
+                </div>
+
+                <!-- Tabs: Autos vs Motorräder -->
+                <div class="mdc-tab-bar" style="margin-bottom:1.2rem;">
+                  <button class="mdc-tab active" id="tab-veh-cars">🚗 Autos</button>
+                  <button class="mdc-tab" id="tab-veh-bikes">🏍️ Motorräder</button>
+                </div>
+
+                <!-- Grid für Fahrzeuge -->
+                <div class="vehicles-catalog-grid" id="f-vehicles-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:1rem;">
+                  <!-- Dynamisch befüllt -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOME BAR INDICATOR -->
+      <div class="home-bar-container">
+        <div class="home-bar" id="home-bar"></div>
+      </div>
+
+      <!-- MODAL: RANG BEARBEITEN -->
+      <div id="modal-edit-rank" class="f-modal-overlay hidden">
+        <div class="f-modal-box">
+          <div class="f-modal-header">
+            <h3 id="edit-rank-modal-title">Rang bearbeiten</h3>
+            <button class="f-modal-close" id="btn-close-edit-rank">&times;</button>
+          </div>
+          <div class="f-modal-body">
+            <input type="hidden" id="edit-rank-grade">
+            <div class="form-group">
+              <label>Rang-Bezeichnung</label>
+              <input type="text" id="edit-rank-label" placeholder="z.B. Sergeant, Ausbilder...">
+            </div>
+            <div class="form-group" style="margin-top: 0.85rem;">
+              <label>Gehalt pro Payday ($)</label>
+              <input type="number" id="edit-rank-salary" min="0" max="10000" placeholder="z.B. 450">
+            </div>
+          </div>
+          <div class="f-modal-footer">
+            <button class="f-btn-secondary" id="btn-cancel-edit-rank">Abbrechen</button>
+            <button class="f-btn-primary" id="btn-save-edit-rank">Speichern</button>
+          </div>
+        </div>
+      </div>
+
+            <!-- MODAL: 36 BERECHTIGUNGEN KONFIGURIEREN -->
+      <div id="modal-rank-permissions" class="f-modal-overlay hidden">
+        <div class="f-modal-box modal-large">
+          <div class="f-modal-header">
+            <div>
+              <h3 id="perm-modal-title">🛡️ Berechtigungen verwalten: Rang</h3>
+              <p class="form-hint" id="perm-modal-subtitle">Konfiguriere alle 36 Berechtigungen für diesen Dienstgrad.</p>
+            </div>
+            <button class="f-modal-close" id="btn-close-perm-modal">&times;</button>
+          </div>
+
+          <div class="perm-modal-toolbar">
+            <input type="text" id="perm-search-input" placeholder="🔍 Berechtigung suchen...">
+            <div style="display:flex; gap:0.5rem;">
+              <button class="f-btn-secondary" id="btn-perm-select-all" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Alle aktivieren</button>
+              <button class="f-btn-secondary" id="btn-perm-deselect-all" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Alle abwählen</button>
+            </div>
+          </div>
+
+          <div class="f-modal-body perm-modal-body" id="perm-checkboxes-container">
+            <!-- Dynamisch in 6 Kategorien gerendert -->
+          </div>
+
+          <div class="f-modal-footer">
+            <span id="perm-active-count" style="font-size:0.85rem; color:#64748b; font-weight:600; margin-right:auto;">0 / 36 aktiv</span>
+            <button class="f-btn-secondary" id="btn-cancel-perm-modal">Abbrechen</button>
+            <button class="f-btn-primary" id="btn-save-perm-modal">💾 Berechtigungen speichern</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- IOS STYLE ALERT MODAL -->
+      <div id="ios-alert" class="ios-alert-overlay hidden">
+        <div class="ios-alert-box">
+          <div class="alert-icon-wrap" id="alert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <h3 class="alert-title" id="alert-title">Hinweis</h3>
+          <p class="alert-message" id="alert-message">Du bist in keiner Fraktion.</p>
+          <div class="alert-actions">
+            <button class="alert-btn" id="alert-btn-ok">OK</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

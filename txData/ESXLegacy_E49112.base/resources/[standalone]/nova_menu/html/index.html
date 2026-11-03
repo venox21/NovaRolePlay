@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>NOVA F2 Menü</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="menu-overlay" class="menu-overlay hidden">
+    <!-- 1. LINKE SEITENLEISTE -->
+    <aside class="sidebar-container">
+      <div class="profile-header">
+        <div class="avatar-box">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Nico" alt="Avatar" class="avatar-img" />
+        </div>
+        <div class="profile-details">
+          <div class="user-name" id="menu-user-name">Nico Panzer</div>
+          <div class="user-sub" id="menu-user-id">ID: #1</div>
+        </div>
+        <div class="visibility-icon" id="id-toggle-btn" title="ID ein/ausblenden">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="menu-list">
+        <!-- CHARAKTER MIT ACCORDION & BAUM-UNTERPUNKTEN -->
+        <div class="menu-group" id="group-charakter">
+          <div class="menu-nav-btn active" data-tab="charakter">
+            <div class="item-left">
+              <span class="item-icon">👤</span>
+              <span class="item-title">Charakter</span>
+            </div>
+            <span class="chevron">⌄</span>
+          </div>
+          <div class="sub-tree-list">
+            <div class="sub-tree-item active" data-subtab="char-startseite">Startseite</div>
+            <div class="sub-tree-item" data-subtab="char-statistiken">Statistiken</div>
+            <div class="sub-tree-item" data-subtab="char-fahrzeuge">Fahrzeuge</div>
+            <div class="sub-tree-item" data-subtab="char-eigentum">Eigentum</div>
+            <div class="sub-tree-item" data-subtab="char-faehigkeiten">Fähigkeiten</div>
+            <div class="sub-tree-item" data-subtab="char-jobs">Jobs</div>
+          </div>
+        </div>
+
+        <div class="menu-nav-btn" data-tab="animationen">
+          <div class="item-left">
+            <span class="item-icon">⚙️</span>
+            <span class="item-title">Animationen</span>
+          </div>
+          <span class="arrow-right">›</span>
+        </div>
+
+        <div class="menu-nav-btn" data-tab="aufgaben">
+          <div class="item-left">
+            <span class="item-icon">⭐</span>
+            <span class="item-title">Aufgaben</span>
+          </div>
+          <span class="arrow-right">›</span>
+        </div>
+
+        <div class="menu-nav-btn" data-tab="ereignisse">
+          <div class="item-left">
+            <span class="item-icon">📅</span>
+            <span class="item-title">Ereignisse</span>
+          </div>
+          <span class="arrow-right">›</span>
+        </div>
+
+        <div class="menu-nav-btn" data-tab="tickets">
+          <div class="item-left">
+            <span class="item-icon">💬</span>
+            <span class="item-title">Tickets</span>
+          </div>
+          <span class="arrow-right">›</span>
+        </div>
+
+        <!-- GESCHÄFT MIT ACCORDION & BAUM-UNTERPUNKTEN (WIE IM SCREENSHOT) -->
+        <div class="menu-group" id="group-geschaeft">
+          <div class="menu-nav-btn" data-tab="geschaeft">
+            <div class="item-left">
+              <span class="item-icon">🛍️</span>
+              <span class="item-title">Geschäft</span>
+            </div>
+            <span class="chevron">⌄</span>
+          </div>
+          <div class="sub-tree-list shop-sub-tree" style="display: none;">
+            <div class="sub-tree-item active" data-shopsub="shop-startseite">Startseite</div>
+            <div class="sub-tree-item" data-shopsub="shop-aufladen">Aufladen</div>
+            <div class="sub-tree-item" data-shopsub="shop-kisten">Kisten</div>
+            <div class="sub-tree-item" data-shopsub="shop-premium">Nova Premium</div>
+            <div class="sub-tree-item" data-shopsub="shop-sets">Sets</div>
+            <div class="sub-tree-item" data-shopsub="shop-geld">Geld</div>
+            <div class="sub-tree-item" data-shopsub="shop-charakter">Charakter</div>
+            <div class="sub-tree-item" data-shopsub="shop-exklusiv">Exklusiv</div>
+            <div class="sub-tree-item" data-shopsub="shop-fahrzeug">Fahrzeug</div>
+            <div class="sub-tree-item" data-shopsub="shop-kleidung">Kleidung</div>
+            <div class="sub-tree-item" data-shopsub="shop-animationen">Animationen</div>
+            <div class="sub-tree-item" data-shopsub="shop-skins">Skins</div>
+            <div class="sub-tree-item" data-shopsub="shop-transaktionen">Transaktionsverlauf</div>
+            <div class="sub-tree-item" data-shopsub="shop-donator"><span>Donator-Inventar</span><span style="opacity:0.6;">🔒</span></div>
+          </div>
+        </div>
+
+        <div class="menu-nav-btn" data-tab="statistiken">
+          <div class="item-left">
+            <span class="item-icon">📊</span>
+            <span class="item-title">Spielstatistiken</span>
+          </div>
+          <span class="arrow-right">›</span>
+        </div>
+
+        <div class="menu-nav-btn" data-tab="regelwerk">
+          <div class="item-left">
+            <span class="item-icon">📁</span>
+            <span class="item-title">Regelwerk</span>
+          </div>
+          <span class="arrow-right">›</span>
+        </div>
+
+        <div class="menu-nav-btn" data-tab="einstellungen">
+          <div class="item-left">
+            <span class="item-icon">⚙️</span>
+            <span class="item-title">Einstellungen</span>
+          </div>
+          <span class="arrow-right">›</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. RECHTER CONTENT-BEREICH -->
+    <main class="content-workspace">
+      <!-- TOP STATUS LEISTE -->
+      <div class="top-nav-bar">
+        <div class="top-title" id="page-main-title">CHARAKTER // STARTSEITE</div>
+        <div class="top-actions">
+          <div class="coins-pill">
+            <span class="coin-icon">🔴</span>
+            <span class="coin-val" id="top-coins">1 079</span>
+            <button class="top-btn" id="btn-recharge">⨁ Aufladen</button>
+          </div>
+          <button class="exit-btn" id="btn-exit">✕ Verlassen <span class="kbd-badge">ESC</span></button>
+        </div>
+      </div>
+
+      <!-- VIEW: CHARAKTER (UNTERPUNKTE) -->
+      <section id="view-charakter" class="main-tab-view active">
+        <!-- SUB-VIEW 1: STARTSEITE -->
+        <div id="subview-char-startseite" class="char-subview active">
+          <div class="info-card-box">
+            <h3>Charakter-Übersicht</h3>
+            <div class="stats-row"><span>Name:</span> <strong id="c-name">Nico Panzer</strong></div>
+            <div class="stats-row"><span>ID:</span> <strong id="c-id">1</strong></div>
+            <div class="stats-row"><span>Beruf:</span> <strong id="c-job">Arbeitslos</strong></div>
+            <div class="stats-row"><span>Rang:</span> <strong id="c-grade">-</strong></div>
+            <div class="stats-row"><span>Bargeld:</span> <strong id="c-cash">$0</strong></div>
+            <div class="stats-row"><span>Bank:</span> <strong id="c-bank">$0</strong></div>
+          </div>
+
+          <div class="info-card-box" style="margin-top: 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="margin:0;">🛡️ Schutzwesten & Ausrüstung</h3>
+              <span id="vest-current-status" style="font-size:14px; font-weight:700; color:#38bdf8;">0% Rüstung</span>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.08); border-radius:6px; height:8px; width:100%; overflow:hidden; margin-bottom:16px;">
+              <div id="vest-armour-bar" style="background:linear-gradient(90deg, #0284c7, #38bdf8); height:100%; width:0%; transition:width 0.3s ease;"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+              <!-- 50% Weste -->
+              <div style="background:#1a1c24; border:1px solid #282a36; border-radius:8px; padding:12px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="font-weight:700; font-size:14px; color:#fff; margin-bottom:4px;">Leichte Weste</div>
+                  <div style="font-size:12px; color:#9ca3af; margin-bottom:4px;">Schutz: <strong style="color:#38bdf8;">50%</strong></div>
+                  <div style="font-size:12px; color:#9ca3af; margin-bottom:4px;">Gewicht: <strong>2.0 KG</strong></div>
+                  <div style="font-size:12px; color:#a1a1aa; margin-bottom:10px;">Bestand: <strong id="vest-count-50" style="color:#10b981;">0x</strong></div>
+                </div>
+                <button class="vest-equip-btn" data-type="armour_50" style="background:#0284c7; color:#fff; border:none; border-radius:6px; padding:8px; font-weight:600; cursor:pointer; font-size:12px;">
+                  Anziehen (50%)
+                </button>
+              </div>
+
+              <!-- 100% Weste -->
+              <div style="background:#1a1c24; border:1px solid #282a36; border-radius:8px; padding:12px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="font-weight:700; font-size:14px; color:#fff; margin-bottom:4px;">Schwere Weste</div>
+                  <div style="font-size:12px; color:#9ca3af; margin-bottom:4px;">Schutz: <strong style="color:#38bdf8;">100%</strong></div>
+                  <div style="font-size:12px; color:#9ca3af; margin-bottom:4px;">Gewicht: <strong>4.0 KG</strong></div>
+                  <div style="font-size:12px; color:#a1a1aa; margin-bottom:10px;">Bestand: <strong id="vest-count-100" style="color:#10b981;">0x</strong></div>
+                </div>
+                <button class="vest-equip-btn" data-type="armour_100" style="background:#7c3aed; color:#fff; border:none; border-radius:6px; padding:8px; font-weight:600; cursor:pointer; font-size:12px;">
+                  Anziehen (100%)
+                </button>
+              </div>
+            </div>
+
+            <button id="btn-unequip-vest" style="width:100%; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; border-radius:6px; padding:8px; font-weight:600; cursor:pointer; font-size:12px;">
+              Weste ausziehen & verstauen
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 2: STATISTIKEN -->
+        <div id="subview-char-statistiken" class="char-subview">
+          <div class="info-card-box">
+            <h3>Persönliche Statistiken</h3>
+            <div class="stats-row"><span>Spielzeit:</span> <strong>34 Stunden</strong></div>
+            <div class="stats-row"><span>Zurückgelegte Distanz:</span> <strong>142 km</strong></div>
+            <div class="stats-row"><span>Schüsse abgefeuert:</span> <strong>284</strong></div>
+            <div class="stats-row"><span>Erfolgreiche Überweisungen:</span> <strong>18</strong></div>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 3: FAHRZEUGE -->
+        <div id="subview-char-fahrzeuge" class="char-subview">
+          <div class="info-card-box">
+            <h3>Eigene Fahrzeuge</h3>
+            <div class="stats-row"><span>Aktuelle Fahrzeuge:</span> <strong>In Garage geparkt</strong></div>
+            <p style="color:#9ca3af; margin-top:10px; font-size:12px;">Öffne die Garage, um deine Fahrzeuge auszuparken oder zu verwalten.</p>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 4: EIGENTUM -->
+        <div id="subview-char-eigentum" class="char-subview">
+          <div class="info-card-box">
+            <h3>Immobilien & Lager</h3>
+            <div class="stats-row"><span>Hauptwohnsitz:</span> <strong>Apartment #12</strong></div>
+            <div class="stats-row"><span>Garagenplätze:</span> <strong>2 Plätze</strong></div>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 5: FÄHIGKEITEN -->
+        <div id="subview-char-faehigkeiten" class="char-subview">
+          <div class="info-card-box">
+            <h3>Charakter-Fähigkeiten</h3>
+            <div class="stats-row"><span>Ausdauer:</span> <strong>100%</strong></div>
+            <div class="stats-row"><span>Kraft:</span> <strong>75%</strong></div>
+            <div class="stats-row"><span>Fahren:</span> <strong>85%</strong></div>
+            <div class="stats-row"><span>Lungenvolumen:</span> <strong>60%</strong></div>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 6: JOBS -->
+        <div id="subview-char-jobs" class="char-subview">
+          <div class="info-card-box">
+            <h3>Berufe & Fraktionen</h3>
+            <div class="stats-row"><span>Aktueller Job:</span> <strong id="c-job2">Arbeitslos</strong></div>
+            <div class="stats-row"><span>Gehalt:</span> <strong>$250 / Payday</strong></div>
+            <div class="stats-row"><span>Dienststatus:</span> <strong style="color:#10b981;">Aktiv</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: EINSTELLUNGEN (ALLE UNTERPUNKTE FUNKTIONSFÄHIG) -->
+      <section id="view-einstellungen" class="main-tab-view">
+        <div class="settings-split-layout">
+          <!-- LINKE KATEGORIE-LEISTE DER EINSTELLUNGEN -->
+          <div class="settings-sidebar">
+            <div class="set-cat-group">
+              <div class="set-cat-btn active" data-target="schnittstelle">
+                <span>⚙️ Startseite</span>
+                <span class="chevron">⌄</span>
+              </div>
+              <div class="set-sub-list">
+                <div class="set-sub-item active" data-target="schnittstelle">Schnittstelle</div>
+                <div class="set-sub-item" data-target="zusatzlich">Zusätzlich</div>
+              </div>
+            </div>
+
+            <div class="set-cat-btn" data-target="sound">
+              <span>🔊 Sound-Anpassung</span>
+              <span class="arrow-right">›</span>
+            </div>
+
+            <div class="set-cat-btn" data-target="chat">
+              <span>💬 Spiel Chat</span>
+              <span class="arrow-right">›</span>
+            </div>
+
+            <div class="set-cat-btn" data-target="tastaturbelegung">
+              <span>⌨️ Tastaturbelegung</span>
+              <span class="arrow-right">›</span>
+            </div>
+
+            <div class="set-cat-btn" data-target="makros">
+              <span>🪄 Makros</span>
+              <span class="arrow-right">›</span>
+            </div>
+
+            <div class="set-cat-btn" data-target="fadenkreuz">
+              <span>🎯 Fadenkreuz</span>
+              <span class="arrow-right">›</span>
+            </div>
+
+            <div class="set-cat-btn" data-target="sicherheit">
+              <span>🛡️ Sicherheit</span>
+              <span class="arrow-right">›</span>
+            </div>
+          </div>
+
+          <!-- RECHTER EINSTELLUNGS-CONTENT -->
+          <div class="settings-content-area">
+            <!-- 1. SUBVIEW: SCHNITTSTELLE -->
+            <div id="setview-schnittstelle" class="settings-subview active">
+              <div class="settings-section-title">SCHNITTSTELLE</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Sprache</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">🇩🇪 Deutsch</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Chat</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chat">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnittstelle zum Spiel</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-gameui">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Karte</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-map">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">ID über Spieler</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-id">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Kompass</span>
+                  <label class="switch">
+                    <input type="checkbox" id="set-toggle-compass">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnittstelle zum Territoriumskampf</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Standard</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Drift Punkte anzeigen</span>
+                  <label class="switch">
+                    <input type="checkbox" id="set-toggle-drift">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Tooltip-Anzeige</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Steuerung</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Tacho</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Minimalistisch (2)</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Ultraweiter Modus</span>
+                  <label class="switch">
+                    <input type="checkbox" id="set-toggle-ultrawide">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Aktualisierungsrate des Tachos</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Normal</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Interface Thema</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Dunkel</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schriftart der Spielernamen über dem Kopf</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">ProximaNova SemiB...</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. SUBVIEW: ZUSÄTZLICH -->
+            <div id="setview-zusatzlich" class="settings-subview">
+              <div class="settings-section-title">ZUSÄTZLICH</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Bewegungsunschärfe (Motion Blur)</span>
+                  <label class="switch">
+                    <input type="checkbox" id="set-toggle-blur">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">FPS-Begrenzung</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Unbegrenzt</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Texturbudget erweitern</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-textures">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schatten-Distanz</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Hoch</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Distanz-Skalierung</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">100%</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Streamer-Modus</span>
+                  <label class="switch">
+                    <input type="checkbox" id="set-toggle-streamer">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Kamera-Erschütterungen</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-shakiness">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">HDR-Helligkeitsbereich</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Standard</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Fahrzeug-Partikeleffekte</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-particles">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Straßenglanz & Reflexionen</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Hoch</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. SUBVIEW: SOUND-ANPASSUNG -->
+            <div id="setview-sound" class="settings-subview">
+              <div class="settings-section-title">SOUND-ANPASSUNG</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Gesamtlautstärke</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">100%</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Sprachchat (Voice-Lautstärke)</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">100%</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Funkgerät-Lautstärke</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">80%</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Soundeffekte & Motoren</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">100%</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Hintergrundmusik</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Aus</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">UI-Klicksounds</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-uisounds">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">3D-Audio / Raumklang</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-3daudio">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Rauschunterdrückung (Mikrofon)</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-noise">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Mikrofon-Empfindlichkeit</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Normal</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Funk-Piepen (Radio Beep)</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-radiobeep">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. SUBVIEW: SPIEL CHAT -->
+            <div id="setview-chat" class="settings-subview">
+              <div class="settings-section-title">SPIEL CHAT</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Chat aktivieren</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chatenable">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schriftgröße im Chat</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Normal</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Hintergrund-Deckkraft</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">80%</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Zeitstempel vor Nachrichten</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chattime">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">OOC-Chat anzeigen (/b)</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chatooc">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schimpfwort-Filter</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chatfilter">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Benachrichtigungssound bei @Ping</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chatping">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Automatisch ausblenden</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Nach 10 Sekunden</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Flüster-Nachrichten hervorheben</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chatwhisper">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Chat-Nachrichtenverlauf speichern</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-chathistory">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. SUBVIEW: TASTATURBELEGUNG -->
+            <div id="setview-tastaturbelegung" class="settings-subview">
+              <div class="settings-section-title">TASTATURBELEGUNG (AKTUELLE BELEGUNG)</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Hauptmenü öffnen</span>
+                  <span class="kbd-badge-key">F2</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Inventar öffnen</span>
+                  <span class="kbd-badge-key">I / K</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Smartphone</span>
+                  <span class="kbd-badge-key">PFEIL OBEN ↑</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Fraktions-Tablet</span>
+                  <span class="kbd-badge-key">PFEIL UNTEN ↓</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Interaktion (Third-Eye / Target)</span>
+                  <span class="kbd-badge-key">ALT LINKS</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Animationen & Emotes</span>
+                  <span class="kbd-badge-key">F3</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Sprachreichweite wechseln</span>
+                  <span class="kbd-badge-key">BILD RUNTER ⇟</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Funkgerät Push-to-Talk</span>
+                  <span class="kbd-badge-key">FESTSTELL (CAPS)</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Fahrzeug Motor starten/stoppen</span>
+                  <span class="kbd-badge-key">M</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Sicherheitsgurt anlegen</span>
+                  <span class="kbd-badge-key">G</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Tempomat (Cruise Control)</span>
+                  <span class="kbd-badge-key">Y</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Hände hochnehmen</span>
+                  <span class="kbd-badge-key">X</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Waffe nachladen</span>
+                  <span class="kbd-badge-key">R</span>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Kofferraum / Handschuhfach</span>
+                  <span class="kbd-badge-key">K</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. SUBVIEW: MAKROS -->
+            <div id="setview-makros" class="settings-subview">
+              <div class="settings-section-title">MAKROS & SCHNELLWAHL</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Schnellslot 1 (Waffe / Item)</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Taste 1</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnellslot 2 (Waffe / Item)</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Taste 2</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnellslot 3 (Waffe / Item)</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Taste 3</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnellslot 4 (Waffe / Item)</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Taste 4</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnellslot 5 (Waffe / Item)</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Taste 5</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnell-Animation 1</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Winken (/e wave)</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnell-Animation 2</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Daumen Hoch (/e thumbup)</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnell-Animation 3</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Sitzen (/e sit)</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schnell-Animation 4</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Kaffee trinken</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Notruf-Schnellmakro (112)</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-quick911">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Doppelklick zum Benutzen</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-doubleclick">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Direkte Ziffern-Schnellwahl</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-numpad">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. SUBVIEW: FADENKREUZ -->
+            <div id="setview-fadenkreuz" class="settings-subview">
+              <div class="settings-section-title">FADENKREUZ & ZIELHILFE</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Fadenkreuz aktivieren</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="crosshair-toggle">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Fadenkreuz-Stil</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val" id="crosshair-style-val">Punkt</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Fadenkreuz-Farbe</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val" id="crosshair-color-val">Rot</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Punktgröße</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val" id="crosshair-size-val">Mittel (4px)</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Schwarzer Umriss</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="crosshair-outline">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Bei Zielerfassung (ADS) verbergen</span>
+                  <label class="switch">
+                    <input type="checkbox" id="crosshair-hideads">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="crosshair-preview-container">
+                <div class="preview-label">LIVE-VORSCHAU</div>
+                <div class="crosshair-preview-stage">
+                  <div id="crosshair-preview-element" class="crosshair-element dot"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 8. SUBVIEW: SICHERHEIT -->
+            <div id="setview-sicherheit" class="settings-subview">
+              <div class="settings-section-title">SICHERHEIT & KONTO</div>
+              <div class="settings-grid">
+                <div class="setting-card">
+                  <span class="setting-label">Zwei-Faktor-Authentifizierung (2FA)</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Aktiviert</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Discord-Konto Verknüpfung</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Verbunden (FabianLuca)</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Automatische Abmeldung bei Inaktivität</span>
+                  <div class="setting-selector">
+                    <button class="selector-arrow">‹</button>
+                    <span class="selector-val">Nach 30 Min</span>
+                    <button class="selector-arrow">›</button>
+                  </div>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Login-Benachrichtigungen per Discord</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-notifydiscord">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Bank-Transaktionen mit PIN schützen</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-bankpin">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Sitzungssicherheit (Session Lock)</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-sessionlock">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Anmelde-IP-Überprüfung</span>
+                  <label class="switch">
+                    <input type="checkbox" checked id="set-toggle-ipcheck">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="setting-card">
+                  <span class="setting-label">Account-Sicherheitslevel</span>
+                  <span class="badge-secure">MAXIMAL (STUFE 3)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: TICKETS (SPLIT SCREEN) -->
+      <section id="view-tickets" class="main-tab-view">
+        <div class="split-ticket-view">
+          <div class="ticket-history-column">
+            <div class="column-header">TICKET-VERLAUF</div>
+            <div class="ticket-cards-list" id="ticket-cards-container"></div>
+          </div>
+
+          <div class="ticket-chat-column">
+            <div class="chat-header-bar">
+              <span class="chat-header-title" id="chat-header-title">TICKET BEARBEITUNG</span>
+              <div class="chat-header-actions" id="chat-header-actions">
+                <button class="header-action-btn tp" id="btn-goto-player" title="Zum Spieler teleportieren">📍 Teleport</button>
+                <button class="header-action-btn close-ticket" id="btn-close-ticket" title="Ticket schliessen">🔒 Ticket schließen</button>
+              </div>
+            </div>
+
+            <div class="chat-bubbles-wrap" id="ticket-chat-bubbles"></div>
+
+            <div class="chat-input-bar">
+              <input type="text" id="chat-msg-input" placeholder="Schreiben Sie eine Nachricht..." maxlength="300" />
+              <button type="button" id="btn-submit-chat">➤</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: ANIMATIONEN -->
+      <section id="view-animationen" class="main-tab-view">
+        <div class="anim-workspace">
+          <div class="anim-top-row">
+            <input type="text" id="anim-search" placeholder="Animation suchen... (z. B. Tanzen, Sitzen, Winken)" />
+            <button class="stop-anim-btn" id="btn-stop-anim">⏹ Animation abbrechen</button>
+          </div>
+          <div class="anim-categories-row" id="anim-cats">
+            <button class="cat-chip active" data-cat="all">Alle</button>
+            <button class="cat-chip" data-cat="emotes">Emotes</button>
+            <button class="cat-chip" data-cat="dances">Tänze</button>
+            <button class="cat-chip" data-cat="lifestyle">Lifestyle</button>
+            <button class="cat-chip" data-cat="poses">Posen</button>
+          </div>
+          <div class="anim-grid" id="anim-grid"></div>
+        </div>
+      </section>
+
+      <!-- WEITERE VIEWS -->
+      <section id="view-statistiken" class="main-tab-view">
+        <div class="info-card-box"><h3>Server-Statistiken</h3><div class="stats-row"><span>Spieler Online:</span> <strong id="c-online">1</strong></div><div class="stats-row"><span>Server:</span> <strong>NOVA Roleplay</strong></div></div>
+      </section>
+      <section id="view-regelwerk" class="main-tab-view">
+        <div class="info-card-box"><h3>Server-Regelwerk</h3><p style="color:#9ca3af; line-height:1.6;">1. Kein RDM oder VDM.<br>2. Schütze dein Leben zu jeder Zeit.<br>3. Halte dich an die Roleplay-Regeln im Discord.</p></div>
+      </section>
+      <section id="view-aufgaben" class="main-tab-view">
+        <div class="shop-banner" style="margin-bottom: 20px;">
+          <div class="shop-banner-info">
+            <h2>TÄGLICHE BELOHNUNGEN & AUFGABEN</h2>
+            <p>Logge dich täglich ein und erfülle Aufgaben, um exklusive Boni und Coins zu sammeln.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+          <!-- DAILY REWARD CARD -->
+          <div class="shop-card" style="border: 2px solid #22c55e; background: linear-gradient(145deg, rgba(34,197,94,0.1), #15161c);">
+            <span class="shop-card-badge" style="background: #22c55e; color: #000; font-weight: 700;">Alle 24 Stunden</span>
+            <div class="shop-card-title" style="font-size: 20px; color: #22c55e;">🎁 Tägliche Belohnung</div>
+            <div class="shop-card-desc" style="color: #e5e7eb; font-size: 14px; margin: 12px 0;">
+              Enthält täglich:<br>
+              • 💵 <strong>$20.000 Bargeld</strong><br>
+              • 🔴 <strong>50 Nova Coins</strong><br>
+              • 🛡️ <strong>1x Leichte Schutzweste (50%)</strong>
+            </div>
+            <div class="shop-card-footer" style="margin-top: 14px;">
+              <span id="daily-cooldown-text" style="color: #9ca3af; font-size: 13px;">Status: Bereit</span>
+              <button id="claim-daily-btn" class="shop-buy-btn" style="background: #22c55e; color: #000; font-weight: 700; padding: 10px 20px;">Belohnung abholen</button>
+            </div>
+          </div>
+
+          <!-- VIP DAILY PASS -->
+          <div class="shop-card" style="border: 1px solid #374151; background: #15161c;">
+            <span class="shop-card-badge popular">Aktivitäts-Bonus</span>
+            <div class="shop-card-title" style="font-size: 20px;">⭐ Spielzeit-Prämie</div>
+            <div class="shop-card-desc" style="color: #9ca3af; font-size: 14px; margin: 12px 0;">
+              Bleibe 2 Stunden auf dem Server verbunden für automatische Payday-Boni und Belohnungen.
+            </div>
+            <div class="shop-card-footer" style="margin-top: 14px;">
+              <span style="color: #22c55e; font-size: 13px;">Aktiviert bei Payday</span>
+              <button class="shop-buy-btn" style="background: #374151; color: #9ca3af; cursor: default;">Aktiv</button>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 18px; margin-bottom: 12px; color: #e5e7eb;">Tagesaufgaben</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="info-card-box" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color: #fff;">Tanke ein beliebiges Fahrzeug auf</strong>
+              <div style="color: #9ca3af; font-size: 13px;">Fahre an eine Zapfsäule und drücke [E] zum Tanken.</div>
+            </div>
+            <span style="color: #22c55e; font-weight: 700;">+$5.000</span>
+          </div>
+          <div class="info-card-box" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color: #fff;">Kaufe eine Schutzweste im Waffenladen</strong>
+              <div style="color: #9ca3af; font-size: 13px;">Rüste dich mit einer 50% oder 100% Weste aus.</div>
+            </div>
+            <span style="color: #ef4444; font-weight: 700;">+25 Coins</span>
+          </div>
+        </div>
+      </section>
+      <section id="view-ereignisse" class="main-tab-view">
+        <div class="info-card-box"><h3>Ereignisse</h3><p style="color:#9ca3af;">Derzeit finden keine Events statt.</p></div>
+      </section>
+      <section id="view-geschaeft" class="main-tab-view">
+        <!-- 1. STARTSEITE -->
+        <div id="subview-shop-startseite" class="shop-subview active">
+          <div class="shop-banner">
+            <div class="shop-banner-info">
+              <h2>STORE & GESCHÄFT</h2>
+              <p>Entdecke exklusive Fahrzeuge, Majestic Premium Vorteile, Kisten und limitierte Sets.</p>
+            </div>
+            <div class="shop-banner-coins">
+              <span>Guthaben:</span>
+              <span class="coin-num">🔴 1 079 Coins</span>
+            </div>
+          </div>
+
+          <div class="shop-grid">
+            <div class="shop-card">
+              <span class="shop-card-badge exclusive">Tagesdeal -25%</span>
+              <div class="shop-card-title">Bugatti Chiron Sport</div>
+              <div class="shop-card-desc">Exklusiver Hypercar Import mit Topspeed über 410 km/h und maßgeschneidertem Sound.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 12 500 Coins</span>
+                <button class="shop-buy-btn">Kaufen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge popular">Sehr Beliebt</span>
+              <div class="shop-card-title">Luxus-Autokiste</div>
+              <div class="shop-card-desc">Chance auf seltene Supersportler, Tuning-Teile oder Geldgewinne bis zu $1.000.000.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 450 Coins</span>
+                <button class="shop-buy-btn">Öffnen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge gold">VIP Vorteil</span>
+              <div class="shop-card-title">Majestic Premium (30 Tage)</div>
+              <div class="shop-card-desc">+35% Payday, 4 zusätzliche Garagenslots, keine Steuern und exklusiver VIP-Chat.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 1 200 Coins</span>
+                <button class="shop-buy-btn">Aktivieren</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge discount">Starter Bundle</span>
+              <div class="shop-card-title">Neulings-Paket Plus</div>
+              <div class="shop-card-desc">Beinhaltet $250.000 Startkapital, einen Audi RS6 Avant und 14 Tage Bronze Premium.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 850 Coins</span>
+                <button class="shop-buy-btn">Kaufen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. AUFLADEN -->
+        <div id="subview-shop-aufladen" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info">
+              <h2>COINS AUFLADEN</h2>
+              <p>Lade dein Münzguthaben schnell und sicher auf. Coins werden dir sofort gutgeschrieben.</p>
+            </div>
+          </div>
+
+          <div class="shop-grid">
+            <div class="shop-card">
+              <span class="shop-card-badge">Paket 1</span>
+              <div class="shop-card-title">500 Coins</div>
+              <div class="shop-card-desc">Perfekt für kleine Extras, Namensänderungen oder Kisten.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price real-money">4,99 €</span>
+                <button class="shop-buy-btn">Aufladen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge popular">+10% Bonus</span>
+              <div class="shop-card-title">1 200 Coins</div>
+              <div class="shop-card-desc">Reicht für 30 Tage Majestic Premium oder exklusive Skins.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price real-money">9,99 €</span>
+                <button class="shop-buy-btn">Aufladen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge gold">+15% Bonus (Beliebt)</span>
+              <div class="shop-card-title">2 800 Coins</div>
+              <div class="shop-card-desc">Das meistgekaufte Paket für Fahrzeuge, Tuning und Kisten.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price real-money">19,99 €</span>
+                <button class="shop-buy-btn">Aufladen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge discount">+25% Bonus</span>
+              <div class="shop-card-title">7 500 Coins</div>
+              <div class="shop-card-desc">Ideal für exklusive Importwagen und große Investitionen.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price real-money">49,99 €</span>
+                <button class="shop-buy-btn">Aufladen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge exclusive">+35% Bester Wert</span>
+              <div class="shop-card-title">16 000 Coins</div>
+              <div class="shop-card-desc">Maximaler Mehrwert für High-End Sammler und VIPs.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price real-money">99,99 €</span>
+                <button class="shop-buy-btn">Aufladen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. KISTEN -->
+        <div id="subview-shop-kisten" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info">
+              <h2>MYSTERY KISTEN</h2>
+              <p>Öffne Beutekisten für die Chance auf seltene Fahrzeuge, Waffen-Skins und Geldpreise.</p>
+            </div>
+          </div>
+
+          <div class="shop-grid">
+            <div class="shop-card">
+              <span class="shop-card-badge">Klassisch</span>
+              <div class="shop-card-title">Klassik-Kiste</div>
+              <div class="shop-card-desc">Enthält klassische Fahrzeuge, Tuning-Gutscheine und Bargeld bis $100.000.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 150 Coins</span>
+                <button class="shop-buy-btn">Öffnen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge popular">Waffen-Skins</span>
+              <div class="shop-card-title">Waffen- & Tuningkiste</div>
+              <div class="shop-card-desc">Seltene Lackierungen, Waffenskins und Leistungs-Upgrades.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 300 Coins</span>
+                <button class="shop-buy-btn">Öffnen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge gold">Supersportler</span>
+              <div class="shop-card-title">Supersportler-Kiste</div>
+              <div class="shop-card-desc">Hohe Dropchance auf Supersportwagen wie Ferrari, Porsche & Lamborghini.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 600 Coins</span>
+                <button class="shop-buy-btn">Öffnen</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge exclusive">Legendär</span>
+              <div class="shop-card-title">Exklusiv-Goldkiste</div>
+              <div class="shop-card-desc">Garantierte epische oder legendäre Belohnungen ohne Nieten.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 1 200 Coins</span>
+                <button class="shop-buy-btn">Öffnen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. MAJESTIC PREMIUM -->
+        <div id="subview-shop-premium" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info">
+              <h2>MAJESTIC PREMIUM MITGLIEDSCHAFT</h2>
+              <p>Genieße dauerhafte Boosts, extra Garagenplätze und VIP-Privilegien auf dem Server.</p>
+            </div>
+          </div>
+
+          <div class="shop-grid">
+            <div class="shop-card">
+              <span class="shop-card-badge">Stufe 1</span>
+              <div class="shop-card-title">Bronze Premium (14 Tage)</div>
+              <div class="shop-card-desc">+10% Payday Gehalt, 1 zusätzlicher Garagenplatz, 10% Rabatt beim KFZ-Händler.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 450 Coins</span>
+                <button class="shop-buy-btn">Aktivieren</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge popular">Stufe 2</span>
+              <div class="shop-card-title">Silber Premium (30 Tage)</div>
+              <div class="shop-card-desc">+20% Payday Gehalt, 2 zusätzliche Garagenplätze, Prioritäts-Warteschlange.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 850 Coins</span>
+                <button class="shop-buy-btn">Aktivieren</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge gold">Stufe 3 (Empfohlen)</span>
+              <div class="shop-card-title">Gold Premium (30 Tage)</div>
+              <div class="shop-card-desc">+35% Payday Gehalt, 4 Garagenplätze, keine Kontoführungsgebühren, VIP-Chat.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 1 500 Coins</span>
+                <button class="shop-buy-btn">Aktivieren</button>
+              </div>
+            </div>
+
+            <div class="shop-card">
+              <span class="shop-card-badge exclusive">Stufe 4 (Maximal)</span>
+              <div class="shop-card-title">Platin Premium (60 Tage)</div>
+              <div class="shop-card-desc">+50% Payday Gehalt, unbegrenzte Garagenplätze, Discord VIP Rolle, exklusive Kennzeichen.</div>
+              <div class="shop-card-footer">
+                <span class="shop-card-price">🔴 2 800 Coins</span>
+                <button class="shop-buy-btn">Aktivieren</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. SETS -->
+        <div id="subview-shop-sets" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>EXKLUSIVE SETS & BUNDLES</h2><p>Komplette Kleidungspakete kombiniert mit passenden Fahrzeugen und Accessoires.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><span class="shop-card-badge popular">Outfit + Waffe</span><div class="shop-card-title">Undercover-Cop Bundle</div><div class="shop-card-desc">Zivile Schutzweste, taktische Dienstkleidung und Dienstpistole mit Gravur.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 1 200 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge gold">Luxus</span><div class="shop-card-title">Mafia Boss Set</div><div class="shop-card-desc">Nadelstreifen-Maßanzug, Goldkette, goldene Desert Eagle und Zigarren-Emote.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 1 500 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge">Tuning</span><div class="shop-card-title">Street Racer Paket</div><div class="shop-card-desc">Rennoverall, Vollvisierhelm und Gutschein für eine Stufe-4 Motormodifikation.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 900 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+          </div>
+        </div>
+
+        <!-- 6. GELD -->
+        <div id="subview-shop-geld" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>IN-GAME WÄHRUNGSPAKETE</h2><p>Wandle Coins direkt in Spielbargeld auf dein Bankkonto um.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><div class="shop-card-title">$50.000 In-Game Geld</div><div class="shop-card-desc">Sofortige Gutschrift auf dein Bankkonto.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 150 Coins</span><button class="shop-buy-btn">Einlösen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge popular">Meistgekauft</span><div class="shop-card-title">$150.000 In-Game Geld</div><div class="shop-card-desc">Sofortige Gutschrift auf dein Bankkonto.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 400 Coins</span><button class="shop-buy-btn">Einlösen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge gold">Großinvestor</span><div class="shop-card-title">$500.000 In-Game Geld</div><div class="shop-card-desc">Sofortige Gutschrift auf dein Bankkonto.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 1 100 Coins</span><button class="shop-buy-btn">Einlösen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge exclusive">Mega-Paket</span><div class="shop-card-title">$1.500.000 In-Game Geld</div><div class="shop-card-desc">Sofortige Gutschrift auf dein Bankkonto.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 2 800 Coins</span><button class="shop-buy-btn">Einlösen</button></div></div>
+          </div>
+        </div>
+
+        <!-- 7. CHARAKTER -->
+        <div id="subview-shop-charakter" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>CHARAKTER-DIENSTE</h2><p>Passe deinen Charakter an, ändere deinen Namen oder schalte Charakterslots frei.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><div class="shop-card-title">Namensänderung</div><div class="shop-card-desc">Ändere den Vor- und Nachnamen deines aktuellen Charakters.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 300 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><div class="shop-card-title">Aussehen & Schönheits-OP</div><div class="shop-card-desc">Öffnet das Charaktermenü zur vollständigen Anpassung von Gesicht und Körper.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 200 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge popular">Permanent</span><div class="shop-card-title">Zusätzlicher Charakterslot</div><div class="shop-card-desc">Schaltet einen weiteren Charakterslot im Hauptmenü frei.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 750 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><div class="shop-card-title">Wunsch-Nummernschild</div><div class="shop-card-desc">Wähle bis zu 8 individuelle Zeichen für dein Fahrzeugkennzeichen.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 400 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+          </div>
+        </div>
+
+        <!-- 8. EXKLUSIV -->
+        <div id="subview-shop-exklusiv" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>EXKLUSIVE HIGHLIGHTS</h2><p>Einzigartige Sammlerobjekte und Luxusgüter, die nur im Store erhältlich sind.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><span class="shop-card-badge exclusive">Helikopter</span><div class="shop-card-title">SuperVolito Carbon VIP</div><div class="shop-card-desc">Luxushubschrauber mit Champagner-Bar und Autopilot.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 8 500 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge gold">Immobilie</span><div class="shop-card-title">VIP Penthouse Vinewood</div><div class="shop-card-desc">Exklusive Dachwohnung mit Hubschrauberlandeplatz und 10er Garage.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 15 000 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+          </div>
+        </div>
+
+        <!-- 9. FAHRZEUG -->
+        <div id="subview-shop-fahrzeug" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>STORE IMPORT-FAHRZEUGE</h2><p>Lizenzen für hochkarätige Fahrzeuge, dauerhaft in deiner Garage gespeichert.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><span class="shop-card-badge popular">Track Weapon</span><div class="shop-card-title">Porsche 911 GT3 RS</div><div class="shop-card-desc">Saugmotor mit 9000 U/min und aktivem Aero-Heckflügel.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 8 900 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge gold">V8 BiTurbo</span><div class="shop-card-title">Mercedes-AMG G63 Mansory</div><div class="shop-card-desc">Gepanzertes Luxus-SUV mit 850 PS und Breitbaukit.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 7 500 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge">Power Limousine</span><div class="shop-card-title">BMW M5 CS F90</div><div class="shop-card-desc">Allrad-Performance Limousine mit Carbon-Sitzen und Laserlicht.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 6 200 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge">Familien-Rakete</span><div class="shop-card-title">Audi RS6 Avant C8</div><div class="shop-card-desc">Breiter Sportkombi mit brachialem V8-Sound und 600 PS.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 5 800 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+          </div>
+        </div>
+
+        <!-- 10. KLEIDUNG -->
+        <div id="subview-shop-kleidung" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>DESIGNER KLEIDUNG</h2><p>Exklusive Markenkleidung, Schuhe und Accessoires direkt in deinen Kleiderschrank.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><div class="shop-card-title">Designer Lederjacke</div><div class="shop-card-desc">Handgefertigte Luxus-Lederjacke mit speziellem Monogramm.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 450 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><div class="shop-card-title">Dior B22 Sneakers</div><div class="shop-card-desc">Limitierte Designer-Sneakers in weiß-reflektierender Optik.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 350 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge gold">Uhr</span><div class="shop-card-title">Rolex Submariner Gold</div><div class="shop-card-desc">18 Karat Gelbgold mit schwarzem Zifferblatt und Saphirglas.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 800 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+          </div>
+        </div>
+
+        <!-- 11. ANIMATIONEN -->
+        <div id="subview-shop-animationen" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>VIP ANIMATIONEN</h2><p>Schalte exklusive Tänze, Gesten und Statussymbole für dein Animationsmenü frei.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><div class="shop-card-title">VIP Freestyle Hip Hop Dance</div><div class="shop-card-desc">Spezieller Club-Tanz mit flüssigen Moves.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 250 Coins</span><button class="shop-buy-btn">Freischalten</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge popular">Flex</span><div class="shop-card-title">Geldregen werfen (Make It Rain)</div><div class="shop-card-desc">Wirft Geldbündel in die Luft mit Partikeleffekt.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 350 Coins</span><button class="shop-buy-btn">Freischalten</button></div></div>
+            <div class="shop-card"><div class="shop-card-title">Champagner-Spritzen</div><div class="shop-card-desc">Feieranimation für Gewinne und Partys.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 300 Coins</span><button class="shop-buy-btn">Freischalten</button></div></div>
+          </div>
+        </div>
+
+        <!-- 12. SKINS -->
+        <div id="subview-shop-skins" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>WAFFEN-SKINS</h2><p>Verpasse deinen Waffen eine einzigartige Optik mit seltenen Skin-Designs.</p></div>
+          </div>
+          <div class="shop-grid">
+            <div class="shop-card"><span class="shop-card-badge exclusive">Legendär</span><div class="shop-card-title">Karambit Fade Messer-Skin</div><div class="shop-card-desc">Farbverlauf von Lila über Pink bis Gelb mit Glanzeffekt.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 1 200 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge popular">Neon</span><div class="shop-card-title">AP Pistol Cyberpunk</div><div class="shop-card-desc">Leuchtende Cyan- und Magentastreifen im futuristischen Look.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 650 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+            <div class="shop-card"><span class="shop-card-badge gold">Drachen-Gravur</span><div class="shop-card-title">Spezialkarabiner Gold Dragon</div><div class="shop-card-desc">Detailreiche goldene Gravuren entlang des Laufs.</div><div class="shop-card-footer"><span class="shop-card-price">🔴 1 400 Coins</span><button class="shop-buy-btn">Kaufen</button></div></div>
+          </div>
+        </div>
+
+        <!-- 13. TRANSAKTIONSVERLAUF -->
+        <div id="subview-shop-transaktionen" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>TRANSAKTIONSVERLAUF</h2><p>Alle deine bisherigen Käufe, Kistenöffnungen und Münzaufladungen im Überblick.</p></div>
+          </div>
+          <div class="info-card-box" id="shop-transactions-box" style="margin:0; max-width:100%;">
+            <div class="stats-row"><span>Heute</span> <span>Willkommens-Bonus (+1 000 Coins)</span> <strong style="color:#10b981;">Gutschrift</strong></div>
+          </div>
+        </div>
+
+        <!-- 14. DONATOR-INVENTAR -->
+        <div id="subview-shop-donator" class="shop-subview">
+          <div class="shop-banner">
+            <div class="shop-banner-info"><h2>DONATOR-INVENTAR 🔒</h2><p>Sicherer Aufbewahrungsort für deine gekauften Kistenbelohnungen und VIP-Gegenstände.</p></div>
+          </div>
+          <div class="info-card-box" style="margin:0; max-width:100%;">
+            <p style="color:#9ca3af; line-height:1.6;">Alle Gegenstände, die du im Geschäft erwirbst oder aus Mystery-Kisten ziehst, werden hier zwischengelagert. Du kannst sie jederzeit auf deinen aktuellen Charakter übertragen oder verkaufen.</p>
+            <div style="margin-top:20px; display:flex; gap:12px;">
+              <div class="shop-card" style="flex:1;">
+                <div class="shop-card-title">1x Tuning-Gutschein Stufe 3</div>
+                <div class="shop-card-desc">Gezogen aus Klassik-Kiste. Gültig in allen Tuningwerkstätten.</div>
+                <div class="shop-card-footer"><span style="color:#10b981; font-weight:700;">Im Inventar</span><button class="shop-buy-btn">Einlösen</button></div>
+              </div>
+              <div class="shop-card" style="flex:1;">
+                <div class="shop-card-title">1x Wunsch-Kennzeichen Gutschein</div>
+                <div class="shop-card-desc">Gezogen aus Exklusiv-Kiste. Einlösbar am Rathaus.</div>
+                <div class="shop-card-footer"><span style="color:#10b981; font-weight:700;">Im Inventar</span><button class="shop-buy-btn">Einlösen</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- CRATE REWARD MODAL POPUP -->
+  <div id="crate-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center;">
+    <div style="background:#15161c; border:2px solid #22c55e; border-radius:12px; padding:32px; max-width:480px; width:90%; text-align:center; box-shadow:0 0 35px rgba(34,197,94,0.35);">
+      <div style="font-size:50px; margin-bottom:10px;">🎁</div>
+      <h2 id="crate-modal-title" style="color:#22c55e; font-size:24px; margin-bottom:8px;">KISTE GEÖFFNET!</h2>
+      <div id="crate-modal-reward" style="font-size:20px; font-weight:700; color:#fff; margin:16px 0;">Belohnung</div>
+      <p id="crate-modal-desc" style="color:#9ca3af; font-size:14px; margin-bottom:24px;">Beschreibung</p>
+      <button id="crate-modal-close" style="background:#22c55e; color:#000; font-weight:700; border:none; border-radius:6px; padding:12px 28px; cursor:pointer; font-size:15px;">Einsammeln & Weiter</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

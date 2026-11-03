@@ -1,19 +1,1105 @@
 <!doctype html>
-<!--
-  SPDX-License-Identifier: GPL-3.0-only
-  Copyright (C) 2022-2026 ESX Framework
--->
-
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ESX MULTICHARACTER</title>
-    <script type="module" crossorigin src="./assets/index-BxYKUNLw.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Di-CyL00.css">
+    <title>NOVA ROLEPLAY · Charakterauswahl</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+      :root {
+        --bg: rgba(18, 22, 36, 0.62);
+        --bg-solid: rgba(18, 22, 36, 0.92);
+        --line: rgba(255, 255, 255, 0.12);
+        --line-strong: rgba(255, 255, 255, 0.22);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --muted-2: #64748b;
+        --accent: #8b5cf6;
+        --accent-2: #22d3ee;
+        --grad: linear-gradient(120deg, #8b5cf6 0%, #6366f1 45%, #22d3ee 100%);
+        --ok: #34d399;
+        --danger: #f43f5e;
+        --money: #4ade80;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+      /* Skaliert alle rem-Werte mit der Bildschirmhoehe (1080p = 16px) */
+      html { font-size: calc(100vh / 1080 * 16); }
+
+      html, body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: transparent !important;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #app { position: fixed; inset: 0; display: none; }
+      #app.active { display: block; animation: appIn 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+      @keyframes appIn { from { opacity: 0; } to { opacity: 1; } }
+
+      /* Drag-Zone in der Mitte zum Drehen des Charakters */
+      #rotate-zone {
+        position: absolute;
+        top: 12%;
+        bottom: 16%;
+        left: 30%;
+        right: 30%;
+        cursor: grab;
+      }
+      #rotate-zone.dragging { cursor: grabbing; }
+
+      /* ---------- Topbar ---------- */
+      .topbar {
+        position: absolute;
+        top: 2.4rem;
+        left: 3rem;
+        right: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: none;
+      }
+
+      .brand { display: flex; align-items: center; gap: 1rem; }
+      .brand-logo {
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 0.9rem;
+        object-fit: contain;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        padding: 0.3rem;
+      }
+      .brand-fallback {
+        display: none;
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 0.9rem;
+        background: var(--grad);
+        place-items: center;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 1.6rem;
+      }
+      .brand-name {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: 0.32em;
+      }
+      .brand-name span {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .brand-sub {
+        margin-top: 0.15rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .top-right { display: flex; align-items: center; gap: 0.75rem; }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        height: 2.4rem;
+        padding: 0 1rem;
+        border-radius: 999px;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #d4d5de;
+      }
+      .live-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--ok);
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55); }
+        70% { box-shadow: 0 0 0 0.5rem rgba(52, 211, 153, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+      }
+      #clock { font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: 0.06em; }
+
+      /* ---------- Linke Spalte: Charakterliste ---------- */
+      .left {
+        position: absolute;
+        top: 9.5rem;
+        left: 3rem;
+        bottom: 6.5rem;
+        width: 24rem;
+        display: flex;
+        flex-direction: column;
+        animation: slideL 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes slideL { from { opacity: 0; transform: translateX(-2rem); } to { opacity: 1; transform: none; } }
+
+      .section-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+      .section-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.01em;
+      }
+      .section-kicker {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 0.5rem;
+      }
+      .slot-count {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--muted);
+        padding-bottom: 0.2rem;
+      }
+      .slot-count b { color: var(--text); }
+
+      .slot-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        overflow-y: auto;
+        padding-right: 0.3rem;
+        padding-top: 0.2rem;
+      }
+      .slot-list::-webkit-scrollbar { width: 0.25rem; }
+      .slot-list::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
+
+      .slot {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.95rem;
+        padding: 0.9rem 1rem;
+        border-radius: 1rem;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        cursor: pointer;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, background 0.2s;
+        animation: slotIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        overflow: hidden;
+      }
+      @keyframes slotIn { from { opacity: 0; transform: translateY(0.8rem); } to { opacity: 1; transform: none; } }
+
+      .slot:hover { transform: translateX(0.35rem); border-color: var(--line-strong); background: rgba(30, 36, 56, 0.75); }
+
+      .slot.active {
+        border-color: transparent;
+        background:
+          linear-gradient(rgba(26, 30, 48, 0.85), rgba(26, 30, 48, 0.85)) padding-box,
+          var(--grad) border-box;
+        border: 1px solid transparent;
+        transform: translateX(0.5rem);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25), 0 0 1.2rem rgba(139, 92, 246, 0.25);
+      }
+      .slot.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 22%;
+        bottom: 22%;
+        width: 0.2rem;
+        border-radius: 0 99px 99px 0;
+        background: var(--grad);
+      }
+
+      .avatar {
+        position: relative;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 0.85rem;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #fff;
+        background: linear-gradient(135deg, #3b82f6, #22d3ee);
+      }
+      .avatar.f { background: linear-gradient(135deg, #a855f7, #ec4899); }
+      .avatar.locked { background: linear-gradient(135deg, #3f3f46, #27272a); color: #a1a1aa; }
+
+      .slot-body { flex: 1; min-width: 0; }
+      .slot-name {
+        font-size: 1rem;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .slot-meta {
+        margin-top: 0.2rem;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .slot-side { text-align: right; flex-shrink: 0; }
+      .slot-idx {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--muted-2);
+      }
+      .slot-money {
+        margin-top: 0.25rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--money);
+      }
+      .badge-locked {
+        display: inline-block;
+        margin-top: 0.25rem;
+        padding: 0.12rem 0.45rem;
+        border-radius: 0.35rem;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        color: #fda4af;
+        background: rgba(244, 63, 94, 0.14);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+      }
+
+      .slot.empty {
+        background: rgba(18, 22, 34, 0.22);
+        border: 1px dashed rgba(255, 255, 255, 0.16);
+      }
+      .slot.empty:hover { border-color: var(--accent-2); background: rgba(34, 211, 238, 0.08); }
+      .slot.empty .avatar {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        color: var(--muted);
+        font-size: 1.5rem;
+        font-weight: 400;
+        transition: all 0.2s;
+      }
+      .slot.empty:hover .avatar { color: var(--accent-2); border-color: var(--accent-2); }
+      .slot.empty .slot-name { color: #c9cad4; font-weight: 600; }
+
+      .hints {
+        margin-top: auto;
+        padding-top: 1.2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.72rem;
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .hints span { display: flex; align-items: center; gap: 0.4rem; }
+      kbd {
+        display: inline-grid;
+        place-items: center;
+        min-width: 1.5rem;
+        height: 1.5rem;
+        padding: 0 0.4rem;
+        border-radius: 0.4rem;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--line-strong);
+        border-bottom-width: 2px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: #e4e4ea;
+      }
+
+      /* ---------- Rechte Spalte: Details ---------- */
+      .right {
+        position: absolute;
+        top: 9.5rem;
+        right: 3rem;
+        bottom: 6.5rem;
+        width: 25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .card {
+        position: relative;
+        padding: 1.75rem;
+        border-radius: 1.4rem;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        box-shadow: 0 0.5rem 1.8rem rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+      }
+      .card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.16), transparent 60%);
+        pointer-events: none;
+      }
+      .card-anim { animation: cardSwap 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+      @keyframes cardSwap { from { opacity: 0; transform: translateY(0.9rem); } to { opacity: 1; transform: none; } }
+
+      .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+      .tag {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ok);
+        background: rgba(52, 211, 153, 0.1);
+        border: 1px solid rgba(52, 211, 153, 0.3);
+      }
+      .status::before { content: ''; width: 0.4rem; height: 0.4rem; border-radius: 50%; background: currentColor; }
+      .status.locked { color: #fb7185; background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.32); }
+
+      .char-first {
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: #c4c5cf;
+        line-height: 1.1;
+      }
+      .char-last {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.6rem;
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .char-job {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.8rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.6rem;
+        background: rgba(139, 92, 246, 0.12);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #ddd6fe;
+      }
+      .char-job svg { width: 0.95rem; height: 0.95rem; }
+
+      .divider { height: 1px; background: var(--line); margin: 1.4rem 0; }
+
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+      .stat {
+        padding: 0.85rem 0.95rem;
+        border-radius: 0.9rem;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid var(--line);
+      }
+      .stat-lbl {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .stat-lbl svg { width: 0.85rem; height: 0.85rem; opacity: 0.85; }
+      .stat-val {
+        margin-top: 0.4rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.08rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .stat-val.money { color: var(--money); }
+
+      .wealth {
+        margin-top: 0.7rem;
+        padding: 0.95rem;
+        border-radius: 0.9rem;
+        background: linear-gradient(120deg, rgba(74, 222, 128, 0.08), rgba(34, 211, 238, 0.05));
+        border: 1px solid rgba(74, 222, 128, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .wealth .stat-val { margin-top: 0; font-size: 1.35rem; color: var(--money); }
+
+      .error {
+        display: none;
+        margin-top: 1rem;
+        padding: 0.7rem 0.9rem;
+        border-radius: 0.7rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #fecdd3;
+        background: rgba(244, 63, 94, 0.12);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+      }
+      .error.show { display: block; animation: shake 0.4s; }
+      @keyframes shake {
+        0%, 100% { transform: none; }
+        25% { transform: translateX(-0.3rem); }
+        75% { transform: translateX(0.3rem); }
+      }
+
+      .btn-play {
+        position: relative;
+        width: 100%;
+        height: 3.6rem;
+        margin-top: 1.4rem;
+        border: none;
+        border-radius: 1rem;
+        background: var(--grad);
+        color: #fff;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.02rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 0.8rem 2rem rgba(99, 102, 241, 0.35);
+        transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      }
+      .btn-play::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -60%;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        transform: skewX(-20deg);
+        animation: shine 3.2s ease-in-out infinite;
+      }
+      @keyframes shine { 0% { left: -60%; } 55%, 100% { left: 130%; } }
+      .btn-play:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 1.1rem 2.6rem rgba(99, 102, 241, 0.5); filter: brightness(1.08); }
+      .btn-play:disabled { cursor: not-allowed; filter: grayscale(0.85) brightness(0.6); box-shadow: none; }
+      .btn-play:disabled::after { display: none; }
+      .btn-play svg { width: 1.2rem; height: 1.2rem; transition: transform 0.2s; }
+      .btn-play:hover:not(:disabled) svg { transform: translateX(0.25rem); }
+
+      .spinner {
+        width: 1.2rem;
+        height: 1.2rem;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      .btn-del {
+        width: 100%;
+        margin-top: 0.75rem;
+        height: 2.6rem;
+        border-radius: 0.8rem;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--muted);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+      .btn-del svg { width: 0.95rem; height: 0.95rem; }
+      .btn-del:hover:not(:disabled) { color: #fda4af; background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.25); }
+
+      /* Leerer Zustand rechts */
+      .empty-card { text-align: center; padding: 2.4rem 1.75rem; }
+      .empty-icon {
+        width: 4.2rem;
+        height: 4.2rem;
+        margin: 0 auto 1.2rem;
+        border-radius: 1.2rem;
+        display: grid;
+        place-items: center;
+        background: rgba(34, 211, 238, 0.08);
+        border: 1px dashed rgba(34, 211, 238, 0.4);
+        color: var(--accent-2);
+      }
+      .empty-icon svg { width: 1.8rem; height: 1.8rem; }
+      .empty-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; }
+      .empty-card p { margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); line-height: 1.55; }
+
+      /* ---------- Unten Mitte: Dreh-Hinweis ---------- */
+      .rotate-hint {
+        position: absolute;
+        left: 50%;
+        bottom: 2.6rem;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 1.1rem;
+        border-radius: 999px;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #c9cad4;
+        pointer-events: none;
+      }
+      .rotate-hint svg { width: 1rem; height: 1rem; color: var(--accent-2); }
+
+      /* ---------- Loeschen-Dialog ---------- */
+      .modal-bg {
+        position: fixed;
+        inset: 0;
+        display: none;
+        place-items: center;
+        background: rgba(10, 12, 18, 0.6);
+        z-index: 50;
+      }
+      .modal-bg.open { display: grid; animation: appIn 0.25s ease; }
+      .modal {
+        width: 27rem;
+        padding: 1.9rem;
+        border-radius: 1.4rem;
+        background: rgba(18, 22, 34, 0.96);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+        box-shadow: 0 1.2rem 3.5rem rgba(0, 0, 0, 0.45);
+        animation: cardSwap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .modal-icon {
+        width: 3.2rem;
+        height: 3.2rem;
+        border-radius: 1rem;
+        display: grid;
+        place-items: center;
+        background: rgba(244, 63, 94, 0.12);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+        color: #fb7185;
+        margin-bottom: 1.1rem;
+      }
+      .modal-icon svg { width: 1.5rem; height: 1.5rem; }
+      .modal h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 700; }
+      .modal p { margin-top: 0.55rem; font-size: 0.86rem; line-height: 1.55; color: #a9abba; }
+      .modal p b { color: #fff; }
+      .modal-btns { display: flex; gap: 0.7rem; margin-top: 1.5rem; }
+      .modal-btns button {
+        flex: 1;
+        height: 3rem;
+        border-radius: 0.85rem;
+        border: 1px solid var(--line);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-cancel { background: rgba(255, 255, 255, 0.05); color: #e4e4ea; }
+      .btn-cancel:hover { background: rgba(255, 255, 255, 0.1); }
+      .btn-hold { background: rgba(244, 63, 94, 0.14); color: #fecdd3; border-color: rgba(244, 63, 94, 0.4) !important; }
+      .btn-hold .fill {
+        position: absolute;
+        inset: 0;
+        width: 0%;
+        background: linear-gradient(90deg, #e11d48, #f43f5e);
+        z-index: 0;
+      }
+      .btn-hold.holding .fill { width: 100%; transition: width 1.4s linear; }
+      .btn-hold span { position: relative; z-index: 1; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="app">
+      <div id="rotate-zone"></div>
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="brand">
+          <img class="brand-logo" src="./logo.png" alt=""
+            onerror="this.style.display='none';document.getElementById('brand-fb').style.display='grid';" />
+          <div id="brand-fb" class="brand-fallback">N</div>
+          <div>
+            <div class="brand-name"><span>NOVA</span> ROLEPLAY</div>
+            <div class="brand-sub">Willkommen zurück in Los Santos</div>
+          </div>
+        </div>
+        <div class="top-right">
+          <div class="chip"><span class="live-dot"></span>Server online</div>
+          <div class="chip" id="clock">00:00</div>
+        </div>
+      </header>
+
+      <!-- LINKS: CHARAKTERLISTE -->
+      <section class="left">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Identität wählen</div>
+            <div class="section-title">Charaktere</div>
+          </div>
+          <div class="slot-count" id="slot-count"><b>0</b> / 0</div>
+        </div>
+        <div class="slot-list" id="slot-list"></div>
+        <div class="hints">
+          <span><kbd>↑</kbd><kbd>↓</kbd> Wechseln</span>
+          <span><kbd>ENTER</kbd> Spielen</span>
+        </div>
+      </section>
+
+      <!-- RECHTS: DETAILS -->
+      <aside class="right" id="right"></aside>
+
+      <div class="rotate-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+        Maus gedrückt halten &amp; ziehen, um den Charakter zu drehen
+      </div>
+
+      <!-- LOESCHEN-DIALOG -->
+      <div class="modal-bg" id="del-modal">
+        <div class="modal">
+          <div class="modal-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          </div>
+          <h3>Charakter löschen?</h3>
+          <p id="del-text"></p>
+          <div class="modal-btns">
+            <button class="btn-cancel" id="del-cancel" type="button">Abbrechen</button>
+            <button class="btn-hold" id="del-hold" type="button"><div class="fill"></div><span>Gedrückt halten</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const RES = typeof window.GetParentResourceName === 'function' ? window.GetParentResourceName() : 'esx_multicharacter';
+
+        const ICON = {
+          job: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+          cake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+          user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+          cash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>',
+          bank: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18"/></svg>',
+          wallet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H5a2 2 0 0 1 0-4h13v4"/><path d="M3 5v14a2 2 0 0 0 2 2h15V7"/><circle cx="16" cy="14" r="1.2"/></svg>',
+          arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+          trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>',
+          plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
+        };
+
+        const $ = (id) => document.getElementById(id);
+        const app = $('app');
+        const listEl = $('slot-list');
+        const rightEl = $('right');
+        const delModal = $('del-modal');
+        const holdBtn = $('del-hold');
+
+        let chars = [];
+        let selected = null;
+        let maxSlots = 1;
+        let canDelete = false;
+        let busy = false;
+        let errorMsg = '';
+        let locale = {};
+        let lastRenderedId = null;
+
+        async function post(endpoint, payload = {}) {
+          try {
+            const r = await fetch(`https://${RES}/${endpoint}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+              body: JSON.stringify(payload)
+            });
+            const text = await r.text();
+            try {
+              return JSON.parse(text);
+            } catch {
+              return { success: true, raw: text };
+            }
+          } catch (e) {
+            return { success: false, error: e };
+          }
+        }
+
+        // FiveM NUI Handshake: Client-Skript signalisieren, dass NUI bereit ist
+        async function signalReady() {
+          try {
+            await post('nuiReady', {});
+          } catch (e) {}
+        }
+        signalReady();
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', signalReady);
+        }
+        const readyInterval = setInterval(() => {
+          if (app && app.classList.contains('active')) {
+            clearInterval(readyInterval);
+            return;
+          }
+          signalReady();
+        }, 250);
+
+        const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const money = (n) => '$' + Math.round(Number(n) || 0).toLocaleString('de-DE');
+        const initials = (c) => ((c.first[0] || '') + (c.last[0] || '')).toUpperCase() || '?';
+        const isFemale = (sex) => /^(w|f)/i.test(String(sex || ''));
+
+        function updateClock() {
+          const d = new Date();
+          $('clock').textContent = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+        }
+        updateClock();
+        setInterval(updateClock, 10000);
+
+        // ---------- Rendering ----------
+        function renderList() {
+          $('slot-count').innerHTML = `<b>${chars.length}</b> / ${maxSlots}`;
+          listEl.innerHTML = '';
+
+          for (let slot = 1; slot <= maxSlots; slot++) {
+            const c = chars.find((x) => x.id === slot);
+            const el = document.createElement('div');
+            el.style.animationDelay = `${(slot - 1) * 60}ms`;
+
+            if (c) {
+              const active = selected && selected.id === c.id;
+              el.className = 'slot' + (active ? ' active' : '');
+              el.innerHTML = `
+                <div class="avatar ${c.disabled ? 'locked' : (isFemale(c.sex) ? 'f' : '')}">${esc(initials(c))}</div>
+                <div class="slot-body">
+                  <div class="slot-name">${esc(c.first)} ${esc(c.last)}</div>
+                  <div class="slot-meta">${esc(c.jobLine)}</div>
+                </div>
+                <div class="slot-side">
+                  <div class="slot-idx">#${String(slot).padStart(2, '0')}</div>
+                  ${c.disabled ? '<div class="badge-locked">GESPERRT</div>' : `<div class="slot-money">${money(c.money + c.bank)}</div>`}
+                </div>`;
+              el.addEventListener('click', () => selectChar(c.id));
+            } else {
+              el.className = 'slot empty';
+              el.innerHTML = `
+                <div class="avatar">${ICON.plus}</div>
+                <div class="slot-body">
+                  <div class="slot-name">Neuen Charakter erstellen</div>
+                  <div class="slot-meta">Freier Slot · Starte ein neues Leben</div>
+                </div>
+                <div class="slot-side"><div class="slot-idx">#${String(slot).padStart(2, '0')}</div></div>`;
+              el.addEventListener('click', createChar);
+            }
+            listEl.appendChild(el);
+          }
+        }
+
+        function renderRight() {
+          if (!selected) {
+            rightEl.innerHTML = `
+              <div class="card empty-card card-anim">
+                <div class="empty-icon">${ICON.plus}</div>
+                <h3>Noch kein Charakter</h3>
+                <p>Erstelle deinen ersten Charakter über einen freien Slot links und starte dein Abenteuer auf NOVA Roleplay.</p>
+              </div>`;
+            lastRenderedId = null;
+            return;
+          }
+
+          const c = selected;
+          const animate = lastRenderedId !== c.id;
+          lastRenderedId = c.id;
+
+          rightEl.innerHTML = `
+            <div class="card ${animate ? 'card-anim' : ''}">
+              <div class="card-top">
+                <span class="tag">SLOT ${String(c.id).padStart(2, '0')}</span>
+                <span class="status ${c.disabled ? 'locked' : ''}">${c.disabled ? 'Gesperrt' : 'Bereit'}</span>
+              </div>
+
+              <div class="char-first">${esc(c.first)}</div>
+              <div class="char-last">${esc(c.last)}</div>
+              <div class="char-job">${ICON.job}${esc(c.jobLine)}</div>
+
+              <div class="divider"></div>
+
+              <div class="grid">
+                <div class="stat">
+                  <div class="stat-lbl">${ICON.cake}Geburtsdatum</div>
+                  <div class="stat-val">${esc(c.dob)}</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-lbl">${ICON.user}Geschlecht</div>
+                  <div class="stat-val">${esc(c.sex)}</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-lbl">${ICON.cash}Bargeld</div>
+                  <div class="stat-val money">${money(c.money)}</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-lbl">${ICON.bank}Bank</div>
+                  <div class="stat-val money">${money(c.bank)}</div>
+                </div>
+              </div>
+
+              <div class="wealth">
+                <div class="stat-lbl">${ICON.wallet}Gesamtvermögen</div>
+                <div class="stat-val">${money(c.money + c.bank)}</div>
+              </div>
+
+              <div class="error ${errorMsg ? 'show' : ''}">${esc(errorMsg)}</div>
+
+              <button class="btn-play" id="btn-play" type="button" ${busy || c.disabled ? 'disabled' : ''}>
+                ${busy ? '<div class="spinner"></div><span>BITTE WARTEN</span>' : `<span>SPIELEN</span>${ICON.arrow}`}
+              </button>
+              ${canDelete ? `<button class="btn-del" id="btn-del" type="button" ${busy ? 'disabled' : ''}>${ICON.trash}Charakter löschen</button>` : ''}
+            </div>`;
+
+          $('btn-play').addEventListener('click', play);
+          const delBtn = $('btn-del');
+          if (delBtn) delBtn.addEventListener('click', openDelete);
+        }
+
+        function render() {
+          renderList();
+          renderRight();
+        }
+
+        function setError(msg) {
+          errorMsg = msg || '';
+        }
+
+        // ---------- Aktionen ----------
+        async function selectChar(id) {
+          if (busy || (selected && selected.id === id)) return;
+          busy = true;
+          setError('');
+          const prev = selected;
+          selected = chars.find((c) => c.id === id) || selected;
+          render();
+
+          const res = await post('SelectCharacter', { id });
+          busy = false;
+          if (!res || !res.success) {
+            selected = prev;
+            setError(locale.action_failed || 'Charakter konnte nicht geladen werden.');
+          }
+          render();
+        }
+
+        async function play() {
+          if (busy || !selected || selected.disabled) return;
+          busy = true;
+          setError('');
+          render();
+
+          const res = await post('PlayCharacter', { id: selected.id });
+          busy = false;
+          if (!res || !res.success) {
+            setError(locale.action_failed || 'Einreise fehlgeschlagen. Bitte erneut versuchen.');
+            render();
+          }
+        }
+
+        async function createChar() {
+          if (busy || chars.length >= maxSlots) return;
+          busy = true;
+          setError('');
+          render();
+
+          const res = await post('CreateCharacter', {});
+          busy = false;
+          if (!res || !res.success) {
+            setError(locale.action_failed || 'Charakter-Erstellung konnte nicht gestartet werden.');
+            render();
+          }
+        }
+
+        function openDelete() {
+          if (!selected || !canDelete || busy) return;
+          $('del-text').innerHTML = `<b>${esc(selected.first)} ${esc(selected.last)}</b> (Slot ${selected.id}) wird inklusive Fahrzeugen, Geld und Inventar <b>unwiderruflich</b> gelöscht.`;
+          delModal.classList.add('open');
+        }
+
+        function closeDelete() {
+          delModal.classList.remove('open');
+          cancelHold();
+        }
+
+        async function confirmDelete() {
+          if (busy || !selected || !canDelete) return;
+          closeDelete();
+          busy = true;
+          setError('');
+          render();
+
+          const targetId = selected.id;
+          const res = await post('DeleteCharacter', { id: targetId });
+          busy = false;
+
+          if (res && res.success) {
+            chars = chars.filter((c) => c.id !== targetId);
+            selected = chars[0] || null;
+            if (selected) {
+              await post('SelectCharacter', { id: selected.id });
+            } else {
+              await post('CreateCharacter', {});
+            }
+          } else {
+            setError(locale.action_failed || 'Löschen fehlgeschlagen.');
+          }
+          render();
+        }
+
+        // Gedrueckt-halten zum Loeschen
+        let holdTimer = null;
+        function startHold() {
+          holdBtn.classList.add('holding');
+          holdTimer = setTimeout(() => {
+            holdTimer = null;
+            holdBtn.classList.remove('holding');
+            confirmDelete();
+          }, 1400);
+        }
+        function cancelHold() {
+          if (holdTimer) clearTimeout(holdTimer);
+          holdTimer = null;
+          holdBtn.classList.remove('holding');
+        }
+        holdBtn.addEventListener('mousedown', startHold);
+        holdBtn.addEventListener('mouseup', cancelHold);
+        holdBtn.addEventListener('mouseleave', cancelHold);
+        $('del-cancel').addEventListener('click', closeDelete);
+
+        // ---------- Tastatur ----------
+        window.addEventListener('keydown', (e) => {
+          if (!app.classList.contains('active')) return;
+          if (delModal.classList.contains('open')) {
+            if (e.key === 'Escape') closeDelete();
+            return;
+          }
+          if (!chars.length) return;
+          const idx = Math.max(0, chars.findIndex((c) => selected && c.id === selected.id));
+          if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+            selectChar(chars[(idx + 1) % chars.length].id);
+          } else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+            selectChar(chars[(idx - 1 + chars.length) % chars.length].id);
+          } else if (e.key === 'Enter') {
+            play();
+          }
+        });
+
+        // ---------- Charakter drehen (Maus ziehen) ----------
+        const zone = $('rotate-zone');
+        let dragging = false;
+        let lastX = 0;
+        let pending = 0;
+        let sendTimer = null;
+
+        function flushRotate() {
+          sendTimer = null;
+          if (Math.abs(pending) < 0.5) return;
+          const delta = pending;
+          pending = 0;
+          post('RotatePed', { delta });
+        }
+
+        zone.addEventListener('mousedown', (e) => {
+          dragging = true;
+          lastX = e.clientX;
+          zone.classList.add('dragging');
+        });
+        window.addEventListener('mouseup', () => {
+          dragging = false;
+          zone.classList.remove('dragging');
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (!dragging) return;
+          pending += (e.clientX - lastX) * 0.45;
+          lastX = e.clientX;
+          if (!sendTimer) sendTimer = setTimeout(flushRotate, 30);
+        });
+
+        // ---------- NUI Nachrichten ----------
+        window.addEventListener('message', (event) => {
+          const msg = event.data;
+          if (!msg || msg.action !== 'ToggleMulticharacter') return;
+          const d = msg.data || {};
+
+          if (!d.show) {
+            app.classList.remove('active');
+            closeDelete();
+            return;
+          }
+
+          chars = Object.values(d.Characters || {})
+            .filter((c) => c && c.id != null)
+            .map((c) => {
+              const job = c.job || 'Arbeitslos';
+              const grade = c.job_grade && String(c.job_grade).trim() !== '' ? ` · ${c.job_grade}` : '';
+              return {
+                id: Number(c.id),
+                first: String(c.firstname || '').trim() || 'Unbekannt',
+                last: String(c.lastname || '').trim() || `#${c.id}`,
+                dob: c.dateofbirth || '—',
+                sex: c.sex || '—',
+                jobLine: job + grade,
+                money: Number(c.money) || 0,
+                bank: Number(c.bank) || 0,
+                disabled: c.disabled === true || c.disabled === 1 || c.disabled === '1'
+              };
+            })
+            .sort((a, b) => a.id - b.id);
+
+          maxSlots = Math.max(Number(d.AllowedSlot) || 1, chars.length ? chars[chars.length - 1].id : 1);
+          canDelete = Boolean(d.CanDelete);
+          locale = d.Locale || {};
+          selected = chars[0] || null;
+          busy = false;
+          lastRenderedId = null;
+          setError('');
+          closeDelete();
+          app.classList.add('active');
+          render();
+        });
+      })();
+    </script>
   </body>
 </html>

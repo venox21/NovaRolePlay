@@ -264,9 +264,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onClick }) =>
 
       <BottomContainer>
         {vehicle.impounded ? (
-          <StatusIndicator $impounded>Impounded</StatusIndicator>
+          <StatusIndicator $impounded>Verwahrt</StatusIndicator>
         ) : (
-          <StatusIndicator>{vehicle.stored ? 'Stored' : 'Out'}</StatusIndicator>
+          <StatusIndicator>{vehicle.stored ? 'Geparkt' : 'Ausgeparkt'}</StatusIndicator>
         )}
       </BottomContainer>
     </CardContainer>

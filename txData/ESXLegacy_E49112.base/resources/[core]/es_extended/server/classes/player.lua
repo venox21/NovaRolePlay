@@ -197,6 +197,10 @@ function CreateExtendedPlayer(playerId, identifier, ssn, group, accounts, invent
     stateBag:set("group", self.group, true)
     stateBag:set("name", self.name, true)
 
+    self.getCharId = function()
+        return self.charId or self.get('id') or 1
+    end
+
 
     Core.PlayerClass.AttachBase(self)
     Core.PlayerClass.AttachAccounts(self)

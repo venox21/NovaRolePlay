@@ -182,6 +182,21 @@ local function loadPlayer(identifier, playerId, isNew, loading)
     ESX.Players[playerId] = xPlayer
     Core.playersByIdentifier[identifier] = xPlayer
 
+    local charId = tonumber(result.id) or 1
+    userData.charId = charId
+    userData.id = charId
+    xPlayer.set('id', charId)
+    xPlayer.set('charId', charId)
+    xPlayer.charId = charId
+
+    if Player and Player(playerId) then
+        local pState = Player(playerId).state
+        if pState then
+            pState:set('charId', charId, true)
+            pState:set('buergerId', charId, true)
+        end
+    end
+
     if result.firstname and result.firstname ~= '' then
         userData.firstName = result.firstname
         userData.lastName = result.lastname

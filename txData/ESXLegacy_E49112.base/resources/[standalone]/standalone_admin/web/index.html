@@ -3,86 +3,676 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Standalone Admin Panel</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>NOVA Roleplay · Admin Suite</title>
+    <link rel="stylesheet" href="style.css?v=nova3" />
+<style id="nova-cyber-ui">
+  :root {
+    --brand: #a855f7 !important;
+    --brand-color: #a855f7 !important;
+    --brand-bright: #06b6d4 !important;
+    --brand-rgb: 168, 85, 247 !important;
+    --accent: #a855f7 !important;
+    --accent-rgb: 168, 85, 247 !important;
+    --accent-shade: #4f46e5 !important;
+    --bg: #0b0917 !important;
+    --base: #0b0917 !important;
+    --darkest-color: #0b0917 !important;
+    --dark-color: #131026 !important;
+    --panel: #131026 !important;
+    --panel-soft: #1b1636 !important;
+    --raised: #1e193b !important;
+    --mid-color: #1e193b !important;
+  }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: rgba(11, 9, 23, 0.6); }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #06b6d4); border-radius: 99px; }
+</style>
 </head>
 <body>
+    <!-- TOP BANNER OVERLAY (SERVER ANKÜNDIGUNG / WARNUNG) -->
+    <div id="top-banner" class="top-banner hidden">
+        <div class="banner-inner">
+            <img src="logo.png?v=nova" alt="NOVA" class="banner-logo" />
+            <div>
+                <div id="banner-title" class="banner-title">SERVER ANKÜNDIGUNG</div>
+                <div id="banner-message" class="banner-message">Nachricht</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- MAIN ADMIN SUITE PANEL -->
     <div id="app" class="panel hidden">
         <header class="panel-header">
-            <div style="display:flex;align-items:center;gap:14px;">
-                <img src="logo.png" alt="NOVA Roleplay" style="height:48px;width:auto;object-fit:contain;" />
+            <div class="brand-box">
+                <img src="logo.png?v=nova" alt="NOVA Roleplay" class="brand-logo" />
                 <div>
-                    <h1>NOVA ROLEPLAY · ADMIN PANEL</h1>
+                    <h1>NOVA ROLEPLAY · ADMIN SUITE</h1>
                     <p id="self-info">Verbunden als Admin</p>
                 </div>
             </div>
-            <div class="header-actions">
+
+            <div class="header-stats">
+                <div class="stat-pill">
+                    <span>Spieler Online</span>
+                    <strong id="stat-players">0 / 48</strong>
+                </div>
+                <div class="stat-pill">
+                    <span>Wetter / Zeit</span>
+                    <strong id="stat-env">EXTRASUNNY · 12:00</strong>
+                </div>
                 <button id="btn-refresh" class="btn secondary">Aktualisieren</button>
-                <button id="btn-close" class="btn danger">Schließen (ESC)</button>
+                <button id="btn-close" class="btn danger">Schließen (ESC / F9)</button>
             </div>
         </header>
 
-        <nav class="tabs">
-            <button class="tab active" data-tab="players">Online Spieler (<span id="player-count">0</span>)</button>
-            <button class="tab" data-tab="admins">Admin-Verwaltung (<span id="admin-count">0</span>)</button>
-        </nav>
+        <div class="panel-body">
+            <!-- SIDEBAR NAVIGATION -->
+            <aside class="sidebar">
+                <button class="nav-btn active" data-tab="self">⚡ Selbst & Quick-Tools</button>
+                <button class="nav-btn" data-tab="players">👥 Spieler-Verwaltung (<span id="nav-player-count">0</span>)</button>
+                <button class="nav-btn" data-tab="database">🗄️ Spieler-Datenbank (<span id="nav-db-count">0</span>)</button>
+                <button class="nav-btn" data-tab="vehicles">🚗 Fahrzeug-Tools & Spawner</button>
+                <button class="nav-btn" data-tab="world">🌍 Server & Welt</button>
+                <button class="nav-btn" data-tab="bans">🔨 Bann-Liste (<span id="nav-ban-count">0</span>)</button>
+                <button class="nav-btn" data-tab="admins">🛡️ Admin-Team (<span id="nav-admin-count">0</span>)</button>
+                <button class="nav-btn" data-tab="roles">👑 Admin-Rollen (<span id="nav-role-count">10</span>)</button>
+                <button class="nav-btn" data-tab="logs">📜 Admin-Logs (<span id="nav-log-count">0</span>)</button>
+            </aside>
 
-        <!-- TAB 1: SPIELER -->
-        <section id="tab-players" class="tab-content active">
-            <div class="toolbar">
-                <input id="player-search" type="text" placeholder="Suche nach ID, Name oder Identifier..." />
-                <input id="action-reason" type="text" placeholder="Grund für Kick / Ban..." />
-                <input id="ban-duration" type="number" min="0" value="0" title="0 = Permanent" placeholder="Ban-Stunden (0=Perm)" />
-            </div>
+            <!-- MAIN CONTENT AREA -->
+            <main class="content-area">
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Identifier</th>
-                            <th>Rang</th>
-                            <th>Ping</th>
-                            <th>Aktionen</th>
-                        </tr>
-                    </thead>
-                    <tbody id="players-tbody"></tbody>
-                </table>
-            </div>
-        </section>
+                <!-- TAB 1: SELBST & QUICK-TOOLS -->
+                <section id="tab-self" class="tab-pane active">
+                    <div class="section-title">Schnell-Toggles (Live-Status)</div>
+                    <div class="toggle-grid">
+                        <div class="toggle-card" id="toggle-noclip" onclick="triggerSelf('noclip')">
+                            <div class="toggle-head">
+                                <strong>NoClip (F5)</strong>
+                                <span class="status-dot"></span>
+                            </div>
+                            <p>Taste F5 oder /noclip · W/A/S/D, Q/E & Mausrad</p>
+                        </div>
 
-        <!-- TAB 2: ADMINS -->
-        <section id="tab-admins" class="tab-content">
-            <div class="toolbar">
-                <input id="new-admin-id" type="text" placeholder="Identifier (z.B. license:...) oder Server-ID" />
-                <select id="new-admin-rank">
-                    <option value="supporter">Supporter</option>
-                    <option value="moderator">Moderator</option>
-                    <option value="admin" selected>Admin</option>
-                    <option value="superadmin">Superadmin</option>
-                    <option value="owner">Owner</option>
-                </select>
-                <button id="btn-add-admin" class="btn primary">Rang speichern</button>
-            </div>
+                        <div class="toggle-card" id="toggle-godmode" onclick="triggerSelf('godmode')">
+                            <div class="toggle-head">
+                                <strong>Godmode</strong>
+                                <span class="status-dot"></span>
+                            </div>
+                            <p>Vollständige Unverwundbarkeit aktivieren</p>
+                        </div>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Identifier</th>
-                            <th>Aktueller Rang</th>
-                            <th>Rang ändern / Entfernen</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admins-tbody"></tbody>
-                </table>
-            </div>
-        </section>
+                        <div class="toggle-card" id="toggle-invisible" onclick="triggerSelf('invisible')">
+                            <div class="toggle-head">
+                                <strong>Unsichtbarkeit</strong>
+                                <span class="status-dot"></span>
+                            </div>
+                            <p>Macht deinen Charakter für andere unsichtbar</p>
+                        </div>
+
+                        <div class="toggle-card" id="toggle-nametags" onclick="triggerSelf('nametags')">
+                            <div class="toggle-head">
+                                <strong>Spieler- & NPC-ESP (/esp)</strong>
+                                <span class="status-dot"></span>
+                            </div>
+                            <p>Zeigt [ID] Name über Spielern & „NPC“ über NPCs</p>
+                        </div>
+
+                        <div class="toggle-card" id="toggle-blips" onclick="triggerSelf('blips')">
+                            <div class="toggle-head">
+                                <strong>Spieler-Blips (Map)</strong>
+                                <span class="status-dot"></span>
+                            </div>
+                            <p>Zeigt alle Online-Spieler live auf der Karte</p>
+                        </div>
+
+                        <div class="toggle-card" id="toggle-infiniteAmmo" onclick="triggerSelf('infiniteAmmo')">
+                            <div class="toggle-head">
+                                <strong>Unendlich Munition</strong>
+                                <span class="status-dot"></span>
+                            </div>
+                            <p>Kein Nachladen / unbegrenzte Munition</p>
+                        </div>
+
+                        <div class="toggle-card" id="toggle-vehicleEsp" onclick="triggerSelf('vehicleEsp')">
+                            <div class="toggle-head">
+                                <strong>Fahrzeug-ESP (/dl)</strong>
+                                <span class="status-dot"></span>
+                            </div>
+                            <p>Zeigt Car-ID, Tank %, PS & Motor-HP über Autos</p>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Sofort-Aktionen für dich</div>
+                    <div class="action-cards-row">
+                        <button class="btn primary big-btn" onclick="triggerSelf('heal')">❤️ Voll Heilen + Hunger/Durst</button>
+                        <button class="btn primary big-btn" onclick="triggerSelf('revive')">💉 Selbst Wiederbeleben (Revive)</button>
+                        <button class="btn secondary big-btn" onclick="triggerSelf('armor')">🛡️ 100% Rüstung</button>
+                        <button class="btn secondary big-btn" onclick="triggerSelf('tpm')">📍 Zum Wegpunkt (TPM)</button>
+                        <button class="btn secondary big-btn" onclick="triggerSelf('skin')">👕 Kleidungs-/Skin-Menü</button>
+                    </div>
+
+                    <div class="section-title">🪪 Führerscheine, Lizenzen & Waffen (Für dich selbst)</div>
+                    <div class="action-cards-row">
+                        <button class="btn primary big-btn" onclick="quickSelfLicenses('all')">🪪 Alle Führerscheine & Lizenzen geben</button>
+                        <button class="btn secondary big-btn" onclick="quickSelfLicenses('weapon')">🔫 Nur Waffenschein</button>
+                        <button class="btn primary big-btn" onclick="quickSelfWeapons('all')">🔫 Alle Waffen (Full Loadout + Munition)</button>
+                        <button class="btn secondary big-btn" onclick="quickSelfWeapons('ammo')">📦 Volle Munition auffüllen</button>
+                        <button class="btn danger big-btn" onclick="quickSelfWeapons('clear')">🗑️ Alle Waffen ablegen</button>
+                    </div>
+
+                    <div class="section-title">Live-Koordinaten & Kopier-Tools</div>
+                    <div class="coords-box">
+                        <div class="coords-display">
+                            <span id="coords-vec4" class="mono">vec4(0.00, 0.00, 0.00, 0.00)</span>
+                        </div>
+                        <div class="actions-group">
+                            <button class="btn secondary" onclick="copyCoord('vec3')">Kopiere vec3</button>
+                            <button class="btn secondary" onclick="copyCoord('vec4')">Kopiere vec4</button>
+                            <button class="btn secondary" onclick="copyCoord('heading')">Kopiere Heading</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 2: SPIELER-VERWALTUNG -->
+                <section id="tab-players" class="tab-pane">
+                    <div class="players-split">
+                        <!-- LINKS: SPIELERLISTE -->
+                        <div class="players-list-col">
+                            <input id="player-search" type="text" placeholder="Suche nach ID, Name, Job oder Identifier..." />
+                            <div class="player-rows" id="players-list"></div>
+                        </div>
+
+                        <!-- RECHTS: AUSGEWÄHLTER SPIELER INSPEKTOR -->
+                        <div class="player-inspector" id="player-inspector">
+                            <div class="inspector-head">
+                                <div>
+                                    <h2 id="insp-name">Kein Spieler ausgewählt</h2>
+                                    <p id="insp-meta" class="mono">Wähle links einen Spieler aus</p>
+                                </div>
+                                <span id="insp-rank" class="badge">USER</span>
+                            </div>
+
+                            <div class="inspector-stats">
+                                <div class="mini-stat"><span>Beruf</span><strong id="insp-job">-</strong></div>
+                                <div class="mini-stat"><span>Bargeld</span><strong id="insp-cash">$0</strong></div>
+                                <div class="mini-stat"><span>Bank</span><strong id="insp-bank">$0</strong></div>
+                                <div class="mini-stat"><span>Ping</span><strong id="insp-ping">0 ms</strong></div>
+                            </div>
+
+                            <div class="inspector-section" style="border-left: 3px solid var(--brand); background: rgba(168, 85, 247, 0.08); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                <label style="color: #c084fc; font-weight: bold; font-size: 13px;">🎯 Schnell-Aktion per Spieler-ID (Leer = Du selbst)</label>
+                                <div class="toolbar" style="margin-top: 6px;">
+                                    <input id="quick-target-id" type="number" min="1" placeholder="Ziel-ID (z.B. 1) - Leer = Du selbst" style="max-width:210px;" />
+                                    <button class="btn primary" onclick="giveLicensesQuick('all')">🪪 Alle Lizenzen</button>
+                                    <button class="btn primary" onclick="giveWeaponsQuick('all')">🔫 Alle Waffen</button>
+                                    <button class="btn secondary" onclick="giveLicensesQuick('weapon')">🔫 Waffenschein</button>
+                                    <button class="btn danger" onclick="giveLicensesQuick('clear')">❌ Lizenzen weg</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>Teleport, Support & Kontrolle</label>
+                                <div class="actions-group">
+                                    <button class="btn" onclick="playerAct('goto')">📍 Zu Spieler (Goto)</button>
+                                    <button class="btn" onclick="playerAct('bring')">🧲 Zu mir holen (Bring)</button>
+                                    <button class="btn" onclick="playerAct('tp_legion')">🏙️ Zum Würfelpark</button>
+                                    <button class="btn" onclick="playerAct('sit_vehicle')">🚘 Ins Auto setzen</button>
+                                    <button class="btn" onclick="playerAct('spectate')">👁️ Spectate</button>
+                                    <button class="btn" onclick="playerAct('freeze')">❄️ Freeze / Unfreeze</button>
+                                    <button class="btn primary" onclick="playerAct('revive')">💉 Revive</button>
+                                    <button class="btn primary" onclick="playerAct('heal')">❤️ Heilen + Essen</button>
+                                    <button class="btn" onclick="playerAct('armor')">🛡️ Rüstung 100%</button>
+                                    <button class="btn" onclick="playerAct('skin')">👕 Skin-Menü öffnen</button>
+                                    <button class="btn danger" onclick="playerAct('kill')">💀 Töten (Kill)</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>Verwarnung, Kick & Ban</label>
+                                <div class="toolbar">
+                                    <input id="mod-reason" type="text" placeholder="Grund für Warn / Kick / Ban..." />
+                                    <input id="mod-duration" type="number" min="0" value="0" placeholder="Ban-Std (0=Perm)" style="max-width:130px;" />
+                                </div>
+                                <div class="actions-group">
+                                    <button class="btn primary" onclick="playerAct('warn')">⚠️ Verwarnen (Warn)</button>
+                                    <button class="btn danger" onclick="playerAct('kick')">👢 Kicken</button>
+                                    <button class="btn danger" onclick="playerAct('ban')">🔨 Bannen</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>Geld-Verwaltung (Bargeld / Bank / Schwarzgeld)</label>
+                                <div class="toolbar">
+                                    <select id="money-account">
+                                        <option value="money">Bargeld</option>
+                                        <option value="bank">Bankkonto</option>
+                                        <option value="black_money">Schwarzgeld</option>
+                                        <option value="coins">🔴 NOVA Coins (Store)</option>
+                                    </select>
+                                    <input id="money-amount" type="number" min="1" value="5000" placeholder="Betrag ($)" />
+                                    <button class="btn primary" onclick="moneyAct('give')">+ Geben</button>
+                                    <button class="btn danger" onclick="moneyAct('remove')">- Abziehen</button>
+                                    <button class="btn secondary" onclick="moneyAct('set')">= Setzen</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>Beruf / Job ändern</label>
+                                <div class="toolbar">
+                                    <select id="job-select"></select>
+                                    <select id="grade-select"></select>
+                                    <button id="btn-set-job" class="btn primary" onclick="setPlayerJob()">Beruf setzen</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>Inventar & Items (ox_inventory)</label>
+                                <div class="toolbar">
+                                    <input id="item-name" list="items-datalist" type="text" placeholder="Item-Name (z.B. bread, water, weapon_pistol)..." />
+                                    <datalist id="items-datalist"></datalist>
+                                    <input id="item-count" type="number" min="1" value="1" style="max-width:95px;" />
+                                    <button class="btn primary" onclick="givePlayerItem()">Item geben</button>
+                                    <button class="btn secondary" onclick="playerAct('openinv')">🎒 Inventar öffnen</button>
+                                    <button class="btn danger" onclick="playerAct('clearinv')">🗑️ Leeren</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>🪪 Führerscheine & Lizenzen verwalten</label>
+                                <div class="actions-group">
+                                    <button class="btn primary" onclick="playerLicenseAct('all')">🪪 Alle Lizenzen geben</button>
+                                    <button class="btn" onclick="playerLicenseAct('drive')">🚗 PKW (Klasse B)</button>
+                                    <button class="btn" onclick="playerLicenseAct('drive_bike')">🏍️ Motorrad (Klasse A)</button>
+                                    <button class="btn" onclick="playerLicenseAct('drive_truck')">🚛 LKW (Klasse C)</button>
+                                    <button class="btn" onclick="playerLicenseAct('weapon')">🔫 Waffenschein</button>
+                                    <button class="btn" onclick="playerLicenseAct('dmv')">📋 DMV-Theorie</button>
+                                    <button class="btn danger" onclick="playerLicenseAct('clear')">❌ Alle Lizenzen entziehen</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>🔫 Waffen & Munition vergeben</label>
+                                <div class="toolbar">
+                                    <select id="admin-weapon-select" style="min-width: 230px;">
+                                        <optgroup label="Pistolen">
+                                            <option value="WEAPON_COMBATPISTOL">Gefechtspistole (Combat Pistol)</option>
+                                            <option value="WEAPON_PISTOL">Standard Pistole (Pistol)</option>
+                                            <option value="WEAPON_APPISTOL">Automatische Pistole (AP Pistol)</option>
+                                            <option value="WEAPON_PISTOL50">Kaliber .50 (Desert Eagle)</option>
+                                            <option value="WEAPON_HEAVYPISTOL">Schwere Pistole (Heavy Pistol)</option>
+                                            <option value="WEAPON_REVOLVER">Schwerer Revolver (Heavy Revolver)</option>
+                                        </optgroup>
+                                        <optgroup label="Maschinenpistolen (SMG)">
+                                            <option value="WEAPON_SMG">Maschinenpistole (SMG / MP5)</option>
+                                            <option value="WEAPON_COMBATPDW">Gefechts-PDW (Combat PDW)</option>
+                                            <option value="WEAPON_ASSAULTSMG">Sturm-MP (Assault SMG)</option>
+                                            <option value="WEAPON_MICROSMG">Mikro-MP (Micro SMG / Uzi)</option>
+                                        </optgroup>
+                                        <optgroup label="Sturmgewehre">
+                                            <option value="WEAPON_CARBINERIFLE">Karabiner (Carbine Rifle / M4)</option>
+                                            <option value="WEAPON_SPECIALCARBINE">Spezialkarabiner (Special Carbine / G36)</option>
+                                            <option value="WEAPON_ASSAULTRIFLE">Sturmgewehr (Assault Rifle / AK-47)</option>
+                                            <option value="WEAPON_ADVANCEDRIFLE">Verbessertes Gewehr (Advanced Rifle)</option>
+                                            <option value="WEAPON_BULLPUPRIFLE">Bullpup-Gewehr</option>
+                                        </optgroup>
+                                        <optgroup label="Schrotflinten">
+                                            <option value="WEAPON_PUMPSHOTGUN">Pump-Schrotflinte (Pump Shotgun)</option>
+                                            <option value="WEAPON_ASSAULTSHOTGUN">Sturm-Schrotflinte (Assault Shotgun)</option>
+                                            <option value="WEAPON_SAWNOFFSHOTGUN">Abgesägte Schrotflinte (Sawnoff)</option>
+                                        </optgroup>
+                                        <optgroup label="Scharfschützen">
+                                            <option value="WEAPON_HEAVYSNIPER">Schweres Scharfschützengewehr (.50 BMG)</option>
+                                            <option value="WEAPON_SNIPERRIFLE">Scharfschützengewehr (Sniper Rifle)</option>
+                                            <option value="WEAPON_MARKSMANRIFLE">Präzisionsgewehr (Marksman Rifle)</option>
+                                        </optgroup>
+                                        <optgroup label="Nahkampf & Spezial">
+                                            <option value="WEAPON_SWITCHBLADE">Klappmesser (Switchblade)</option>
+                                            <option value="WEAPON_KNIFE">Kampfmesser (Combat Knife)</option>
+                                            <option value="WEAPON_MACHETE">Machete</option>
+                                            <option value="WEAPON_BAT">Baseballschläger</option>
+                                            <option value="WEAPON_STUNGUN">Taser (Stun Gun)</option>
+                                            <option value="WEAPON_FLASHLIGHT">Taschenlampe</option>
+                                        </optgroup>
+                                    </select>
+                                    <input id="admin-weapon-ammo" type="number" min="1" max="999" value="250" placeholder="Munition" style="max-width: 95px;" />
+                                    <button class="btn primary" onclick="giveSelectedWeapon()">+ Waffe geben</button>
+                                </div>
+                                <div class="actions-group">
+                                    <button class="btn primary" onclick="playerWeaponAct('all')">🔫 Alle Waffen (Full Loadout + Munition)</button>
+                                    <button class="btn secondary" onclick="playerWeaponAct('ammo')">📦 Volle Munition geben</button>
+                                    <button class="btn danger" onclick="playerWeaponAct('clear')">🗑️ Alle Waffen abnehmen</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: FAHRZEUG-TOOLS & SPAWNER -->
+                <section id="tab-vehicles" class="tab-pane">
+                    <div class="section-title">Fahrzeug Spawner</div>
+                    <div class="toolbar">
+                        <input id="veh-model" type="text" placeholder="Modellname eingeben (z.B. t20, Krieger, police, buzzard2, sanchez)..." />
+                        <label class="chk"><input id="veh-warp" type="checkbox" checked /> Direkt reinsetzen</label>
+                        <label class="chk"><input id="veh-del" type="checkbox" checked /> Altes Fahrzeug löschen</label>
+                        <label class="chk"><input id="veh-max" type="checkbox" checked /> Direkt Full-Tune</label>
+                        <button class="btn primary" onclick="spawnVehicle()">🚗 Spawnen</button>
+                    </div>
+
+                    <div class="section-title">Schnell-Spawner (1-Klick)</div>
+                    <div class="actions-group">
+                        <button class="btn" onclick="quickSpawn('krieger')">🏎️ Krieger</button>
+                        <button class="btn" onclick="quickSpawn('t20')">🏎️ T20</button>
+                        <button class="btn" onclick="quickSpawn('zentorno')">🏎️ Zentorno</button>
+                        <button class="btn" onclick="quickSpawn('thrax')">🏎️ Thrax</button>
+                        <button class="btn" onclick="quickSpawn('sultanrs')">🚗 Sultan RS</button>
+                        <button class="btn" onclick="quickSpawn('elegy')">🚗 Elegy Retro</button>
+                        <button class="btn" onclick="quickSpawn('baller7')">🚙 Baller ST</button>
+                        <button class="btn" onclick="quickSpawn('bati')">🏍️ Bati 801</button>
+                        <button class="btn" onclick="quickSpawn('sanchez')">🏍️ Sanchez</button>
+                        <button class="btn" onclick="quickSpawn('police3')">🚓 Police Cruiser</button>
+                        <button class="btn" onclick="quickSpawn('ambulance')">🚑 Krankenwagen</button>
+                        <button class="btn" onclick="quickSpawn('buzzard2')">🚁 Buzzard Heli</button>
+                    </div>
+
+                    <div class="section-title">Aktuelles Fahrzeug verwalten</div>
+                    <div class="action-cards-row">
+                        <button class="btn primary big-btn" onclick="vehAct('fix')">🔧 Reparieren (Fix)</button>
+                        <button class="btn primary big-btn" onclick="vehAct('maxtune')">⚡ Full-Tune (Max Performance)</button>
+                        <button class="btn secondary big-btn" onclick="vehAct('clean')">🧼 Waschen (Clean)</button>
+                        <button class="btn secondary big-btn" onclick="vehAct('flip')">🔄 Umdrehen (Flip)</button>
+                        <button class="btn secondary big-btn" onclick="vehAct('fuel')">⛽ Tank 100%</button>
+                        <button class="btn danger big-btn" onclick="vehAct('dv')">🗑️ Fahrzeug löschen (DV)</button>
+                    </div>
+
+                    <div class="section-title">Kennzeichen & Lackierung</div>
+                    <div class="toolbar">
+                        <input id="veh-plate" type="text" maxlength="8" placeholder="Neues Kennzeichen (max. 8 Zeichen)..." />
+                        <button class="btn primary" onclick="setVehiclePlate()">Kennzeichen setzen</button>
+                    </div>
+                    <div class="actions-group">
+                        <button class="btn" onclick="setVehColor(0, 0)">⚫ Schwarz</button>
+                        <button class="btn" onclick="setVehColor(111, 111)">⚪ Weiß</button>
+                        <button class="btn" onclick="setVehColor(27, 27)">🔴 Rot</button>
+                        <button class="btn" onclick="setVehColor(64, 64)">🔵 Blau</button>
+                        <button class="btn" onclick="setVehColor(88, 88)">🟡 Gelb</button>
+                        <button class="btn" onclick="setVehColor(55, 55)">🟢 Grün</button>
+                        <button class="btn" onclick="setVehColor(145, 145)">🟣 Lila</button>
+                        <button class="btn" onclick="setVehColor(158, 158)">🥇 Gold</button>
+                        <button class="btn" onclick="setVehColor(12, 12)">🖤 Matt-Schwarz</button>
+                    </div>
+                </section>
+
+                <!-- TAB 4: SERVER & WELT -->
+                <section id="tab-world" class="tab-pane">
+                    <div class="section-title">Server-Ankündigung (Großes Banner für alle Spieler)</div>
+                    <div class="toolbar">
+                        <input id="announce-msg" type="text" placeholder="Nachricht für die gesamte Stadt eingeben..." />
+                        <button class="btn primary" onclick="sendAnnouncement()">📢 Ankündigung senden</button>
+                    </div>
+
+                    <div class="section-title">Welt-Cleanup (Entitäten aufräumen)</div>
+                    <div class="action-cards-row">
+                        <button class="btn danger big-btn" onclick="worldAct('clear_vehicles')">🚗 Alle unbesetzten Fahrzeuge löschen</button>
+                        <button class="btn secondary big-btn" onclick="worldAct('clear_peds')">🚶 Alle NPC-Peds löschen</button>
+                        <button class="btn secondary big-btn" onclick="worldAct('clear_props')">📦 Alle Props / Objekte löschen</button>
+                    </div>
+
+                    <div class="section-title">Wetter steuern (Global)</div>
+                    <div class="actions-group">
+                        <button class="btn primary" onclick="setWeather('EXTRASUNNY')">☀️ Extrasunny</button>
+                        <button class="btn" onclick="setWeather('CLEAR')">🌤️ Klar</button>
+                        <button class="btn" onclick="setWeather('CLOUDS')">⛅ Bewölkt</button>
+                        <button class="btn" onclick="setWeather('FOGGY')">🌫️ Nebel</button>
+                        <button class="btn" onclick="setWeather('RAIN')">🌧️ Regen</button>
+                        <button class="btn" onclick="setWeather('THUNDER')">⛈️ Gewitter</button>
+                        <button class="btn" onclick="setWeather('XMAS')">❄️ Schnee (XMAS)</button>
+                        <button class="btn" onclick="setWeather('HALLOWEEN')">🎃 Halloween</button>
+                    </div>
+
+                    <div class="section-title">Server-Uhrzeit steuern (Global)</div>
+                    <div class="toolbar">
+                        <button class="btn" onclick="setTime(6, 0)">🌅 06:00 (Morgen)</button>
+                        <button class="btn" onclick="setTime(12, 0)">☀️ 12:00 (Mittag)</button>
+                        <button class="btn" onclick="setTime(19, 30)">🌇 19:30 (Abend)</button>
+                        <button class="btn" onclick="setTime(0, 0)">🌙 00:00 (Nacht)</button>
+                        <input id="custom-hour" type="number" min="0" max="23" value="12" style="max-width:80px;" />
+                        <input id="custom-min" type="number" min="0" max="59" value="0" style="max-width:80px;" />
+                        <button class="btn primary" onclick="setCustomTime()">Uhrzeit setzen</button>
+                    </div>
+                </section>
+
+                <!-- TAB 5: BANN-LISTE -->
+                <section id="tab-bans" class="tab-pane">
+                    <div class="section-title">Aktive Server-Bans (oxmysql)</div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ban-ID</th>
+                                    <th>Spieler</th>
+                                    <th>Identifier</th>
+                                    <th>Grund</th>
+                                    <th>Gebannt von</th>
+                                    <th>Ablauf</th>
+                                    <th>Aktion</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bans-tbody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- TAB 6: ADMIN-TEAM -->
+                <section id="tab-admins" class="tab-pane">
+                    <div class="section-title">Admin-Rolle an Spieler vergeben (per Server-ID oder Identifier)</div>
+                    <div class="toolbar">
+                        <input id="new-admin-id" type="text" placeholder="Server-ID (z.B. 1) oder Identifier (license:...)" />
+                        <select id="new-admin-rank"></select>
+                        <button id="btn-add-admin" class="btn primary">Rolle zuweisen</button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Identifier</th>
+                                    <th>Aktuelle Admin-Rolle</th>
+                                    <th>Rolle ändern / Entfernen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admins-tbody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- TAB 7: ADMIN-ROLLEN & BERECHTIGUNGEN -->
+                <section id="tab-roles" class="tab-pane">
+                    <div class="players-split">
+                        <!-- LINKS: ROLLEN-LISTE -->
+                        <div class="players-list-col">
+                            <button class="btn primary" style="width:100%;padding:10px;" onclick="createNewRoleDraft()">➕ Neue Admin-Rolle erstellen</button>
+                            <div class="player-rows" id="roles-list"></div>
+                        </div>
+
+                        <!-- RECHTS: ROLLEN-EDITOR & BERECHTIGUNGEN -->
+                        <div class="player-inspector" id="role-editor">
+                            <div class="inspector-head">
+                                <div>
+                                    <h2 id="role-editor-title">[Rang 10] Owner</h2>
+                                    <p id="role-editor-key" class="mono">Schlüssel: rank_10</p>
+                                </div>
+                                <div class="actions-group">
+                                    <button class="btn secondary" onclick="toggleAllRolePerms(true)">Alle Rechte AN</button>
+                                    <button class="btn" onclick="toggleAllRolePerms(false)">Alle Rechte AUS</button>
+                                    <button class="btn danger" id="btn-delete-role" onclick="deleteSelectedRole()">🗑️ Rolle löschen</button>
+                                    <button class="btn primary" onclick="saveSelectedRole()">💾 Rolle & Rechte speichern</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>Rollen-Einstellungen (Name, Rang-Stufe & Farbe)</label>
+                                <div class="toolbar">
+                                    <input id="role-label-input" type="text" placeholder="Anzeigename (z.B. [Rang 5] Senior Administrator)..." />
+                                    <input id="role-level-input" type="number" min="1" max="99" value="1" title="Rang-Stufe (1-99)" style="max-width:95px;" />
+                                    <input id="role-color-input" type="color" value="#a855f7" title="Rollen-Farbe" style="max-width:56px;height:36px;padding:2px;" />
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>Ingame-Berechtigungen für diese Rolle festlegen</label>
+                                <div id="role-perms-container" class="perms-categories"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 8: OFFLINE-SPIELER-DATENBANK & CHARAKTER-VERWALTUNG -->
+                <section id="tab-database" class="tab-pane">
+                    <div class="players-split">
+                        <!-- LINKS: CHARAKTER-LISTE -->
+                        <div class="players-list-col">
+                            <input id="db-search" type="text" placeholder="Suche nach Name, Lizenz, char1:..., Job..." />
+                            <div class="toolbar" style="margin-bottom:6px;">
+                                <select id="db-filter-status" style="width:100%;">
+                                    <option value="all">Alle Charaktere (Online & Offline)</option>
+                                    <option value="online">🟢 Nur Online-Charaktere</option>
+                                    <option value="offline">⚫ Nur Offline-Charaktere</option>
+                                </select>
+                            </div>
+                            <div class="player-rows" id="db-chars-list"></div>
+                        </div>
+
+                        <!-- RECHTS: DATENBANK-CHARAKTER-INSPEKTOR -->
+                        <div class="player-inspector" id="db-char-inspector">
+                            <div class="inspector-head">
+                                <div>
+                                    <h2 id="db-insp-name">Kein Charakter ausgewählt</h2>
+                                    <p id="db-insp-meta" class="mono">Wähle links einen Charakter aus der Datenbank</p>
+                                </div>
+                                <div class="actions-group">
+                                    <span id="db-insp-status" class="badge">OFFLINE</span>
+                                    <span id="db-insp-rank" class="badge">SPIELER</span>
+                                </div>
+                            </div>
+
+                            <div class="inspector-stats">
+                                <div class="mini-stat"><span>Bargeld</span><strong id="db-insp-cash">$0</strong></div>
+                                <div class="mini-stat"><span>Bankkonto</span><strong id="db-insp-bank">$0</strong></div>
+                                <div class="mini-stat"><span>Schwarzgeld</span><strong id="db-insp-black">$0</strong></div>
+                                <div class="mini-stat"><span>Beruf (Rang)</span><strong id="db-insp-job">-</strong></div>
+                                <div class="mini-stat"><span>Geburtsdatum / Sex</span><strong id="db-insp-dob">-</strong></div>
+                                <div class="mini-stat"><span>Fahrzeuge (Garage)</span><strong id="db-insp-vehs">0</strong></div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>🪪 Charakter-Namen ändern (Vor- & Nachname in DB)</label>
+                                <div class="toolbar">
+                                    <input id="db-firstname" type="text" placeholder="Vorname..." />
+                                    <input id="db-lastname" type="text" placeholder="Nachname..." />
+                                    <button class="btn primary" onclick="dbRenameChar()">💾 Name speichern</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>💰 Kontostände anpassen (Funktioniert Offline & Online)</label>
+                                <div class="toolbar">
+                                    <select id="db-money-account">
+                                        <option value="money">Bargeld (money)</option>
+                                        <option value="bank">Bankkonto (bank)</option>
+                                        <option value="black_money">Schwarzgeld (black_money)</option>
+                                        <option value="coins">🔴 NOVA Coins (coins)</option>
+                                    </select>
+                                    <input id="db-money-amount" type="number" min="0" value="10000" placeholder="Betrag ($)" />
+                                    <button class="btn primary" onclick="dbMoneyAct('give')">+ Geben</button>
+                                    <button class="btn danger" onclick="dbMoneyAct('remove')">- Abziehen</button>
+                                    <button class="btn secondary" onclick="dbMoneyAct('set')">= Setzen</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>💼 Beruf & Rang ändern (Funktioniert Offline & Online)</label>
+                                <div class="toolbar">
+                                    <select id="db-job-select"></select>
+                                    <select id="db-grade-select"></select>
+                                    <button class="btn primary" onclick="dbSetCharJob()">💼 Beruf speichern</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>🛡️ Admin-Rolle zuweisen (Funktioniert Offline & Online)</label>
+                                <div class="toolbar">
+                                    <select id="db-rank-select"></select>
+                                    <button class="btn primary" onclick="dbSetCharRank()">👑 Rolle zuweisen</button>
+                                    <button class="btn danger" onclick="dbSetCharRank('user')">Entfernen (Spieler)</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>🔨 Offline-Ban / Datenbank-Ban</label>
+                                <div class="toolbar">
+                                    <input id="db-ban-reason" type="text" placeholder="Ban-Grund (für Offline- oder Online-Spieler)..." />
+                                    <input id="db-ban-duration" type="number" min="0" value="0" placeholder="Ban-Std (0=Perm)" style="max-width:130px;" />
+                                    <button class="btn danger" onclick="dbBanChar()">🔨 Bannen</button>
+                                </div>
+                            </div>
+
+                            <div class="inspector-section">
+                                <label>⚠️ Gefahrenzone: Inventar-Reset & Charakter-Wipe (CK)</label>
+                                <div class="actions-group">
+                                    <button class="btn secondary" onclick="dbClearCharInv()">🗑️ DB-Inventar leeren</button>
+                                    <button class="btn danger" id="btn-db-wipe" onclick="dbWipeChar()">💀 Charakter-Wipe (CK) — Komplett löschen</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 9: LIVE ACTION-LOG & DISCORD WEBHOOK -->
+                <section id="tab-logs" class="tab-pane">
+                    <div class="section-title">Live Action-Log & Discord-Webhook-Integration</div>
+                    <div class="toolbar">
+                        <input id="log-search" type="text" placeholder="Suche nach Admin, Spieler, Aktion oder Details..." />
+                        <select id="log-category-filter" style="max-width:210px;">
+                            <option value="all">Alle Kategorien</option>
+                            <option value="moderation">🔨 Moderation & Bans</option>
+                            <option value="warn">⚠️ Verwarnungen & Freeze</option>
+                            <option value="economy">💰 Wirtschaft, Jobs & Items</option>
+                            <option value="database">🗄️ Spieler-Datenbank (Offline/DB)</option>
+                            <option value="roles">👑 Admin-Rollen & Team</option>
+                            <option value="support">🩺 Support & Teleport</option>
+                            <option value="server">🌍 Server & Welt</option>
+                        </select>
+                        <button class="btn primary" onclick="triggerLogAction('test_webhook')">🔔 Test-Webhook an Discord senden</button>
+                        <button class="btn danger" onclick="triggerLogAction('clear_logs')">🗑️ Log-Archiv leeren</button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Zeitpunkt</th>
+                                    <th>Kategorie</th>
+                                    <th>Aktion</th>
+                                    <th>Ausführender Admin</th>
+                                    <th>Ziel / Betroffen</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-tbody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </main>
+        </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=nova5"></script>
 </body>
 </html>
-

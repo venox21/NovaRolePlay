@@ -145,15 +145,10 @@ ESX.RegisterCommand(
     }
 )
 
-ESX.RegisterCommand("noclip", FilterGroups(CommandPermissions.noclip, "noclip"), function(xPlayer)
-    xPlayer.triggerEvent("esx:noclip")
-    if Config.AdminLogging then
-        ESX.DiscordLogFields("UserActions", "Admin NoClip /noclip Triggered!", "pink", {
-            { name = "Player", value = xPlayer and xPlayer.name or "Server Console", inline = true },
-            { name = "ID", value = xPlayer and xPlayer.source or "Unknown ID", inline = true },
-        })
-    end
-end, false)
+-- /noclip wird von standalone_admin verwaltet
+-- ESX.RegisterCommand("noclip", FilterGroups(CommandPermissions.noclip, "noclip"), function(xPlayer)
+--     xPlayer.triggerEvent("standalone_admin:client:toggleNoclip")
+-- end, false)
 
 ESX.RegisterCommand(
     {"setdim", "setbucket"},

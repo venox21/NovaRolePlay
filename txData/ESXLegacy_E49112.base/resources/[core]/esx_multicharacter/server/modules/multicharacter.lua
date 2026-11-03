@@ -78,6 +78,7 @@ local function loadCharacters(self, source, session)
             if id then
                 characters[id] = {
                     id = id,
+                    charId = tonumber(v.id) or id,
                     bank = accounts.bank,
                     money = accounts.money,
                     job = job,

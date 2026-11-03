@@ -16,10 +16,10 @@
 
         <style type="text/css">
             :root {
-                --item-main: #242424;
-                --item-unselectable: #161616;
-                --item-hover: #404040;
-                --item-disabled: #393939;
+                --item-main: rgba(15, 12, 30, 0.92);
+                --item-unselectable: rgba(10, 8, 22, 0.96);
+                --item-hover: rgba(168, 85, 247, 0.25);
+                --item-disabled: rgba(30, 27, 46, 0.7);
             }
 
             html,
@@ -73,17 +73,23 @@
             .item {
                 display: grid;
                 grid-template-columns: 30px calc(100% - 30px);
-                padding: 15px 10px;
-                border-radius: 5px;
+                padding: 14px 12px;
+                border-radius: 12px;
                 background: var(--item-main);
+                border: 1px solid rgba(168, 85, 247, 0.28);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+                transition: all 0.16s ease;
             }
 
             .item:hover {
                 background: var(--item-hover);
+                border-color: rgba(6, 182, 212, 0.6);
+                transform: translateX(3px);
             }
 
             .item > i {
                 text-align: center;
+                color: #c084fc;
             }
 
             .item > div {
@@ -204,7 +210,29 @@
                 display: block;
             }
         </style>
-    </head>
+    <style id="nova-cyber-ui">
+  :root {
+    --brand: #a855f7 !important;
+    --brand-color: #a855f7 !important;
+    --brand-bright: #06b6d4 !important;
+    --brand-rgb: 168, 85, 247 !important;
+    --accent: #a855f7 !important;
+    --accent-rgb: 168, 85, 247 !important;
+    --accent-shade: #4f46e5 !important;
+    --bg: #0b0917 !important;
+    --base: #0b0917 !important;
+    --darkest-color: #0b0917 !important;
+    --dark-color: #131026 !important;
+    --panel: #131026 !important;
+    --panel-soft: #1b1636 !important;
+    --raised: #1e193b !important;
+    --mid-color: #1e193b !important;
+  }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: rgba(11, 9, 23, 0.6); }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #06b6d4); border-radius: 99px; }
+</style>
+</head>
 
     <body>
         <div id="container" class="right">

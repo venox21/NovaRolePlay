@@ -9,7 +9,7 @@ version '1.16.3'
 lua54 'yes'
 
 shared_script '@esx_lib/imports.lua'
-dependencies { 'es_extended', 'esx_context', 'esx_identity', 'esx_skin' }
+dependencies { 'es_extended' }
 
 shared_scripts {
     '@es_extended/imports.lua',

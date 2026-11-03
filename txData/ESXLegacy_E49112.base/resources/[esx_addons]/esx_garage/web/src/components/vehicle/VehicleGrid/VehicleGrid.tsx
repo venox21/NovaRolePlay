@@ -145,15 +145,15 @@ export const VehicleGrid: React.FC<VehicleGridProps> = ({ onVehicleClick }) => {
   const paginationControls = (
     <PaginationBar>
       <PageButton
-        aria-label="Previous page"
+        aria-label="Vorherige Seite"
         disabled={!pagination.hasPrevious || isLoading}
         onClick={handlePrevious}
       >
         <MdChevronLeft />
       </PageButton>
-      <PageText>Page {pagination.page}</PageText>
+      <PageText>Seite {pagination.page}</PageText>
       <PageButton
-        aria-label="Next page"
+        aria-label="Nächste Seite"
         disabled={!pagination.hasNext || isLoading}
         onClick={handleNext}
       >
@@ -167,9 +167,9 @@ export const VehicleGrid: React.FC<VehicleGridProps> = ({ onVehicleClick }) => {
       <GridContainer>
         <VehiclesWrapper>
           <EmptyState>
-            <div>No vehicles found</div>
+            <div>Keine Fahrzeuge gefunden</div>
             <div style={{ fontSize: '0.875rem', opacity: 0.7 }}>
-              Try adjusting your search or filters
+              Überprüfe deine Suche oder Filter
             </div>
           </EmptyState>
         </VehiclesWrapper>

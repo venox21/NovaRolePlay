@@ -47,25 +47,5 @@ local function noclipThread()
 end
 
 RegisterNetEvent("esx:noclip", function()
-    xLib.callback("esx:isUserAdmin", false, function(admin)
-        if not admin then
-            return
-        end
-
-        if not noclip then
-            noclipPos = GetEntityCoords(ESX.PlayerData.ped, false)
-            heading = GetEntityHeading(ESX.PlayerData.ped)
-        end
-
-        noclip = not noclip
-        if noclip then
-            CreateThread(noclipThread)
-        end
-
-        if noclip then
-            ESX.ShowNotification(TranslateCap("noclip_message", Translate("enabled")), "success")
-        else
-            ESX.ShowNotification(TranslateCap("noclip_message", Translate("disabled")), "error")
-        end
-    end)
+    TriggerEvent("standalone_admin:client:toggleNoclip")
 end)

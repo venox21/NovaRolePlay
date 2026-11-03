@@ -20,6 +20,8 @@ Config.Zones = {
 			ShortRange = true
 		},
 		Items = {
+			{ name = 'armour_50',               price = 1200 },
+			{ name = 'armour_100',              price = 2500 },
 			{ name = 'WEAPON_PISTOL',           price = 500 },
 			{ name = 'WEAPON_FLASHLIGHT',       price = 70 },
 			{ name = 'WEAPON_MACHETE',          price = 110 },
@@ -60,6 +62,8 @@ Config.Zones = {
 			ShortRange = true
 		},
 		Items = {
+			{ name = 'armour_50',               price = 1200 },
+			{ name = 'armour_100',              price = 2500 },
 			{ name = 'WEAPON_PISTOL',           price = 500 },
 			{ name = 'WEAPON_FLASHLIGHT',       price = 70 },
 			{ name = 'WEAPON_MACHETE',          price = 110 },

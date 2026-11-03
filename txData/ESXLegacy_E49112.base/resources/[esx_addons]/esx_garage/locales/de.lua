@@ -15,9 +15,9 @@ return {
     ['no_veh_parking'] = 'Keine Fahrzeuge sind hier eingeparkt.',
     ['no_veh_impounded'] = 'Kein abgeschlepptes Fahrzeug.',
     ['no_veh_Impound'] = 'Du hast keine abgeschleppten Fahrzeuge.',
-    ['veh_model'] = 'Model',
+    ['veh_model'] = 'Modell',
     ['veh_plate'] = 'Kennzeichen',
-    ['veh_condition'] = 'Condition',
+    ['veh_condition'] = 'Zustand',
     ['veh_action'] = 'Aktion',
     ['impound_action'] = 'Abschlepphof',
     ['veh_exit'] = 'Fahrzeug zurückholen',
@@ -28,5 +28,13 @@ return {
     ['not_in_vehicle'] = 'du sitzt in keinem Fahrzeug.',
     ['cannot_store'] = 'dieses Fahrzeug kann nicht eingeparkt werden.',
     ['cannot_access_garage'] = 'du hast keinen Zugriff auf diese Garage.',
-    ['received_vehicle'] = 'du hast ein Fahrzeug erhalten (Kennzeichen: %s).'
+    ['received_vehicle'] = 'du hast ein Fahrzeug erhalten (Kennzeichen: %s).',
+
+    ['store_error_already_stored'] = 'Dieses Fahrzeug ist bereits in der Garage eingeparkt.',
+    ['store_error_model_mismatch'] = 'Fahrzeugmodell stimmt nicht mit den Unterlagen überein.',
+    ['store_error_no_location'] = 'Kein freier Einparkplatz gefunden.',
+    ['store_error_plate_conflict'] = 'Kennzeichenkonflikt beim Einparken.',
+    ['store_error_plate_mismatch'] = 'Dieses Fahrzeug gehört dir nicht oder das Kennzeichen ist unbekannt.',
+    ['store_error_too_far'] = 'Fahrzeug ist zu weit von der Garage entfernt.',
+    ['open_garage'] = 'Garage öffnen',
 }

@@ -1,8 +1,8 @@
 .hud-root {
-    --brand: #fb9b04;
+    --brand: #a855f7;
     --surface-rgb: 22, 22, 22;
     --secondary: #191919;
-    --mid: #383838;
+    --mid: #1f1a3d;
     --muted: #a6a6aa;
     --line: #ffffff1a;
     position: fixed;
@@ -184,11 +184,11 @@
     place-items: center;
     flex-shrink: 0;
     border-radius: 10px;
-    border: 1px solid #fb9b0430;
+    border: 1px solid #a855f730;
     color: var(--brand);
     font-size: 12px;
     font-weight: 700;
-    background: #fb9b040d;
+    background: #a855f70d;
 }
 .location > div {
     display: flex;
@@ -311,7 +311,7 @@
     background: #b9b9be;
 }
 .speaking {
-    border-color: #fb9b0470;
+    border-color: #a855f770;
     color: var(--brand);
 }
 .speaking .filled {
@@ -530,7 +530,7 @@
     padding: 11px 14px;
     background: #321f17ed;
     color: #ffc777;
-    border: 1px solid #fb9b0440;
+    border: 1px solid #a855f740;
     border-radius: 12px;
     font-size: 11px;
 }
@@ -839,8 +839,8 @@
     opacity: 0.45;
 }
 .settings-layout nav > button.active {
-    background: #fb9b0410;
-    border-color: #fb9b0422;
+    background: #a855f710;
+    border-color: #a855f722;
     color: var(--brand);
 }
 .sidebar-note {
@@ -920,7 +920,7 @@
     font-size: 11px;
     font-weight: 500;
     color: var(--brand);
-    background: #fb9b0410;
+    background: #a855f710;
     border-radius: 4px;
     padding: 2px 6px;
 }

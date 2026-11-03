@@ -2,15 +2,15 @@
 @font-face{font-family:"DSEG7 Classic";src:url('assets/DSEG7Classic-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
 :root{
   font-family:Inter,"Segoe UI",Arial,sans-serif;
-  color:#f5f3ee;
-  --brand:#fb9b04;
-  --brand-bright:#ffb435;
-  --brand-rgb:251,155,4;
-  --background-rgb:22,22,22;
-  --secondary:#252525;
-  --accent:#383838;
-  --muted:#a8aaa4;
-  --line:#ffffff24;
+  color:#f8fafc;
+  --brand:#a855f7;
+  --brand-bright:#06b6d4;
+  --brand-rgb:168,85,247;
+  --background-rgb:11,9,22;
+  --secondary:#141128;
+  --accent:#1f1a3d;
+  --muted:#a5b4fc;
+  --line:#a855f738;
   font-synthesis:none;
   text-rendering:optimizeLegibility;
   -webkit-font-smoothing:antialiased

@@ -73,3 +73,30 @@ Citizen.SetTimeout(1000, function()
     Modules.Weather.broadcastZones()
     Modules.Time.broadcast()
 end)
+
+RegisterCommand("syncberlin", function(source)
+    if source > 0 then
+        local xPlayer = ESX.Player(source)
+        if not xPlayer or not Config.AdminGroups[xPlayer.getGroup()] then
+            xPlayer.showNotification("Keine Berechtigung!", "error")
+            return
+        end
+        xPlayer.showNotification("Wetter wird manuell mit Berlin abgeglichen...", "info")
+    else
+        print("[esx_weather] Manuelle Wetterprüfung für Berlin gestartet...")
+    end
+
+    if Modules.Weather.syncBerlinWeather then
+        Modules.Weather.syncBerlinWeather(true)
+    end
+end, false)
+
+exports("SyncBerlinWeather", function()
+    if Modules.Weather.syncBerlinWeather then
+        Modules.Weather.syncBerlinWeather(true)
+    end
+end)
+
+exports("GetBerlinWeather", function()
+    return GlobalState.weather, GlobalState.berlinTemperature
+end)

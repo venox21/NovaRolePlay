@@ -1,192 +1,412 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * Copyright (C) 2022-2026 ESX Framework
+ * DMV Fahrschule Los Santos - Modernes Glassmorphic Design
+ * Kein Vollbild-Hintergrund (100% transparentes Overlay)
  */
 
-html {
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	user-select: none;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	background: transparent !important;
 	overflow: hidden;
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+	color: #f8fafc;
 }
 
 .full-screen {
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	display: flex;
 	align-items: center;
+	justify-content: center;
+	background: transparent !important;
 }
 
 .question-container {
-	width: 70%;
-	height: 700px;
-	background-color: #fff;
-	border: 1px solid #222;
-	border-radius: 1px;
-	margin-left: auto;
-	margin-right: auto;
-	overflow: hidden;
-	z-index: 9999999;
+	width: 92%;
+	max-width: 680px;
+	background: rgba(15, 23, 42, 0.95);
+	backdrop-filter: blur(24px);
+	-webkit-backdrop-filter: blur(24px);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 1.5rem;
+	box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(99, 102, 241, 0.12);
+	padding: 2.2rem 2.4rem;
 	display: none;
+	animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@keyframes popIn {
+	from {
+		opacity: 0;
+		transform: scale(0.96) translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
 .header {
-	width: 100%;
-	height: 20%;
-	background-color: #eee;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
+	text-align: center;
+	margin-bottom: 1.6rem;
+	padding-bottom: 1.2rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.header .logo {
-	width: 80%;
-	max-height: 50%;
-	margin: auto;
-	margin-bottom: 0;
+.dmv-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.35rem 0.85rem;
+	background: rgba(99, 102, 241, 0.15);
+	border: 1px solid rgba(99, 102, 241, 0.3);
+	border-radius: 999px;
+	color: #a5b4fc;
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	margin-bottom: 0.8rem;
 }
 
 .header h1 {
-	font-size: 2em;
-	text-align: center;
-	margin: auto;
+	font-size: 1.65rem;
+	font-weight: 800;
+	letter-spacing: -0.5px;
+	color: #ffffff;
+	margin-bottom: 0.25rem;
 }
 
+.header-sub {
+	font-size: 0.88rem;
+	color: #94a3b8;
+}
+
+/* ============================================================
+   BODY & SCREENS
+   ============================================================ */
 .body {
-	width: 100%;
-	height: 80%;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
 	display: none;
 }
 
 .content {
+	margin-bottom: 1.6rem;
+}
+
+/* ============================================================
+   HOME / EINLEITUNG
+   ============================================================ */
+.info-card {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0.85rem;
+}
+
+.info-item {
 	display: flex;
-	flex-direction: column;
-	align-self: center;
-	width: 90%;
-	height: 70%;
-	margin: auto;
-	border: none;
+	align-items: center;
+	gap: 1rem;
+	background: rgba(30, 41, 59, 0.5);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 1rem;
+	padding: 0.95rem 1.15rem;
+	transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.content .logo {
-	width: auto;
-	max-height: auto;
-	margin: auto;
-	margin-bottom: 0;
+.info-item:hover {
+	background: rgba(30, 41, 59, 0.75);
+	border-color: rgba(99, 102, 241, 0.3);
 }
 
-.content h2, p {
-	margin: 5px;
-}
-
-.buttonspot {
+.info-icon {
+	font-size: 1.5rem;
+	width: 44px;
+	height: 44px;
+	border-radius: 0.75rem;
+	background: rgba(255, 255, 255, 0.05);
 	display: flex;
-	flex-direction: column;
-	align-self: center;
-	width: auto;
-	height: 15%;
-	margin: auto;
-	border: none;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
 }
 
-.buttonspot h2, p {
-	margin: 5px;
+.info-text strong {
+	display: block;
+	font-size: 0.95rem;
+	color: #f8fafc;
+	margin-bottom: 0.15rem;
 }
 
-.button {
-	width: 30%;
-	height: 40px;
-	align-self: center;
-	text-align: center;
-	margin-left: 40px;
-	margin-right: 40px;
-	background: #6699ff;
-	background-image: linear-gradient(to bottom, #6699ff, #4d88ff);
-	border-radius: 4px;
+.info-text span {
+	font-size: 0.82rem;
+	color: #94a3b8;
+	line-height: 1.35;
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+.progress-wrap {
+	margin-bottom: 1.4rem;
+}
+
+.progress-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: #cbd5e1;
+	margin-bottom: 0.5rem;
+}
+
+.custom-progress-bar {
+	width: 100%;
+	height: 8px;
+	background: rgba(255, 255, 255, 0.08);
+	border-radius: 999px;
+	overflow: hidden;
+}
+
+.progress-fill {
+	height: 100%;
+	background: linear-gradient(90deg, #6366f1, #06b6d4);
+	border-radius: 999px;
+	transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+}
+
+/* ============================================================
+   QUESTIONNAIRE FORM
+   ============================================================ */
+.question-box {
+	background: rgba(30, 41, 59, 0.6);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 1rem;
+	padding: 1.25rem 1.4rem;
+	margin-bottom: 1.3rem;
+}
+
+#question {
+	font-size: 1.05rem;
+	font-weight: 700;
 	color: #ffffff;
-	font-size: 1.5em;
+	line-height: 1.45;
+}
+
+.options-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 0.65rem;
+	margin-bottom: 1.4rem;
+}
+
+.option-card {
+	display: flex;
+	align-items: center;
+	gap: 0.95rem;
+	padding: 0.9rem 1.15rem;
+	background: rgba(30, 41, 59, 0.45);
+	border: 1.5px solid rgba(255, 255, 255, 0.07);
+	border-radius: 0.95rem;
+	cursor: pointer;
+	transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.option-card input[type="radio"] {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.option-badge {
+	width: 32px;
+	height: 32px;
+	border-radius: 0.6rem;
+	background: rgba(255, 255, 255, 0.08);
+	color: #94a3b8;
+	font-weight: 800;
+	font-size: 0.9rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transition: all 0.18s ease;
+}
+
+.option-text {
+	font-size: 0.92rem;
+	color: #e2e8f0;
+	line-height: 1.35;
+	flex-grow: 1;
+}
+
+.option-card:hover {
+	background: rgba(30, 41, 59, 0.8);
+	border-color: rgba(99, 102, 241, 0.4);
+	transform: translateY(-1px);
+}
+
+.option-card.selected,
+.option-card:has(input[type="radio"]:checked) {
+	background: rgba(99, 102, 241, 0.18);
+	border-color: #6366f1;
+	box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+}
+
+.option-card.selected .option-badge,
+.option-card:has(input[type="radio"]:checked) .option-badge {
+	background: #6366f1;
+	color: #ffffff;
+	box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+}
+
+.option-card.selected .option-text,
+.option-card:has(input[type="radio"]:checked) .option-text {
+	color: #ffffff;
+	font-weight: 600;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.buttonspot, .form-actions {
+	display: flex;
+	justify-content: center;
+}
+
+.button, .submit {
+	width: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	padding: 0.95rem 1.6rem;
+	background: linear-gradient(135deg, #6366f1, #4f46e5);
+	color: #ffffff;
+	border: none;
+	border-radius: 0.85rem;
+	font-family: inherit;
+	font-size: 0.98rem;
+	font-weight: 700;
+	cursor: pointer;
 	text-decoration: none;
+	box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+	transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.form {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	flex-wrap: wrap;
-	width: 100%;
-	margin-top: 5px;
+.button:hover, .submit:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 22px rgba(99, 102, 241, 0.5);
+	filter: brightness(1.08);
 }
 
-.form div {
-	margin: auto;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	width: 100%;
+.button:active, .submit:active {
+	transform: translateY(0);
 }
 
-.submit {
-	align-items: center;
-	height: 30px;
+/* ============================================================
+   RESULTS
+   ============================================================ */
+.result-content {
 	text-align: center;
-	width: 30%;
-	background: #017ebc;
-	background-image: linear-gradient(to bottom, #6699ff, #4d88ff);
-	border-radius: 4px;
-	color: #fff;
-	font-size: 1.2em;
-	margin-top: 10px;
+	padding: 1.5rem 1rem 0.5rem;
 }
 
-.barre-progression {
-	width: 50%;
-	align-self: center;
-	height: 10%;
-	margin: auto;
-	margin-top: 0;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	padding: 0;
-}
-
-.barre-progression h2 {
-	width: 100%;
-	height: 60%;
-	text-align: center;
-	display: flex;
-	justify-content: center;
+.result-badge {
+	display: inline-flex;
 	align-items: center;
-	margin: 0;
-	color: #6699ff;
+	justify-content: center;
+	width: 76px;
+	height: 76px;
+	border-radius: 1.3rem;
+	margin-bottom: 1.2rem;
 }
 
-.progression {
-	width: 80%;
-	border: 0 none;
-	background: #ddd;
-	border-radius: 14px;
-	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
+.result-badge.success {
+	background: rgba(16, 185, 129, 0.15);
+	border: 1px solid rgba(16, 185, 129, 0.35);
+	box-shadow: 0 0 30px rgba(16, 185, 129, 0.25);
 }
 
-.progression::-moz-progress-bar {
-	background: #FFF;
-	border-radius: 14px;
-	box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 5px 0px rgba(0, 0, 0, 0.3);
+.result-badge.failed {
+	background: rgba(239, 68, 68, 0.15);
+	border: 1px solid rgba(239, 68, 68, 0.35);
+	box-shadow: 0 0 30px rgba(239, 68, 68, 0.25);
 }
 
-.progression::-webkit-progress-bar {
-	background: transparent;
+.result-content h2 {
+	font-size: 1.55rem;
+	font-weight: 800;
+	margin-bottom: 0.6rem;
+	color: #ffffff;
 }
 
-.progression::-webkit-progress-value {
-	background-image: linear-gradient(to bottom, #6699ff, #4d88ff);
-	border-radius: 14px;
-	box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 5px 0px rgba(0, 0, 0, 0.3);
+.result-desc {
+	font-size: 0.92rem;
+	color: #94a3b8;
+	line-height: 1.5;
+	max-width: 500px;
+	margin: 0 auto 1.5rem;
 }
 
-.bold-text {
-	font-weight: bold;
-	font-size: 1.3em;
+.result-next-step {
+	background: rgba(30, 41, 59, 0.55);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 0.95rem;
+	padding: 0.95rem 1.2rem;
+	display: inline-block;
+	font-size: 0.88rem;
+}
+
+.result-next-step span {
+	color: #94a3b8;
+	display: block;
+	font-size: 0.78rem;
+	text-transform: uppercase;
+	font-weight: 700;
+	margin-bottom: 0.2rem;
+}
+
+.result-next-step strong {
+	color: #10b981;
+	font-weight: 700;
+}
+
+.result-next-step.failed-step strong {
+	color: #ef4444;
+}
+
+.success-btn {
+	background: linear-gradient(135deg, #10b981, #059669);
+	box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+}
+
+.success-btn:hover {
+	box-shadow: 0 6px 22px rgba(16, 185, 129, 0.5);
+}
+
+.failed-btn {
+	background: linear-gradient(135deg, #ef4444, #dc2626);
+	box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+}
+
+.failed-btn:hover {
+	box-shadow: 0 6px 22px rgba(239, 68, 68, 0.5);
+}
+
+@keyframes shake {
+	0%, 100% { transform: translateX(0); }
+	20%, 60% { transform: translateX(-6px); }
+	40%, 80% { transform: translateX(6px); }
 }

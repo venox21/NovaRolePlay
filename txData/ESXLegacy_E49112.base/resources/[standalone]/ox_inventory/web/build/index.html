@@ -1,16 +1,1213 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
-    <title>Ox Inventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <title>Inventar</title>
     <script type="module" crossorigin src="./assets/index.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index.css">
+    <link rel="stylesheet" crossorigin href="./assets/index.css" />
+    <style id="grand-tactical-inventory">
+      * {
+        box-sizing: border-box;
+        user-select: none;
+      }
+
+      body, html {
+        font-family: 'Inter', 'Roboto', sans-serif !important;
+        background: transparent !important;
+        overflow: hidden !important;
+      }
+
+      /* Hide default ox_inventory floating info button & weight bar */
+      .useful-controls-button,
+      .weight-bar {
+        display: none !important;
+      }
+
+      /* MAIN 3-COLUMN TACTICAL INVENTORY WINDOW */
+      .inventory-wrapper {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 1320px !important;
+        height: 876px !important;
+        max-width: 96vw !important;
+        max-height: 95vh !important;
+        padding: 18px 22px !important;
+        background: rgba(22, 23, 26, 0.96) !important;
+        border: 1px solid #2b2d33 !important;
+        border-radius: 6px !important;
+        box-shadow: 0 32px 90px rgba(0, 0, 0, 0.88) !important;
+        display: grid !important;
+        grid-template-columns: 376px 380px 492px !important;
+        grid-template-rows: 100% !important;
+        gap: 18px !important;
+        align-items: stretch !important;
+        justify-content: space-between !important;
+      }
+
+      /* ======================================================================
+         COLUMN 1 (LEFT): UMGEBUNG (TOP) + RUCKSACK (BOTTOM)
+         In ox_inventory DOM, 2nd .inventory-grid-wrapper is rightInventory (Drop/Container)
+         ====================================================================== */
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(2) {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        height: 100% !important;
+        gap: 0 !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(2) > div:first-child {
+        margin-bottom: 10px !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(2) .inventory-grid-header-wrapper {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        height: 28px !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(2) .inventory-grid-header-wrapper p:first-child {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #f1f2f4 !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(2) .inventory-grid-container {
+        display: grid !important;
+        grid-template-columns: repeat(6, 1fr) !important;
+        grid-auto-rows: 60px !important;
+        gap: 2px !important;
+        height: 368px !important;
+        max-height: 368px !important;
+        background: #141518 !important;
+        border: 1px solid #28292e !important;
+        padding: 2px !important;
+        overflow-y: auto !important;
+      }
+
+      /* RUCKSACK SUB-PANEL (INJECTED INTO LEFT COLUMN) */
+      #grand-backpack-panel {
+        margin-top: 14px;
+        flex: 1;
+        display: none;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      #grand-backpack-panel.has-bag {
+        display: flex;
+      }
+
+      .grand-bp-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 30px;
+        margin-bottom: 8px;
+      }
+
+      .grand-bp-title-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .grand-bp-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #f1f2f4;
+      }
+
+      .grand-bp-weight {
+        font-size: 13px;
+        font-weight: 600;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .grand-bp-weight strong {
+        color: #f3f4f6;
+        font-weight: 700;
+      }
+
+      .grand-kg-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1px 5px;
+        border-radius: 3px;
+        background: #2d2f36;
+        color: #d1d5db;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+
+      .grand-bp-unequip {
+        height: 26px;
+        padding: 0 10px;
+        border-radius: 4px;
+        border: 1px solid #32343b;
+        background: #23252a;
+        color: #e5e7eb;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background 0.15s ease;
+      }
+
+      .grand-bp-unequip:hover {
+        background: #2e3038;
+      }
+
+      .grand-bp-grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 2px;
+        background: #141518;
+        border: 1px solid #28292e;
+        padding: 2px;
+      }
+
+      .grand-empty-slot {
+        background: #1e1f23;
+        border: 1px solid #28292e;
+        position: relative;
+        transition: background 0.12s ease;
+      }
+
+      .grand-empty-slot:hover {
+        background: #25262b;
+      }
+
+      /* ======================================================================
+         COLUMN 2 (CENTER): SILHOUETTE, CLOTHING SLOTS, STATUS, ACTIVE ITEMS, QUICKSLOTS
+         ====================================================================== */
+      .inventory-wrapper > .inventory-control {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        width: 100% !important;
+        position: relative !important;
+      }
+
+      /* Hide original ox_inventory control buttons wrapper visually, keep it mounted for React refs */
+      .inventory-control > .inventory-control-wrapper {
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 505px !important;
+        height: 138px !important;
+        opacity: 0 !important;
+        z-index: 5 !important;
+        pointer-events: none !important;
+      }
+
+      body.inv-dragging .inventory-control > .inventory-control-wrapper {
+        pointer-events: auto !important;
+      }
+
+      #grand-center-column {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+      }
+
+      .grand-char-header {
+        height: 28px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 600;
+        color: #f3f4f6;
+        letter-spacing: 0.2px;
+      }
+
+      /* SILHOUETTE + 13 CLOTHING SLOTS BOX */
+      .grand-silhouette-box {
+        height: 368px;
+        background: #1a1b1f;
+        border: 1px solid #28292e;
+        padding: 8px;
+        display: grid;
+        grid-template-columns: 62px 1fr 62px;
+        grid-template-rows: 1fr 62px;
+        gap: 6px;
+      }
+
+      .grand-cloth-col {
+        display: grid;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 6px;
+      }
+
+      .grand-cloth-bottom {
+        grid-column: 1 / 4;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+      }
+
+      .grand-cloth-slot {
+        background: #212226;
+        border: 1px solid #2b2d33;
+        border-radius: 2px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        color: #52555f;
+        transition: all 0.15s ease;
+        position: relative;
+      }
+
+      .grand-cloth-slot:hover {
+        background: #282a30;
+        border-color: #3d4049;
+        color: #9ca3af;
+      }
+
+      .grand-cloth-slot.off {
+        opacity: 0.45;
+      }
+
+      .grand-cloth-slot svg {
+        width: 28px;
+        height: 28px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .grand-body-figure {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .grand-body-figure svg {
+        height: 92%;
+        width: auto;
+        fill: #0f1013;
+        filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.55));
+      }
+
+      /* 3 STATUS BARS (HUNGER, THIRST, HEALTH) */
+      .grand-status-bars {
+        margin: 12px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 2px;
+      }
+
+      .grand-status-row {
+        display: grid;
+        grid-template-columns: 22px 1fr 28px;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .grand-stat-icon {
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .grand-stat-track {
+        height: 4px;
+        background: #26272c;
+        border-radius: 99px;
+        overflow: hidden;
+      }
+
+      .grand-stat-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.25s ease;
+      }
+
+      .grand-stat-fill.hunger { background: #f59e0b; }
+      .grand-stat-fill.thirst { background: #0ea5e9; }
+      .grand-stat-fill.health { background: #ef4444; }
+
+      .grand-stat-num {
+        text-align: right;
+        font-size: 12px;
+        font-weight: 700;
+        color: #f3f4f6;
+      }
+
+      /* AKTIVE GEGENSTÄNDE BOX */
+      .grand-active-box {
+        height: 138px;
+        background: #1d1e22;
+        border: 1px solid #28292e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #7c808b;
+        margin-bottom: 6px;
+      }
+
+      .grand-active-box svg {
+        width: 38px;
+        height: 38px;
+        fill: #35373f;
+      }
+
+      .grand-active-box span {
+        font-size: 13px;
+        font-weight: 500;
+        color: #8b909c;
+      }
+
+      /* 2 LARGE EQUIPMENT SLOTS (ARMOR & BACKPACK) */
+      .grand-equip-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        height: 112px;
+        margin-bottom: 6px;
+      }
+
+      .grand-equip-slot {
+        background: #1d1e22;
+        border: 1px solid #28292e;
+        position: relative;
+        display: grid;
+        place-items: center;
+        color: #383a42;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+        z-index: 10;
+        pointer-events: auto !important;
+      }
+
+      .grand-equip-slot:hover {
+        background: #23252a;
+      }
+
+      .grand-equip-slot.drag-hover {
+        background: rgba(34, 197, 94, 0.16) !important;
+        border: 2px dashed #22c55e !important;
+        box-shadow: 0 0 16px rgba(34, 197, 94, 0.5) !important;
+        color: #22c55e !important;
+        transform: scale(1.03);
+      }
+
+      .grand-equip-slot svg {
+        width: 48px;
+        height: 48px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.3;
+      }
+
+      .grand-equip-meta-left {
+        position: absolute;
+        left: 8px;
+        bottom: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #22c55e;
+      }
+
+      .grand-equip-meta-right {
+        position: absolute;
+        right: 8px;
+        bottom: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* BOTTOM 3 QUICKSLOTS (1, 2, 3) */
+      .grand-quickslots-row {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        min-height: 96px;
+      }
+
+      .grand-quick-slot {
+        background: #1d1e22;
+        border: 1px solid #28292e;
+        position: relative;
+      }
+
+      .grand-quick-num {
+        position: absolute;
+        top: 5px;
+        right: 7px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #d1d5db;
+      }
+
+      /* ======================================================================
+         COLUMN 3 (RIGHT): INVENTAR (PLAYER INVENTORY)
+         In ox_inventory DOM, 1st .inventory-grid-wrapper is leftInventory (Player)
+         ====================================================================== */
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        gap: 0 !important;
+        position: static !important;
+      }
+
+      /* REAL INTERACTIVE QUICKSLOTS 1, 2, 3 (Player Slots 1, 2, 3 positioned at bottom of Center Column) */
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(1),
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(2),
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(3) {
+        position: absolute !important;
+        bottom: 18px !important;
+        height: 98px !important;
+        width: 122px !important;
+        z-index: 25 !important;
+        background-color: #1d1e22 !important;
+        border: 1px solid #2b2d33 !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(1) {
+        left: 416px !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(2) {
+        left: 545px !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(3) {
+        left: 674px !important;
+        width: 122px !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(1)::after,
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(2)::after,
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(3)::after {
+        position: absolute;
+        top: 5px;
+        right: 7px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #d1d5db;
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(1)::after { content: '1'; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(2)::after { content: '2'; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot:nth-child(3)::after { content: '3'; }
+
+      /* Hide default top-left slot number badge since we render 1, 2, 3 top-right */
+      .inventory-slot-number {
+        display: none !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) > div:first-child {
+        margin-bottom: 10px !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-header-wrapper {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        height: 28px !important;
+        padding-right: 36px !important;
+        position: relative !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-header-wrapper p:first-child {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #f1f2f4 !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-header-wrapper p:last-child {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #ef4444 !important;
+      }
+
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container {
+        flex: 1 !important;
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        grid-auto-rows: 92px !important;
+        gap: 2px !important;
+        height: calc(100% - 38px) !important;
+        max-height: none !important;
+        background: #141518 !important;
+        border: 1px solid #28292e !important;
+        padding: 2px !important;
+        overflow-y: auto !important;
+      }
+
+      /* CLOSE BUTTON (TOP RIGHT OF INVENTAR) */
+      #grand-close-btn {
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        width: 26px;
+        height: 26px;
+        border-radius: 4px;
+        border: 1px solid #2e3038;
+        background: #212226;
+        color: #d1d5db;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        z-index: 20;
+        transition: all 0.15s ease;
+      }
+
+      #grand-close-btn:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #fff;
+      }
+
+      /* SLOTS STYLING (SQUARE MATTE DARK CELLS LIKE SCREENSHOT) */
+      .inventory-slot {
+        background-color: #1e1f23 !important;
+        border: 1px solid #28292e !important;
+        border-radius: 1px !important;
+        background-size: 62% !important;
+        transition: background-color 0.12s ease !important;
+      }
+
+      .inventory-slot:hover {
+        background-color: #25272c !important;
+        border-color: #383a42 !important;
+      }
+
+      .inventory-slot-number {
+        background: transparent !important;
+        color: #9ca3af !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        padding: 2px 5px !important;
+      }
+
+      .inventory-slot-label-box {
+        background-color: rgba(20, 21, 24, 0.88) !important;
+        border-top: 1px solid #28292e !important;
+      }
+
+      .inventory-slot-label-text {
+        font-size: 10px !important;
+        font-weight: 600 !important;
+        color: #d1d5db !important;
+      }
+
+      .durability-bar {
+        height: 3px !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+      }
+
+      /* NOVA: WAFFEN NEHMEN MEHRERE SLOTS IM INVENTAR EIN */
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container {
+        grid-auto-flow: row dense !important;
+      }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-gsize] {
+        background-size: contain !important;
+        background-origin: content-box !important;
+        padding: 10px 8px 18px !important;
+      }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-gsize="2x1"] { grid-column: span 2; grid-row: span 1; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-gsize="3x1"] { grid-column: span 3; grid-row: span 1; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-gsize="2x2"] { grid-column: span 2; grid-row: span 2; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-gsize="3x2"] { grid-column: span 3; grid-row: span 2; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-gsize="4x2"] { grid-column: span 4; grid-row: span 2; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-gsize="5x2"] { grid-column: span 5; grid-row: span 2; }
+      .inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container > .inventory-slot[data-ghide="1"] { display: none !important; }
+
+      /* BOTTOM-LEFT CASH & BANK OVERLAY */
+      #grand-money-hud {
+        position: fixed;
+        left: 44px;
+        bottom: 18px;
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        z-index: 30;
+        pointer-events: none;
+      }
+
+      #grand-money-hud.visible {
+        display: flex;
+      }
+
+      .grand-money-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #f3f4f6;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+      }
+
+      .grand-money-row.cash {
+        color: #9ca3af;
+        font-size: 14px;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- BOTTOM-LEFT CASH & BANK READOUT -->
+    <div id="grand-money-hud">
+      <div class="grand-money-row cash">
+        <span>💵</span>
+        <span id="grand-cash-val">$0</span>
+      </div>
+      <div class="grand-money-row bank">
+        <span>💳</span>
+        <span id="grand-bank-val">$0</span>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const resName = typeof window.GetParentResourceName === 'function'
+          ? window.GetParentResourceName()
+          : 'ox_inventory';
+
+        let stats = {
+          name: 'Spieler',
+          health: 100,
+          armor: 0,
+          hunger: 100,
+          thirst: 100,
+          cash: 0,
+          bank: 0,
+          hasBag: false
+        };
+
+        function postNui(endpoint, data = {}) {
+          fetch(`https://${resName}/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+            body: JSON.stringify(data)
+          }).catch(() => {});
+        }
+
+        function fmtMoney(n) {
+          return '$' + Math.round(Number(n) || 0).toLocaleString('de-DE').replace(/\./g, ' ');
+        }
+
+        const CLOTH_ICONS = {
+          hat: '<svg viewBox="0 0 24 24"><path d="M4 14c0-4 3.5-7 8-7s8 3 8 7H4z"/><path d="M2 14h20v2H2z"/></svg>',
+          torso: '<svg viewBox="0 0 24 24"><path d="M16 3l5 4-3 4-2-2v12H8V9l-2 2-3-4 5-4 2 3h4l2-3z"/></svg>',
+          chain: '<svg viewBox="0 0 24 24"><circle cx="12" cy="11" r="6"/><path d="M12 17v3"/></svg>',
+          pants: '<svg viewBox="0 0 24 24"><path d="M6 3h12l1 18h-5l-2-11-2 11H5L6 3z"/></svg>',
+          glasses: '<svg viewBox="0 0 24 24"><circle cx="6.5" cy="13.5" r="3.5"/><circle cx="17.5" cy="13.5" r="3.5"/><path d="M10 13.5h4M3 13l2-5M21 13l-2-5"/></svg>',
+          ears: '<svg viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0v5a2 2 0 0 1-2 2h-1v-5h3"/><path d="M6 10v5a2 2 0 0 0 2 2h1v-5H6"/></svg>',
+          shoes: '<svg viewBox="0 0 24 24"><path d="M3 16l4-6 4 3 7 1a3 3 0 0 1 3 3v2H3v-3z"/></svg>',
+          gloves: '<svg viewBox="0 0 24 24"><path d="M8 11V5a1 1 0 0 1 2 0v5m0 0V4a1 1 0 0 1 2 0v6m0 0V5a1 1 0 0 1 2 0v5m0 0V7a1 1 0 0 1 2 0v8a5 5 0 0 1-5 5H9a4 4 0 0 1-4-4v-4a1 1 0 0 1 2 0v2"/></svg>',
+          watch: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M10 2h4l1 5H9l1-5zm0 20h4l1-5H9l1 5z"/><path d="M12 10v2l1.5 1"/></svg>',
+          mask: '<svg viewBox="0 0 24 24"><path d="M4 9c0-3 3.5-5 8-5s8 2 8 5v4c0 4-3.5 7-8 7s-8-3-8-7V9z"/><circle cx="9" cy="11" r="1.5"/><circle cx="15" cy="11" r="1.5"/></svg>',
+          idcard: '<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 16c1-2 7-2 8 0"/></svg>',
+          bracelet: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="6" r="1.2"/></svg>',
+          dogtag: '<svg viewBox="0 0 24 24"><path d="M8 3c0 4 8 4 8 0"/><rect x="8" y="9" width="8" height="11" rx="3"/><circle cx="12" cy="12" r="1"/></svg>'
+        };
+
+        function buildCenterColumnHTML() {
+          return `
+            <div class="grand-char-header" id="grand-char-name">${stats.name}</div>
+            <div class="grand-silhouette-box">
+              <div class="grand-cloth-col">
+                <div class="grand-cloth-slot" data-cloth="hat" title="Kopfbedeckung an/aus">${CLOTH_ICONS.hat}</div>
+                <div class="grand-cloth-slot" data-cloth="torso" title="Oberteil an/aus">${CLOTH_ICONS.torso}</div>
+                <div class="grand-cloth-slot" data-cloth="chain" title="Halskette an/aus">${CLOTH_ICONS.chain}</div>
+                <div class="grand-cloth-slot" data-cloth="pants" title="Hose an/aus">${CLOTH_ICONS.pants}</div>
+              </div>
+              <div class="grand-body-figure">
+                <svg viewBox="0 0 120 280" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M60 12 C70 12 76 20 76 31 C76 42 70 50 60 50 C50 50 44 42 44 31 C44 20 50 12 60 12 Z M42 58 L78 58 C90 58 98 68 98 82 L94 142 C93 148 88 150 85 146 L82 92 L78 92 L82 162 L76 262 C75 268 66 268 65 262 L61 176 L59 176 L55 262 C54 268 45 268 44 262 L38 162 L42 92 L38 92 L35 146 C32 150 27 148 26 142 L22 82 C22 68 30 58 42 58 Z"/>
+                </svg>
+              </div>
+              <div class="grand-cloth-col">
+                <div class="grand-cloth-slot" data-cloth="glasses" title="Brille an/aus">${CLOTH_ICONS.glasses}</div>
+                <div class="grand-cloth-slot" data-cloth="ears" title="Ohrzubehör an/aus">${CLOTH_ICONS.ears}</div>
+                <div class="grand-cloth-slot" data-cloth="shoes" title="Schuhe an/aus">${CLOTH_ICONS.shoes}</div>
+                <div class="grand-cloth-slot" data-cloth="gloves" title="Handschuhe an/aus">${CLOTH_ICONS.gloves}</div>
+              </div>
+              <div class="grand-cloth-bottom">
+                <div class="grand-cloth-slot" data-cloth="watch" title="Uhr an/aus">${CLOTH_ICONS.watch}</div>
+                <div class="grand-cloth-slot" data-cloth="mask" title="Maske an/aus">${CLOTH_ICONS.mask}</div>
+                <div class="grand-cloth-slot" data-cloth="armor" title="Weste/Abzeichen an/aus">${CLOTH_ICONS.idcard}</div>
+                <div class="grand-cloth-slot" data-cloth="bracelet" title="Armband an/aus">${CLOTH_ICONS.bracelet}</div>
+                <div class="grand-cloth-slot" data-cloth="chain" title="Anhänger an/aus">${CLOTH_ICONS.dogtag}</div>
+              </div>
+            </div>
+
+            <div class="grand-status-bars">
+              <div class="grand-status-row">
+                <span class="grand-stat-icon" style="color:#f59e0b;">🍴</span>
+                <div class="grand-stat-track"><div id="grand-bar-hunger" class="grand-stat-fill hunger" style="width:${stats.hunger}%"></div></div>
+                <span id="grand-val-hunger" class="grand-stat-num">${stats.hunger}</span>
+              </div>
+              <div class="grand-status-row">
+                <span class="grand-stat-icon" style="color:#0ea5e9;">🥤</span>
+                <div class="grand-stat-track"><div id="grand-bar-thirst" class="grand-stat-fill thirst" style="width:${stats.thirst}%"></div></div>
+                <span id="grand-val-thirst" class="grand-stat-num">${stats.thirst}</span>
+              </div>
+              <div class="grand-status-row">
+                <span class="grand-stat-icon" style="color:#ef4444;">❤️</span>
+                <div class="grand-stat-track"><div id="grand-bar-health" class="grand-stat-fill health" style="width:${stats.health}%"></div></div>
+                <span id="grand-val-health" class="grand-stat-num">${stats.health}</span>
+              </div>
+            </div>
+
+            <div class="grand-active-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 11V5a1 1 0 0 1 2 0v5h1V4a1 1 0 0 1 2 0v6h1V5a1 1 0 0 1 2 0v6h1V7a1 1 0 0 1 2 0v7a6 6 0 0 1-6 6H9a5 5 0 0 1-5-5v-4a1 1 0 0 1 2 0v2h1z"/>
+              </svg>
+              <span>Aktive Gegenstände</span>
+            </div>
+
+            <div class="grand-equip-row">
+              <div class="grand-equip-slot" data-cloth="armor" title="Schutzweste (Hierher ziehen zum Anziehen)">
+                <svg viewBox="0 0 24 24"><path d="M6 4l3-1 3 2 3-2 3 1 1 6-2 10H7L5 10 6 4z"/></svg>
+                <span id="grand-armor-pct" class="grand-equip-meta-left">${stats.armor}%</span>
+                <span id="grand-armor-kg" class="grand-equip-meta-right">${Number(stats.armor) > 50 ? 4 : (Number(stats.armor) > 0 ? 2 : 0)} <i class="grand-kg-badge" style="font-style:normal">KG</i></span>
+              </div>
+              <div class="grand-equip-slot" data-cloth="bag" title="Rucksack">
+                <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="14" rx="3"/><path d="M9 6V4a3 3 0 0 1 6 0v2M9 13h6"/></svg>
+              </div>
+            </div>
+
+            <div class="grand-quickslots-row">
+              <div class="grand-quick-slot"><span class="grand-quick-num">1</span></div>
+              <div class="grand-quick-slot"><span class="grand-quick-num">2</span></div>
+              <div class="grand-quick-slot"><span class="grand-quick-num">3</span></div>
+            </div>
+          `;
+        }
+
+        function buildBackpackHTML() {
+          let cells = '';
+          for (let i = 0; i < 9; i++) {
+            cells += '<div class="grand-empty-slot"></div>';
+          }
+          return `
+            <div class="grand-bp-header">
+              <div class="grand-bp-title-group">
+                <span class="grand-bp-title">Rucksack</span>
+                <span class="grand-bp-weight"><strong>0.00</strong> / 22 <span class="grand-kg-badge">KG</span></span>
+              </div>
+              <button type="button" class="grand-bp-unequip" id="grand-bp-unequip-btn">➦ Ausziehen</button>
+            </div>
+            <div class="grand-bp-grid">${cells}</div>
+          `;
+        }
+
+        function updateStatsDOM() {
+          const nameEl = document.getElementById('grand-char-name');
+          if (nameEl) nameEl.textContent = stats.name || 'Spieler';
+
+          const hBar = document.getElementById('grand-bar-hunger');
+          const hVal = document.getElementById('grand-val-hunger');
+          if (hBar) hBar.style.width = `${stats.hunger}%`;
+          if (hVal) hVal.textContent = stats.hunger;
+
+          const tBar = document.getElementById('grand-bar-thirst');
+          const tVal = document.getElementById('grand-val-thirst');
+          if (tBar) tBar.style.width = `${stats.thirst}%`;
+          if (tVal) tVal.textContent = stats.thirst;
+
+          const hpBar = document.getElementById('grand-bar-health');
+          const hpVal = document.getElementById('grand-val-health');
+          if (hpBar) hpBar.style.width = `${stats.health}%`;
+          if (hpVal) hpVal.textContent = stats.health;
+
+          const armEl = document.getElementById('grand-armor-pct');
+          if (armEl) armEl.textContent = `${stats.armor}%`;
+
+          const armKgEl = document.getElementById('grand-armor-kg');
+          if (armKgEl) {
+            const kg = Number(stats.armor) > 50 ? 4 : (Number(stats.armor) > 0 ? 2 : 0);
+            armKgEl.innerHTML = `${kg} <i class="grand-kg-badge" style="font-style:normal">KG</i>`;
+          }
+
+          const cashEl = document.getElementById('grand-cash-val');
+          const bankEl = document.getElementById('grand-bank-val');
+          if (cashEl) cashEl.textContent = fmtMoney(stats.cash);
+          if (bankEl) bankEl.textContent = fmtMoney(stats.bank);
+
+          const bpPanel = document.getElementById('grand-backpack-panel');
+          if (bpPanel) {
+            bpPanel.classList.toggle('has-bag', Boolean(stats.hasBag));
+          }
+        }
+
+        function enhanceInventoryDOM() {
+          const wrapper = document.querySelector('.inventory-wrapper');
+          const moneyHud = document.getElementById('grand-money-hud');
+          if (!wrapper) {
+            if (moneyHud) moneyHud.classList.remove('visible');
+            return;
+          }
+          if (moneyHud) moneyHud.classList.add('visible');
+
+          const grids = wrapper.querySelectorAll('.inventory-grid-wrapper');
+          const playerGrid = grids[0];
+          const rightGrid = grids[1];
+          const controlCol = wrapper.querySelector('.inventory-control');
+
+          // 1. Set headers to "Inventar" (right) and "Umgebung" (left)
+          if (playerGrid) {
+            const pTitle = playerGrid.querySelector('.inventory-grid-header-wrapper p:first-child');
+            if (pTitle && pTitle.textContent !== 'Inventar') {
+              if (pTitle.textContent && pTitle.textContent.trim() !== '') {
+                stats.name = pTitle.textContent.trim();
+              }
+              pTitle.textContent = 'Inventar';
+            }
+          }
+
+          if (rightGrid) {
+            const rTitle = rightGrid.querySelector('.inventory-grid-header-wrapper p:first-child');
+            if (rTitle && (!rTitle.textContent || rTitle.textContent.trim() === '' || rTitle.textContent === 'Boden' || rTitle.textContent === 'Ground' || rTitle.textContent === 'Drop')) {
+              rTitle.textContent = 'Umgebung';
+            }
+
+            // Inject Rucksack section below Umgebung
+            if (!document.getElementById('grand-backpack-panel')) {
+              const bpDiv = document.createElement('div');
+              bpDiv.id = 'grand-backpack-panel';
+              bpDiv.innerHTML = buildBackpackHTML();
+              rightGrid.appendChild(bpDiv);
+              const unequipBtn = bpDiv.querySelector('#grand-bp-unequip-btn');
+              if (unequipBtn) {
+                unequipBtn.addEventListener('click', () => postNui('toggleClothing', { slot: 'bag' }));
+              }
+            }
+          }
+
+          // 2. Inject Center Column (Silhouette, Clothing Slots, Status Bars, Active Items, Quickslots)
+          if (controlCol && !document.getElementById('grand-center-column')) {
+            const centerDiv = document.createElement('div');
+            centerDiv.id = 'grand-center-column';
+            centerDiv.innerHTML = buildCenterColumnHTML();
+            controlCol.appendChild(centerDiv);
+
+            centerDiv.querySelectorAll('[data-cloth]').forEach((slotEl) => {
+              slotEl.addEventListener('click', () => {
+                slotEl.classList.toggle('off');
+                postNui('toggleClothing', { slot: slotEl.dataset.cloth });
+              });
+            });
+          }
+
+          // 3. Inject Close "✕" Button top-right
+          if (!document.getElementById('grand-close-btn')) {
+            const closeBtn = document.createElement('button');
+            closeBtn.id = 'grand-close-btn';
+            closeBtn.type = 'button';
+            closeBtn.textContent = '✕';
+            closeBtn.addEventListener('click', () => postNui('exit', {}));
+            wrapper.appendChild(closeBtn);
+          }
+
+          updateStatsDOM();
+        }
+
+        // ======================================================================
+        // NOVA: EQUIPMENT DRAG & DROP (WESTE & RUCKSACK AUF DEN SLOT ZIEHEN)
+        // ======================================================================
+        let currentEquipDrag = null;
+
+        function getPlayerSlots() {
+          const container = document.querySelector('.inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container');
+          if (!container) return [];
+          return Array.from(container.children).filter((el) => el.classList && el.classList.contains('inventory-slot'));
+        }
+
+        function getEquipType(bg, text) {
+          const m = (bg || '').match(/\/([^\/"')]+?)\.(png|webp|jpg|jpeg)/i);
+          const name = m ? m[1].toLowerCase() : '';
+          const str = (name + ' ' + (text || '')).toLowerCase();
+          if (str.indexOf('armour') !== -1 || str.indexOf('armor') !== -1 || str.indexOf('schutzweste') !== -1 || str.indexOf('bulletproof') !== -1) {
+            return 'armor';
+          }
+          if (str.indexOf('backpack') !== -1 || str.indexOf('bag') !== -1 || str.indexOf('rucksack') !== -1) {
+            return 'bag';
+          }
+          return null;
+        }
+
+        window.addEventListener('mousedown', (e) => {
+          if (e.button !== 0) return;
+          const slotEl = e.target.closest('.inventory-slot');
+          if (!slotEl) {
+            currentEquipDrag = null;
+            return;
+          }
+          const slots = getPlayerSlots();
+          const slotIdx = slots.indexOf(slotEl) + 1;
+          if (slotIdx <= 0) {
+            currentEquipDrag = null;
+            return;
+          }
+          const bg = slotEl.style.backgroundImage || '';
+          const eqType = getEquipType(bg, slotEl.textContent);
+          if (eqType) {
+            currentEquipDrag = {
+              slot: slotIdx,
+              type: eqType
+            };
+          } else {
+            currentEquipDrag = null;
+          }
+        }, true);
+
+        window.addEventListener('mousemove', (e) => {
+          const isDragging = document.body.classList.contains('inv-dragging');
+          const armorSlot = document.querySelector('.grand-equip-slot[data-cloth="armor"]');
+          const bagSlot = document.querySelector('.grand-equip-slot[data-cloth="bag"]');
+
+          if (isDragging) {
+            if (!currentEquipDrag) {
+              const preview = document.querySelector('.item-drag-preview');
+              const pBg = preview ? preview.style.backgroundImage || '' : '';
+              const eqType = getEquipType(pBg, '');
+              if (eqType) {
+                const slots = getPlayerSlots();
+                const found = slots.find(el => getEquipType(el.style.backgroundImage || '', '') === eqType);
+                currentEquipDrag = {
+                  slot: found ? slots.indexOf(found) + 1 : null,
+                  type: eqType
+                };
+              }
+            }
+
+            if (currentEquipDrag) {
+              const targetSlot = currentEquipDrag.type === 'bag' ? bagSlot : armorSlot;
+              const otherSlot = currentEquipDrag.type === 'bag' ? armorSlot : bagSlot;
+              if (otherSlot) otherSlot.classList.remove('drag-hover');
+
+              if (targetSlot) {
+                const rect = targetSlot.getBoundingClientRect();
+                const isOver = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+                if (isOver) {
+                  targetSlot.classList.add('drag-hover');
+                } else {
+                  targetSlot.classList.remove('drag-hover');
+                }
+                return;
+              }
+            }
+          }
+          if (armorSlot) armorSlot.classList.remove('drag-hover');
+          if (bagSlot) bagSlot.classList.remove('drag-hover');
+        });
+
+        window.addEventListener('mouseup', (e) => {
+          const armorSlot = document.querySelector('.grand-equip-slot[data-cloth="armor"]');
+          const bagSlot = document.querySelector('.grand-equip-slot[data-cloth="bag"]');
+          if (armorSlot) armorSlot.classList.remove('drag-hover');
+          if (bagSlot) bagSlot.classList.remove('drag-hover');
+
+          if (e.button !== 0) {
+            currentEquipDrag = null;
+            return;
+          }
+
+          if (currentEquipDrag) {
+            const targetSlot = currentEquipDrag.type === 'bag' ? bagSlot : armorSlot;
+            if (targetSlot) {
+              const rect = targetSlot.getBoundingClientRect();
+              const isOver = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+
+              if (isOver) {
+                let slotToUse = currentEquipDrag.slot;
+                if (!slotToUse) {
+                  const slots = getPlayerSlots();
+                  const found = slots.find(el => getEquipType(el.style.backgroundImage || '', '') === currentEquipDrag.type);
+                  if (found) slotToUse = slots.indexOf(found) + 1;
+                }
+
+                if (slotToUse) {
+                  postNui('useItem', slotToUse);
+                  targetSlot.style.transform = 'scale(0.92)';
+                  setTimeout(() => {
+                    targetSlot.style.transform = '';
+                  }, 180);
+                }
+              }
+            }
+          }
+
+          currentEquipDrag = null;
+        }, true);
+
+        // NOVA: Waffengroessen im Inventar (Breite x Hoehe in Slots)
+        const WEAPON_SIZES = [
+          [/^weapon_(heavysniper|heavysniper_mk2|sniperrifle|marksmanrifle|marksmanrifle_mk2|precisionrifle|mg|combatmg|combatmg_mk2|rpg|hominglauncher|grenadelauncher|grenadelauncher_smoke|railgun|railgunxm3|minigun|firework|raycarbine|rayminigun|emplauncher|musket)$/, '5x2'],
+          [/^weapon_(assaultrifle|assaultrifle_mk2|carbinerifle|carbinerifle_mk2|advancedrifle|specialcarbine|specialcarbine_mk2|bullpuprifle|bullpuprifle_mk2|militaryrifle|heavyrifle|tacticalrifle|battlerifle|pumpshotgun|pumpshotgun_mk2|assaultshotgun|bullpupshotgun|heavyshotgun|combatshotgun|gusenberg)$/, '4x2'],
+          [/^weapon_(smg|smg_mk2|assaultsmg|combatpdw|compactrifle|sawnoffshotgun|dbshotgun|autoshotgun|compactlauncher|tecpistol)$/, '3x2'],
+          [/^weapon_(pistol|pistol_mk2|combatpistol|appistol|pistol50|snspistol|snspistol_mk2|heavypistol|vintagepistol|marksmanpistol|revolver|revolver_mk2|doubleaction|ceramicpistol|navyrevolver|gadgetpistol|pistolxm3|stungun|stungun_mp|flaregun|raypistol|microsmg|minismg|machinepistol|petrolcan|fireextinguisher|hazardcan|fertilizercan)$/, '2x2'],
+          [/^weapon_(bat|crowbar|golfclub|poolcue|wrench|hammer|nightstick|battleaxe|stone_hatchet|candycane)$/, '3x1'],
+          [/^weapon_(knife|dagger|switchblade|knuckle|hatchet|machete|flashlight|bottle)$/, '2x1']
+        ];
+
+        function getWeaponSize(bg) {
+          if (!bg || bg.indexOf('none') !== -1) return null;
+          const m = bg.match(/\/([^\/"')]+?)\.(png|webp|jpg|jpeg)/i);
+          if (!m) return null;
+          const name = m[1].toLowerCase();
+          if (name.indexOf('weapon_') !== 0) return null;
+          for (const [re, size] of WEAPON_SIZES) {
+            if (re.test(name)) return size;
+          }
+          return null;
+        }
+
+        function applyWeaponSizes() {
+          const container = document.querySelector('.inventory-wrapper > .inventory-grid-wrapper:nth-of-type(1) .inventory-grid-container');
+          if (!container) return;
+          const slots = Array.from(container.children).filter((el) => el.classList && el.classList.contains('inventory-slot'));
+          let extra = 0;
+          const empties = [];
+
+          slots.forEach((el, i) => {
+            if (i < 3) { // Schnellslots 1-3 bleiben 1x1
+              if (el.dataset.gsize) delete el.dataset.gsize;
+              return;
+            }
+            const bg = el.style.backgroundImage || '';
+            const size = getWeaponSize(bg);
+            if (size) {
+              if (el.dataset.gsize !== size) el.dataset.gsize = size;
+              const [w, h] = size.split('x').map(Number);
+              extra += w * h - 1;
+            } else if (el.dataset.gsize) {
+              delete el.dataset.gsize;
+            }
+            const isEmpty = !bg || bg.indexOf('none') !== -1;
+            empties.push(isEmpty ? el : null);
+          });
+
+          // Leere Slots am Ende ausblenden, damit Waffen wirklich Platz "verbrauchen"
+          for (let i = empties.length - 1; i >= 0; i--) {
+            const el = empties[i];
+            if (!el) continue;
+            if (extra > 0) {
+              if (el.dataset.ghide !== '1') el.dataset.ghide = '1';
+              extra--;
+            } else if (el.dataset.ghide) {
+              delete el.dataset.ghide;
+            }
+          }
+          // Belegte Slots niemals verstecken
+          slots.forEach((el) => {
+            const bg = el.style.backgroundImage || '';
+            if (el.dataset.ghide && bg && bg.indexOf('none') === -1) delete el.dataset.ghide;
+          });
+        }
+
+        let rafPending = false;
+        const observer = new MutationObserver((muts) => {
+          let relevant = false;
+          for (const m of muts) {
+            if (m.type === 'childList') { relevant = true; break; }
+            if (m.target && m.target.classList && m.target.classList.contains('inventory-slot')) { relevant = true; break; }
+          }
+          if (!relevant || rafPending) return;
+          rafPending = true;
+          requestAnimationFrame(() => {
+            rafPending = false;
+            enhanceInventoryDOM();
+            applyWeaponSizes();
+          });
+        });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+
+        
+        // NOVA: Schnelles Schließen über Escape oder X (ohne Pause Menü)
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' || e.code === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+          } else if (e.key === 'x' || e.key === 'X' || e.code === 'KeyX') {
+            const isInput = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable);
+            if (!isInput) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        }, true);
+
+        window.addEventListener('keyup', (e) => {
+          if (e.key === 'Escape' || e.code === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+            fetch(`https://${GetParentResourceName()}/exit`, { method: 'POST', body: '{}' }).catch(() => {});
+          } else if (e.key === 'x' || e.key === 'X' || e.code === 'KeyX') {
+            const isInput = e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable);
+            if (!isInput) {
+              e.preventDefault();
+              e.stopPropagation();
+              fetch(`https://${GetParentResourceName()}/exit`, { method: 'POST', body: '{}' }).catch(() => {});
+            }
+          }
+        }, true);
+
+        window.addEventListener('message', (event) => {
+          const d = event.data;
+          if (!d) return;
+          if (d.action === 'grandStats' && d.data) {
+            stats = { ...stats, ...d.data };
+            updateStatsDOM();
+          } else if (d.action === 'setupInventory' && d.data?.leftInventory?.label) {
+            stats.name = d.data.leftInventory.label;
+            setTimeout(enhanceInventoryDOM, 20);
+          } else if (d.action === 'closeInventory') {
+            const moneyHud = document.getElementById('grand-money-hud');
+            if (moneyHud) moneyHud.classList.remove('visible');
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

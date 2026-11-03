@@ -99,14 +99,10 @@ local currentInventory = defaultInventory
 
 local function closeTrunk()
 	if currentInventory.type == 'trunk' then
-		local coords = GetEntityCoords(playerPed, true)
-		---@todo animation for vans?
-		Utils.PlayAnimAdvanced(0, 'anim@heists@fleeca_bank@scope_out@return_case', 'trevor_action', coords.x, coords.y, coords.z, 0.0, 0.0, GetEntityHeading(playerPed), 2.0, 2.0, 1000, 49, 0.25)
-
 		CreateThread(function()
 			local entity = currentInventory.entity
 			local door = currentInventory.door
-			Wait(900)
+			Wait(400)
 
 			if type(door) == 'table' then
 				for i = 1, #door do
@@ -295,15 +291,58 @@ function client.openInventory(inv, data)
         }
     })
 
+    CreateThread(function()
+        local ped = PlayerPedId()
+        local hp = math.max(0, math.min(100, GetEntityHealth(ped) - 100))
+        local armor = math.max(0, math.min(100, GetPedArmour(ped)))
+        local hunger, thirst = 100, 100
+        pcall(function()
+            TriggerEvent('esx_status:getStatus', 'hunger', function(st)
+                if st and st.getPercent then hunger = math.floor(st.getPercent() + 0.5) end
+            end)
+            TriggerEvent('esx_status:getStatus', 'thirst', function(st)
+                if st and st.getPercent then thirst = math.floor(st.getPercent() + 0.5) end
+            end)
+        end)
+        local cash, bank = 0, 0
+        if PlayerData and PlayerData. inventory then
+            for _, it in pairs(PlayerData.inventory) do
+                if it and it.name == 'money' then
+                    cash = cash + (it.count or 0)
+                end
+            end
+        end
+        pcall(function()
+            local esxObj = exports['es_extended']:getSharedObject()
+            local pd = esxObj and esxObj.GetPlayerData()
+            if pd and pd.accounts then
+                for _, acc in pairs(pd.accounts) do
+                    if acc.name == 'bank' then bank = acc.money or 0 end
+                    if acc.name == 'money' and cash == 0 then cash = acc.money or 0 end
+                end
+            end
+        end)
+        SendNUIMessage({
+            action = 'grandStats',
+            data = {
+                name = left.label or GetPlayerName(PlayerId()),
+                health = hp,
+                armor = armor,
+                hunger = hunger,
+                thirst = thirst,
+                cash = cash,
+                bank = bank,
+                hasBag = GetPedDrawableVariation(ped, 5) > 0
+            }
+        })
+    end)
+
     if inv and not currentInventory.coords and inv ~= 'container' and inv ~= 'glovebox' then
         currentInventory.coords = GetEntityCoords(playerPed)
     end
 
     if inv == 'trunk' then
-        SetTimeout(200, function()
-            ---@todo animation for vans?
-            Utils.PlayAnim(0, 'anim@heists@prison_heiststation@cop_reactions', 'cop_b_idle', 3.0, 3.0, -1, 49, 0.0, 0, 0, 0)
-
+        SetTimeout(100, function()
             local entity = data.entity or NetworkGetEntityFromNetworkId(data.netid)
             currentInventory.entity = entity
             currentInventory.door = data.door
@@ -314,7 +353,7 @@ function client.openInventory(inv, data)
                 currentInventory.door = vehicleClass == 12 and { 2, 3 } or Vehicles.Storage[vehicleHash] and 4 or 5
             end
 
-            while currentInventory.entity == entity and invOpen and DoesEntityExist(entity) and Inventory.CanAccessTrunk(entity) do
+            while currentInventory.entity == entity and invOpen and DoesEntityExist(entity) and (#(GetEntityCoords(PlayerPedId()) - GetEntityCoords(entity)) <= 6.0) do
                 Wait(100)
             end
 
@@ -560,99 +599,19 @@ local function useSlot(slot, noAnim)
 			if data.ammo then
 				if EnableWeaponWheel or currentWeapon.metadata.durability <= 0 then return end
 
+				-- NOVA: Munition wird direkt aus dem Inventar-Pool genutzt.
+				-- Nachladen fuellt nur das Magazin aus dem Pool auf und entfernt KEINE Munition aus dem Inventar.
+				local _, clipAmmo = GetAmmoInClip(playerPed, currentWeapon.hash)
 				local clipSize = GetMaxAmmoInClip(playerPed, currentWeapon.hash, true)
-				local currentAmmo = GetAmmoInPedWeapon(playerPed, currentWeapon.hash)
-				local _, maxAmmo = GetMaxAmmo(playerPed, currentWeapon.hash)
+				local totalAmmo = GetAmmoInPedWeapon(playerPed, currentWeapon.hash)
 
-				if maxAmmo < clipSize then clipSize = maxAmmo end
+				if clipAmmo >= clipSize or totalAmmo <= clipAmmo or IsPedReloading(playerPed) then return end
 
-				if currentAmmo == clipSize then return end
-
-				useItem(data, function(resp)
-					if not resp or resp.name ~= currentWeapon?.ammo then return end
-
-					if currentWeapon.metadata.specialAmmo ~= resp.metadata.type and type(currentWeapon.metadata.specialAmmo) == 'string' then
-						local clipComponentKey = ('%s_CLIP'):format(Items[currentWeapon.name].model:gsub('WEAPON_', 'COMPONENT_'))
-						local specialClip = ('%s_%s'):format(clipComponentKey, (resp.metadata.type or currentWeapon.metadata.specialAmmo):upper())
-
-						if type(resp.metadata.type) == 'string' then
-							if not HasPedGotWeaponComponent(playerPed, currentWeapon.hash, specialClip) then
-								if not DoesWeaponTakeWeaponComponent(currentWeapon.hash, specialClip) then
-									warn('cannot use clip with this weapon')
-									return
-								end
-
-								local defaultClip = ('%s_01'):format(clipComponentKey)
-
-								if not HasPedGotWeaponComponent(playerPed, currentWeapon.hash, defaultClip) then
-									warn('cannot use clip with currently equipped clip')
-									return
-								end
-
-								if currentAmmo > 0 then
-									warn('cannot mix special ammo with base ammo')
-									return
-								end
-
-								currentWeapon.metadata.specialAmmo = resp.metadata.type
-
-								GiveWeaponComponentToPed(playerPed, currentWeapon.hash, specialClip)
-							end
-						elseif HasPedGotWeaponComponent(playerPed, currentWeapon.hash, specialClip) then
-							if currentAmmo > 0 then
-								warn('cannot mix special ammo with base ammo')
-								return
-							end
-
-							currentWeapon.metadata.specialAmmo = nil
-
-							RemoveWeaponComponentFromPed(playerPed, currentWeapon.hash, specialClip)
-						end
-					end
-
-					if maxAmmo > clipSize then
-						clipSize = GetMaxAmmoInClip(playerPed, currentWeapon.hash, true)
-					end
-
-					currentAmmo = GetAmmoInPedWeapon(playerPed, currentWeapon.hash)
-					local missingAmmo = clipSize - currentAmmo
-					local addAmmo = resp.count > missingAmmo and missingAmmo or resp.count
-					local newAmmo = currentAmmo + addAmmo
-
-					if newAmmo == currentAmmo then return end
-
-                    AddAmmoToPed(playerPed, currentWeapon.hash, addAmmo)
-
-					if cache.vehicle then
-						if cache.seat > -1 or IsVehicleStopped(cache.vehicle) then
-							TaskReloadWeapon(playerPed, true)
-                        else
-                            -- This is a hacky solution for forcing ammo to properly load into the
-                            -- weapon clip while driving; without it, ammo will be added but won't
-                            -- load until the player stops doing anything. i.e. if you keep shooting,
-                            -- the weapon will not reload until the clip empties.
-                            -- And yes - for some reason RefillAmmoInstantly needs to run in a loop.
-                            lib.waitFor(function()
-                                RefillAmmoInstantly(playerPed)
-
-                                local _, ammo = GetAmmoInClip(playerPed, currentWeapon.hash)
-                                return ammo == newAmmo or nil
-                            end)
-                        end
-					else
-						Wait(100)
-						MakePedReload(playerPed)
-
-						SetTimeout(100, function()
-							while IsPedReloading(playerPed) do
-								DisableControlAction(0, 22, true)
-								Wait(0)
-							end
-						end)
-					end
-
-					lib.callback.await('ox_inventory:updateWeapon', false, 'load', newAmmo, false, currentWeapon.metadata.specialAmmo)
-				end)
+				if cache.vehicle then
+					TaskReloadWeapon(playerPed, true)
+				else
+					MakePedReload(playerPed)
+				end
 			elseif data.component then
 				local components = data.client.component
 
@@ -772,8 +731,10 @@ local function registerCommands()
 		end
 	end
 
+	RegisterCommand('+inv', function() end, false)
+	RegisterCommand('-inv', function() end, false)
 	local primary = lib.addKeybind({
-		name = 'inv',
+		name = 'nova_inv',
 		description = locale('open_player_inventory'),
 		defaultKey = client.keys[1],
 		onPressed = function()
@@ -886,6 +847,34 @@ local function registerCommands()
 			end
 		})
 	end
+
+	-- Direct hardware key fallback for Quickslots 1, 2, 3
+	CreateThread(function()
+		local quickControls = {
+			{ slot = 1, control = 157 }, -- Key 1
+			{ slot = 2, control = 158 }, -- Key 2
+			{ slot = 3, control = 160 }, -- Key 3
+		}
+		local lastUse = 0
+		while true do
+			Wait(0)
+			if not invOpen and not EnableWeaponWheel and invHotkeys and not IsNuiFocused() then
+				for i = 1, #quickControls do
+					local qc = quickControls[i]
+					DisableControlAction(0, qc.control, true)
+					if IsDisabledControlJustPressed(0, qc.control) then
+						local now = GetGameTimer()
+						if now - lastUse > 350 then
+							lastUse = now
+							useSlot(qc.slot)
+						end
+					end
+				end
+			else
+				Wait(100)
+			end
+		end
+	end)
 
 	registerCommands = nil
 end
@@ -1463,6 +1452,22 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 			DisableAllControlActions(0)
 			HideHudAndRadarThisFrame()
 
+			-- NOVA: Pause Menu bei ESC komplett blockieren
+			DisableControlAction(0, 199, true)
+			DisableControlAction(0, 200, true)
+			DisableControlAction(0, 322, true)
+
+			if IsPauseMenuActive() then
+				SetPauseMenuActive(false)
+			end
+
+			-- NOVA: Schließen über ESC oder X
+			if IsDisabledControlJustReleased(0, 73) or IsControlJustReleased(0, 73) then
+				client.closeInventory()
+			elseif IsDisabledControlJustReleased(0, 199) or IsDisabledControlJustReleased(0, 200) or IsDisabledControlJustReleased(0, 322) then
+				client.closeInventory()
+			end
+
 			for i = 1, #EnableKeys do
 				EnableControlAction(0, EnableKeys[i], true)
 			end
@@ -1535,7 +1540,7 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 							if currentAmmo < weaponAmmo then
 								currentAmmo = (weaponAmmo < currentAmmo) and 0 or currentAmmo
 								currentWeapon.metadata.ammo = currentAmmo
-								currentWeapon.metadata.durability = currentWeapon.metadata.durability - (durabilityDrain * math.abs((weaponAmmo or 0.1) - currentAmmo))
+								currentWeapon.metadata.durability = currentWeapon.metadata.durability - (durabilityDrain * 0.1 * math.abs((weaponAmmo or 0.1) - currentAmmo))
 							end
 						end
 
@@ -1789,6 +1794,89 @@ RegisterNUICallback('exit', function(_, cb)
 	cb(1)
 end)
 
+local savedClothing = {}
+RegisterNUICallback('toggleClothing', function(data, cb)
+	cb(1)
+	local slot = type(data) == 'table' and data.slot or nil
+	if not slot then return end
+	local ped = PlayerPedId()
+	local isFemale = GetEntityModel(ped) == `mp_f_freemode_01`
+
+	-- NOVA: Rucksack Ausziehen
+	if slot == 'bag' then
+		local cur = GetPedDrawableVariation(ped, 5)
+		if cur > 0 then
+			SetPedComponentVariation(ped, 5, 0, 0, 2)
+			TriggerServerEvent('ox_inventory:unequipBackpack')
+			SendNUIMessage({
+				action = 'grandStats',
+				data = { hasBag = false }
+			})
+			lib.notify({ type = 'inform', description = 'Rucksack ausgezogen und ins Inventar gelegt' })
+			return
+		end
+	end
+
+	local propMap = {
+		hat = 0,
+		glasses = 1,
+		ears = 2,
+		watch = 6,
+		bracelet = 7,
+	}
+
+	local compMap = {
+		mask = { id = 1, off = 0 },
+		torso = { id = 11, off = 15, arms = 15, undershirt = 15 },
+		pants = { id = 4, off = isFemale and 15 or 21 },
+		shoes = { id = 6, off = isFemale and 35 or 34 },
+		gloves = { id = 3, off = 15 },
+		chain = { id = 7, off = 0 },
+		bag = { id = 5, off = 0 },
+		armor = { id = 9, off = 0 },
+	}
+
+	if propMap[slot] then
+		local propId = propMap[slot]
+		local cur = GetPedPropIndex(ped, propId)
+		if cur ~= -1 then
+			savedClothing[slot] = { drawable = cur, texture = GetPedPropTextureIndex(ped, propId) }
+			ClearPedProp(ped, propId)
+		elseif savedClothing[slot] then
+			SetPedPropIndex(ped, propId, savedClothing[slot].drawable, savedClothing[slot].texture, true)
+			savedClothing[slot] = nil
+		end
+	elseif compMap[slot] then
+		local cfg = compMap[slot]
+		local cur = GetPedDrawableVariation(ped, cfg.id)
+		if cur ~= cfg.off and not savedClothing[slot] then
+			savedClothing[slot] = {
+				drawable = cur,
+				texture = GetPedTextureVariation(ped, cfg.id),
+				arms = cfg.arms and GetPedDrawableVariation(ped, 3) or nil,
+				undershirt = cfg.undershirt and GetPedDrawableVariation(ped, 8) or nil,
+				undershirtTex = cfg.undershirt and GetPedTextureVariation(ped, 8) or nil,
+			}
+			SetPedComponentVariation(ped, cfg.id, cfg.off, 0, 2)
+			if cfg.arms then SetPedComponentVariation(ped, 3, cfg.arms, 0, 2) end
+			if cfg.undershirt then SetPedComponentVariation(ped, 8, cfg.undershirt, 0, 2) end
+		elseif savedClothing[slot] then
+			local s = savedClothing[slot]
+			SetPedComponentVariation(ped, cfg.id, s.drawable, s.texture, 2)
+			if s.arms then SetPedComponentVariation(ped, 3, s.arms, 0, 2) end
+			if s.undershirt then SetPedComponentVariation(ped, 8, s.undershirt, s.undershirtTex or 0, 2) end
+			savedClothing[slot] = nil
+		end
+	end
+	SendNUIMessage({
+		action = 'grandStats',
+		data = {
+			hasBag = GetPedDrawableVariation(ped, 5) > 0,
+			armor = math.max(0, math.min(100, GetPedArmour(ped)))
+		}
+	})
+end)
+
 lib.callback.register('ox_inventory:startCrafting', function(id, recipe)
 	recipe = CraftingBenches[id].items[recipe]
 
@@ -1934,5 +2022,131 @@ lib.callback.register('ox_inventory:getVehicleData', function(netid)
 
 	if entity then
 		return GetEntityModel(entity), GetVehicleClass(entity)
+	end
+end)
+
+-- ============================================================================
+-- LIVE AMMO SYNC FROM INVENTORY & 3D WEAPONS ON BACK (SLING SYSTEM)
+-- ============================================================================
+AddEventHandler('ox_inventory:itemCount', function(itemName, totalCount)
+	if currentWeapon and currentWeapon.ammo == itemName and (not currentWeapon.timer or currentWeapon.timer == 0) then
+		local ped = PlayerPedId()
+		local newTotal = math.max(0, totalCount or 0)
+		currentWeapon.metadata.ammo = newTotal
+		SetPedAmmo(ped, currentWeapon.hash, newTotal)
+	end
+end)
+
+local slungWeapons = {}
+
+local backOffsets = {
+	[1] = { bone = 24818, x = 0.08,  y = -0.155, z = -0.02, rx = 0.0,   ry = 165.0, rz = 0.0   }, -- Primary Back
+	[2] = { bone = 24818, x = 0.08,  y = -0.175, z = 0.05,  rx = 0.0,   ry = 15.0,  rz = 180.0 }, -- Secondary Back (Crossed)
+	[3] = { bone = 24816, x = -0.06, y = -0.145, z = -0.06, rx = 0.0,   ry = 150.0, rz = 0.0   }, -- Lower Back
+	[4] = { bone = 24816, x = -0.06, y = -0.145, z = 0.06,  rx = 0.0,   ry = 30.0,  rz = 180.0 }, -- Lower Back 2
+}
+
+local function clearAllSlungWeapons()
+	for key, entry in pairs(slungWeapons) do
+		if entry.entity and DoesEntityExist(entry.entity) then
+			DeleteEntity(entry.entity)
+		end
+		slungWeapons[key] = nil
+	end
+end
+
+AddEventHandler('onResourceStop', function(res)
+	if res == GetCurrentResourceName() then
+		clearAllSlungWeapons()
+	end
+end)
+
+CreateThread(function()
+	while true do
+		Wait(450)
+		local ped = PlayerPedId()
+		if not PlayerData or not PlayerData.loaded or not PlayerData.inventory or IsEntityDead(ped) or not IsEntityVisible(ped) then
+			clearAllSlungWeapons()
+		else
+			local desired = {}
+			local slotIndex = 0
+			local heldSlot = currentWeapon and currentWeapon.slot or nil
+			local heldHash = GetSelectedPedWeapon(ped)
+
+			for _, slotItem in pairs(PlayerData.inventory) do
+				if slotItem and slotItem.name and slotItem.slot and slotItem.slot <= 3 then
+					local itemDef = Items[slotItem.name]
+					if itemDef and itemDef.weapon and itemDef.hash and not itemDef.throwable then
+						local isHeld = (heldSlot and slotItem.slot == heldSlot) or (heldHash == itemDef.hash)
+						if not isHeld and slotIndex < #backOffsets then
+							slotIndex = slotIndex + 1
+							local key = ('%s_%s'):format(slotItem.slot, slotItem.name)
+							desired[key] = {
+								hash = itemDef.hash,
+								slotIndex = slotIndex,
+								tint = slotItem.metadata and slotItem.metadata.tint or nil
+							}
+						end
+					end
+				end
+			end
+
+			-- Remove props no longer in inventory or currently held in hands
+			for key, entry in pairs(slungWeapons) do
+				if not desired[key] or not DoesEntityExist(entry.entity) or entry.ped ~= ped then
+					if entry.entity and DoesEntityExist(entry.entity) then
+						DeleteEntity(entry.entity)
+					end
+					slungWeapons[key] = nil
+				elseif entry.slotIndex ~= desired[key].slotIndex then
+					local off = backOffsets[desired[key].slotIndex]
+					entry.slotIndex = desired[key].slotIndex
+					AttachEntityToEntity(
+						entry.entity,
+						ped,
+						GetPedBoneIndex(ped, off.bone),
+						off.x, off.y, off.z,
+						off.rx, off.ry, off.rz,
+						true, true, false, false, 2, true
+					)
+				end
+			end
+
+			-- Spawn & attach new weapons on back
+			for key, info in pairs(desired) do
+				if not slungWeapons[key] then
+					RequestWeaponAsset(info.hash, 31, 0)
+					local timeout = 0
+					while not HasWeaponAssetLoaded(info.hash) and timeout < 25 do
+						Wait(10)
+						timeout = timeout + 1
+					end
+					if HasWeaponAssetLoaded(info.hash) then
+						local coords = GetEntityCoords(ped)
+						local wObj = CreateWeaponObject(info.hash, 0, coords.x, coords.y, coords.z, true, 1.0, 0)
+						if wObj and wObj ~= 0 and DoesEntityExist(wObj) then
+							if info.tint then
+								SetWeaponObjectTintIndex(wObj, info.tint)
+							end
+							SetEntityCollision(wObj, false, false)
+							local off = backOffsets[info.slotIndex]
+							AttachEntityToEntity(
+								wObj,
+								ped,
+								GetPedBoneIndex(ped, off.bone),
+								off.x, off.y, off.z,
+								off.rx, off.ry, off.rz,
+								true, true, false, false, 2, true
+							)
+							slungWeapons[key] = {
+								entity = wObj,
+								ped = ped,
+								slotIndex = info.slotIndex
+							}
+						end
+					end
+				end
+			end
+		end
 	end
 end)

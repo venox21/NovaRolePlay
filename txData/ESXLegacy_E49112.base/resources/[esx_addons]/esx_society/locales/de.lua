@@ -71,4 +71,8 @@ Locales['de'] = {
   ['money_add_reason'] = 'Society Withdraw',
   ['name_not_found'] = 'Name not found.',
   ['employees_title'] = 'Employees',
+
+    ['previous_page'] = 'Vorherige Seite',
+    ['next_page'] = 'Nächste Seite',
+    ['invalid_value'] = 'Ungültiger Wert',
 }

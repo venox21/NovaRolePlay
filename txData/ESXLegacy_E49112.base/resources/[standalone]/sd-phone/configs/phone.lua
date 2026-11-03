@@ -9,6 +9,7 @@ return {
     -- exports, compat commands) requires one of these items, so {} means
     -- nobody can open the phone.
     Items = {
+        { item = 'phone',        color = 'black'  },
         { item = 'phone_black',  color = 'black'  },
         { item = 'phone_blue',   color = 'blue'   },
         { item = 'phone_green',  color = 'green'  },
@@ -94,7 +95,7 @@ return {
 
     -- Default keybind to open / close the phone. Players can rebind
     -- via FiveM's keybinding menu (Settings → Key Bindings → FiveM).
-    Keybind  = 'F1',
+    Keybind  = 'UP',
 
     -- Hide the phone while the player is dead, swimming, in water,
     -- or carrying a two-handed weapon. The phone is still openable

@@ -85,6 +85,10 @@ ESX.RegisterCommand(
         local pedVehicle = GetVehiclePedIsIn(ped, false)
 
         if DoesEntityExist(pedVehicle) then
+            local plate = ESX.Math.Trim(GetVehicleNumberPlateText(pedVehicle) or "")
+            if plate ~= "" then
+                pcall(MySQL.update.await, "UPDATE `owned_vehicles` SET `stored` = 1, `parking` = NULL, `pound` = NULL WHERE `plate` = ?", { plate })
+            end
             DeleteEntity(pedVehicle)
         end
 
@@ -93,6 +97,10 @@ ESX.RegisterCommand(
         for i = 1, #Vehicles do
             local Vehicle = NetworkGetEntityFromNetworkId(Vehicles[i])
             if DoesEntityExist(Vehicle) then
+                local plate = ESX.Math.Trim(GetVehicleNumberPlateText(Vehicle) or "")
+                if plate ~= "" then
+                    pcall(MySQL.update.await, "UPDATE `owned_vehicles` SET `stored` = 1, `parking` = NULL, `pound` = NULL WHERE `plate` = ?", { plate })
+                end
                 DeleteEntity(Vehicle)
             end
         end

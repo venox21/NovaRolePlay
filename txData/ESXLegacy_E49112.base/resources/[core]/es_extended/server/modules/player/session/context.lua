@@ -6,7 +6,7 @@ Core.PlayerSession.loadingPlayers = {}
 Core.PlayerSession.oneSyncState = GetConvar("onesync", "off")
 Core.PlayerSession.isEnhanced = xLib.isEnhanced()
 Core.PlayerSession.newPlayerQuery = "INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `ssn` = ?, `group` = ?"
-Core.PlayerSession.loadPlayerQuery = "SELECT `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
+Core.PlayerSession.loadPlayerQuery = "SELECT `id`, `accounts`, `ssn`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`, `metadata`"
 
 if Config.Multichar then
     Core.PlayerSession.newPlayerQuery = Core.PlayerSession.newPlayerQuery .. ", `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?"

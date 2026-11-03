@@ -697,6 +697,20 @@ end
 -- to fire while the pause menu is up, and clears both halves out of the chat suggestion list. It
 -- invokes the handlers as METHODS, so each is handed the keybind table as a first argument; all of
 -- these take none, so it falls away.
+-- Native Arrow UP (Pfeiltaste Hoch) Fallback Listener fuer sofortiges Oeffnen
+CreateThread(function()
+    while true do
+        Wait(0)
+        -- 27 = INPUT_PHONE (Pfeiltaste nach oben standardmaessig in GTA V)
+        -- 172 = INPUT_CELLPHONE_UP
+        if IsControlJustPressed(0, 27) or IsControlJustPressed(0, 172) then
+            if not IsPauseMenuActive() and not isDead and not isEscorting then
+                TogglePhone()
+            end
+        end
+    end
+end)
+
 lib.addKeybind({
     name        = 'sdphone_toggle',
     description = 'Toggle Phone',

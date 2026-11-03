@@ -22,3 +22,15 @@ end)
 RegisterNuiCallback('CreateCharacter', function (data, cb)
     cb(Menu:NewCharacter())
 end)
+
+RegisterNuiCallback('RotatePed', function (data, cb)
+    local delta = type(data) == 'table' and tonumber(data.delta)
+    if delta then
+        local ped = Multicharacter.playerPed or PlayerPedId()
+        if ped and DoesEntityExist(ped) then
+            local heading = GetEntityHeading(ped)
+            SetEntityHeading(ped, (heading - delta) % 360.0)
+        end
+    end
+    cb(1)
+end)

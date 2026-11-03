@@ -7,9 +7,12 @@ CreateThread(function()
     while not ESX.PlayerLoaded do
         Wait(100)
 
-        if NetworkIsPlayerActive(ESX.playerId) then
+        if NetworkIsPlayerActive(PlayerId()) then
+            ESX.playerId = PlayerId()
             ESX.DisableSpawnManager()
             DoScreenFadeOut(0)
+            ShutdownLoadingScreen()
+            ShutdownLoadingScreenNui()
             Multicharacter:SetupCharacters()
             break
         end
@@ -20,10 +23,12 @@ end)
 
 ESX.SecureNetEvent("esx_multicharacter:SetupUI", function(data, slots)
     if not nuiReady then
-        print('[WARNING]', 'NUI not ready yet, awaiting...')
-        xLib.waitFor(function()
-            return nuiReady == true
-        end, 'NUI Failed to load after 10000ms', 10000)
+        print('[esx_multicharacter] NUI not ready yet, awaiting...')
+        pcall(function()
+            xLib.waitFor(function()
+                return nuiReady == true
+            end, 'NUI Failed to load after 5000ms', 5000)
+        end)
     end
     Multicharacter:SetupUI(data, slots)
 end)

@@ -55,8 +55,12 @@ Config = {
             Shared.Enum.WeatherType.SNOW_HALLOWEEN,
         },
         transitionTimeSeconds = 30,
-        cycleTimeSeconds = 60 * 30, -- 30 minutes
-        dynamic = true, -- Rotates weather every cycleTimeSeconds. Set false to keep defaultType until changed from the panel.
+        cycleTimeSeconds = 60 * 30, -- 30 minutes (Fallback falls dynamic aktiv)
+        dynamic = false, -- Zufällige Wetterrotation deaktiviert zugunsten von echtem Berlin-Wetter
+        syncWithBerlin = true, -- Synchronisiert das Wetter mit der echten Wetterlage in Berlin
+        checkIntervalSeconds = 300, -- Alle 5 Minuten (300 Sekunden) Wetter in Berlin abfragen
+        berlinLatitude = 52.5200,
+        berlinLongitude = 13.4050,
         defaultType = Shared.Enum.WeatherType.CLEAR, -- Used when dynamic is false.
         persist = true, -- Restores the last weather after a restart. With dynamic, the rotation timer is kept too.
         persistKey = "esx_weather_zones",

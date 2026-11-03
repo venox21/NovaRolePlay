@@ -1,4 +1,4 @@
-﻿const app = document.getElementById('app');
+const app = document.getElementById('app');
 const frame = document.getElementById('frame');
 const modal = document.getElementById('modal');
 const modalClose = document.getElementById('modalClose');
@@ -107,10 +107,10 @@ function setMetric(id, value, unit) {
 
 function setTheme(theme = {}) {
     const root = document.documentElement.style;
-    root.setProperty('--brand', theme.primaryColor || theme.brandColor || '#FB9B04');
-    root.setProperty('--darkest', theme.backgroundColor || theme.darkestColor || '#161616');
-    root.setProperty('--dark', theme.secondaryColor || theme.darkColor || '#252525');
-    root.setProperty('--mid', theme.accentColor || theme.midColor || '#383838');
+    root.setProperty('--brand', theme.primaryColor || theme.brandColor || '#a855f7');
+    root.setProperty('--darkest', theme.backgroundColor || theme.darkestColor || '#0b0917');
+    root.setProperty('--dark', theme.secondaryColor || theme.darkColor || '#15122a');
+    root.setProperty('--mid', theme.accentColor || theme.midColor || '#1f1a3d');
     root.setProperty('--light', theme.lightColor || '#969696');
     root.setProperty('--lightest', theme.lightestColor || '#F2F2F2');
 
@@ -142,13 +142,42 @@ function initials(name = t('ui_player')) {
 }
 
 function formatClock(clock = {}) {
-    const hour = String(Number(clock.hour) || 0).padStart(2, '0');
-    const minute = String(Number(clock.minute) || 0).padStart(2, '0');
+    let hour = clock.hour;
+    let minute = clock.minute;
+    let day = clock.day;
+    let month = clock.month;
+    let year = clock.year;
+
+    try {
+        const parts = new Intl.DateTimeFormat('de-DE', {
+            timeZone: 'Europe/Berlin',
+            year: 'numeric',
+            month: 'numeric',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).formatToParts(new Date());
+
+        const map = {};
+        for (const p of parts) { map[p.type] = p.value; }
+        hour = map.hour;
+        minute = map.minute;
+        day = map.day;
+        month = parseInt(map.month, 10);
+        year = map.year;
+    } catch (e) {
+        hour = String(Number(hour) || 0).padStart(2, '0');
+        minute = String(Number(minute) || 0).padStart(2, '0');
+        day = String(Number(day) || 1).padStart(2, '0');
+        month = Number(month) || 1;
+        year = Number(year) || new Date().getFullYear();
+    }
+
     const months = t('ui_months').split(',');
-    const month = months[Math.max(0, Math.min(11, (Number(clock.month) || 1) - 1))] ?? '';
-    const day = String(Number(clock.day) || 1).padStart(2, '0');
-    const year = Number(clock.year) || new Date().getFullYear();
-    return { time: `${hour}:${minute}`, date: `${day} ${month} ${year}` };
+    const monthText = months[Math.max(0, Math.min(11, (Number(month) || 1) - 1))] ?? '';
+    const dayStr = String(day).padStart(2, '0');
+    return { time: `${hour}:${minute}`, date: `${dayStr} ${monthText} ${year}` };
 }
 
 function applyClock(clock) {
@@ -431,8 +460,8 @@ window.addEventListener('message', (event) => {
 
 const demoData = {
     theme: {
-        primaryColor: '#FB9B04', backgroundColor: '#161616', secondaryColor: '#252525', accentColor: '#383838',
-        brandColor: '#FB9B04', darkestColor: '#161616', darkColor: '#252525', midColor: '#383838', lightColor: '#969696', lightestColor: '#F2F2F2'
+        primaryColor: '#a855f7', backgroundColor: '#0b0917', secondaryColor: '#15122a', accentColor: '#1f1a3d',
+        brandColor: '#a855f7', darkestColor: '#0b0917', darkColor: '#15122a', midColor: '#1f1a3d', lightColor: '#969696', lightestColor: '#F2F2F2'
     },
     config: {
         brand: { kicker: 'NOVA ROLEPLAY', tagline: 'ROLEPLAY BEYOND LIMITS', city: 'Los Santos', established: '2015', communityLine: 'BUILT BY A COMMUNITY THAT CARES' },

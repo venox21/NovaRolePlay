@@ -38,6 +38,7 @@ function Camera:StartLoops()
 end
 
 function Camera:Create()
+    ClearTimecycleModifier()
     if self.cam then
         return
     end

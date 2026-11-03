@@ -79,7 +79,11 @@ function Inventory.CanAccessTrunk(entity)
     local offset = (max - min) * (not checkVehicle and vec3(0.5, 0, 0.5) or vec3(0.5, 1, 0.5)) + min
     offset = GetOffsetFromEntityInWorldCoords(entity, offset.x, offset.y, offset.z)
 
-    if #(GetEntityCoords(cache.ped) - offset) < 1.5 then
+    local pedCoords = GetEntityCoords(cache.ped or PlayerPedId())
+    local distToTrunk = #(pedCoords - offset)
+    local distToVeh = #(pedCoords - GetEntityCoords(entity))
+
+    if distToTrunk < 4.0 or distToVeh < 5.0 then
         return doorId
     end
 end
@@ -89,10 +93,6 @@ function Inventory.OpenTrunk(entity)
     local door = Inventory.CanAccessTrunk(entity)
 
     if not door then return end
-
-    local coords = GetEntityCoords(entity)
-
-    TaskTurnPedToFaceCoord(cache.ped, coords.x, coords.y, coords.z, 0)
 
     if not client.openInventory('trunk', { netid = NetworkGetNetworkIdFromEntity(entity), entityid = entity, door = door }) then return end
 

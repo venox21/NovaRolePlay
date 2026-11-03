@@ -7,19 +7,33 @@
 
 local loadScreenActive = true
 
-local SHUTDOWN_DELAY <const> = 2500
+local SHUTDOWN_DELAY <const> = 1500
 
-RegisterNUICallback('loadingComplete', function(_, cb)
-    cb({})
-
+local function forceShutdownLoadingScreen()
     if not loadScreenActive then
         return
     end
-
     loadScreenActive = false
+    ShutdownLoadingScreen()
+    ShutdownLoadingScreenNui()
+end
 
+RegisterNUICallback('loadingComplete', function(_, cb)
+    cb({})
     CreateThread(function()
         Wait(SHUTDOWN_DELAY)
-        ShutdownLoadingScreenNui()
+        forceShutdownLoadingScreen()
     end)
+end)
+
+AddEventHandler('esx:loadingScreenOff', function()
+    forceShutdownLoadingScreen()
+end)
+
+CreateThread(function()
+    while not NetworkIsSessionStarted() and not NetworkIsPlayerActive(PlayerId()) do
+        Wait(100)
+    end
+    Wait(2000)
+    forceShutdownLoadingScreen()
 end)

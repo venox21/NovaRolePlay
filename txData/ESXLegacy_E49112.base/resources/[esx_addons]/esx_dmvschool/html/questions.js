@@ -1,96 +1,87 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * Copyright (C) 2022-2026 ESX Framework
+ * DMV Fahrschule Los Santos - Offizieller Fragenkatalog (Theorieprüfung)
+ * UTF-8 Encoding
  */
 
 var tableauQuestion = [
 	{
-		question: "If you're going 80 km/h, and you're approaching a residential area you must:",
-		propositionA: "You accelerate",
-		propositionB: "You keep your speed, if you do not pass other vehicles",
-		propositionC: "You slow down",
-		propositionD: "You keep your speed",
-		reponse: "C"
-	},
-
-	{
-		question: "If you're turning right at a traffic light, but see a pedestrian crossing what do you do:",
-		propositionA: "You pass the pedestrian",
-		propositionB: "You check that there is no other vehicles around",
-		propositionC: "You wait until the pedestrian has crossed",
-		propositionD: "You shoot the pedestrian and continue to drive",
-		reponse: "C"
-	},
-
-	{
-		question: "Without any prior indication, the speed in a residential area is: __ km/h",
+		question: "Wie hoch ist die zulässige Höchstgeschwindigkeit innerhalb geschlossener Ortschaften und Wohngebieten in Los Santos?",
 		propositionA: "30 km/h",
 		propositionB: "50 km/h",
-		propositionC: "40 km/h",
-		propositionD: "60 km/h",
+		propositionC: "70 km/h",
+		propositionD: "80 km/h",
 		reponse: "B"
 	},
-
 	{
-		question: "Before every lane change you must:",
-		propositionA: "Check your mirrors",
-		propositionB: "Check your blind spots",
-		propositionC: "Signal your intentions",
-		propositionD: "All of the above",
-		reponse: "D"
+		question: "Du möchtest an einer Kreuzung nach rechts abbiegen und ein Fußgänger überquert die Straße. Wie verhältst du dich?",
+		propositionA: "Hupen und zügig vor dem Fußgänger abbiegen",
+		propositionB: "Warten und dem Fußgänger das sichere Überqueren ermöglichen",
+		propositionC: "Das Gaspedal durchdrücken und auf den Gehweg ausweichen",
+		propositionD: "Warnblinker einschalten und den Fußgänger überholen",
+		reponse: "B"
 	},
-
 	{
-		question: "What blood alcohol level is classified as driving while intoxicated?",
-		propositionA: "0.05%",
-		propositionB: "0.18%",
-		propositionC: "0.08%",
-		propositionD: "0.06%",
+		question: "Ein Einsatzfahrzeug (Polizei / Notarzt) nähert sich mit Sondersignal (Blaulicht & Sirene) von hinten. Was tust du?",
+		propositionA: "Geschwindigkeit halten und stur auf deiner Spur bleiben",
+		propositionB: "Mitten auf der Kreuzung eine Vollbremsung hinlegen",
+		propositionC: "Unverzüglich freie Bahn schaffen und vorsichtig an den Fahrbahnrand fahren",
+		propositionD: "Beschleunigen und versuchen, vor dem Einsatzwagen zu bleiben",
 		reponse: "C"
 	},
-
 	{
-		question: "When can you continue to drive at a traffic light?",
-		propositionA: "When it is green",
-		propositionB: "When there is nobody in the intersection",
-		propositionC: "You are in a school zone",
-		propositionD: "When it is green and / or red and you're turning right",
-		reponse: "D"
+		question: "Welche Schritte sind vor jedem Fahrstreifenwechsel zwingend vorgeschrieben?",
+		propositionA: "Nur kurz in den Innenspiegel schauen",
+		propositionB: "Rückspiegel prüfen, Schulterblick für den toten Winkel machen und frühzeitig blinken",
+		propositionC: "Einfach ohne Vorwarnung die Spur wechseln",
+		propositionD: "Die Lichthupe betätigen und sofort rüberziehen",
+		reponse: "B"
 	},
-
 	{
-		question: "A pedestrian has a do not cross signal, what do you do?",
-		propositionA: "You let them pass",
-		propositionB: "You observe before continuing",
-		propositionC: "You wave to tell them to cross",
-		propositionD: "You continue because your traffic light is green",
-		reponse: "D"
-	},
-
-	{
-		question: "What is allowed when passing another vehicle",
-		propositionA: "You follow it closely to pass it faster",
-		propositionB: "You pass it without leaving the roadway",
-		propositionC: "You drive on the opposite side of the road to pass",
-		propositionD: "You exceed the speed limit to pass them",
-		reponse: "C"
-	},
-
-	{
-		question: "You are driving on a highway which indicates a maximum speed of 120 km/h. But most trafficers drive at 125 km/h, so you should not drive faster than:",
-		propositionA: "120 km/h",
-		propositionB: "125 km/h",
-		propositionC: "130 km/h",
-		propositionD: "110 km/h",
+		question: "Wie lautet die gesetzliche Promillegrenze für das Führen von Kraftfahrzeugen im Straßenverkehr?",
+		propositionA: "0,5 Promille (für Fahranfänger gilt striktes 0,0 Promille Alkoholverbot)",
+		propositionB: "1,5 Promille",
+		propositionC: "Es gibt kein Limit, solange man noch geradeaus lenken kann",
+		propositionD: "2,0 Promille",
 		reponse: "A"
 	},
-
 	{
-		question: "When you are overtaken by another vehicle it is important NOT to:",
-		propositionA: "Slow Down",
-		propositionB: "Check your mirrors",
-		propositionC: "Watch other drivers",
-		propositionD: "Increase your speed",
-		reponse: "D"
+		question: "Wann darfst du in eine Kreuzung mit Lichtzeichenanlage (Ampel) einfahren?",
+		propositionA: "Sobald die Ampel Gelb blinkt",
+		propositionB: "Wenn die Ampel Grün zeigt und die Kreuzung frei ist",
+		propositionC: "Sobald der Vordermann anfährt, egal welche Ampelfarbe",
+		propositionD: "Immer dann, wenn kein Querverkehr in Sicht ist",
+		reponse: "B"
 	},
-]
+	{
+		question: "Welche Faustregel gilt für den Mindestsicherheitsabstand zum vorausfahrenden Fahrzeug?",
+		propositionA: "Eine Wagenlänge, egal bei welchem Tempo",
+		propositionB: "Halber Tacho in Metern (z. B. 50 Meter bei 100 km/h)",
+		propositionC: "Immer genau 5 Meter",
+		propositionD: "Dicht auffahren für optimalen Windschatten",
+		reponse: "B"
+	},
+	{
+		question: "Wo ist das Halten und Parken von Kraftfahrzeugen strikt untersagt?",
+		propositionA: "Vor Feuerwehrzufahrten, Notausgängen und in zweiter Reihe",
+		propositionB: "Auf öffentlich ausgewiesenen Parkflächen",
+		propositionC: "In markierten Parkbuchten",
+		propositionD: "Auf privaten Kundenparkplätzen",
+		reponse: "A"
+	},
+	{
+		question: "Was musst du tun, wenn dein Fahrzeug mit einer Panne auf dem Highway liegenbleibt?",
+		propositionA: "Einfach im unbeleuchteten Auto sitzen bleiben",
+		propositionB: "Warnblinker an, Warnweste anziehen, Warndreieck aufstellen und hinter die Leitplanke treten",
+		propositionC: "Auf die Fahrbahn laufen und winkend den schnellen Verkehr anhalten",
+		propositionD: "Auf der blanken Felge mit Vollgas weiterfahren",
+		reponse: "B"
+	},
+	{
+		question: "Welches Fahrverhalten ist innerorts gesetzlich verboten und wird mit Bußgeldern geahndet?",
+		propositionA: "Vorausschauendes Fahren und Beachten der Vorfahrtsregeln",
+		propositionB: "Unnötiges Aufheulenlassen des Motors, Burnouts und Lärmbelästigung",
+		propositionC: "Das korrekte Einhalten der vorgeschriebenen Geschwindigkeiten",
+		propositionD: "Das rechtzeitige Betätigen der Blinker",
+		reponse: "B"
+	}
+];

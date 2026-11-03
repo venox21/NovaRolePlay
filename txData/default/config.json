@@ -1,7 +1,8 @@
 {
   "version": 2,
   "general": {
-    "serverName": "Nova RolePlay"
+    "serverName": "Nova RolePlay",
+    "language": "de"
   },
   "server": {
     "dataPath": "F:/txData/ESXLegacy_E49112.base/"

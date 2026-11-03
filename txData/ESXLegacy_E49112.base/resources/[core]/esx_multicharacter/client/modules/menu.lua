@@ -72,6 +72,8 @@ function Menu:InitCharacter()
     end
     Wait(500)
     
+    local localeData = (Locales[Config.Locale] and Locales[Config.Locale].UI) or (Locales['en'] and Locales['en'].UI) or {}
+
     xLib.nui.send({
         action = "ToggleMulticharacter",
         data = {
@@ -79,7 +81,7 @@ function Menu:InitCharacter()
             Characters = Characters,
             CanDelete = Config.CanDelete,
             AllowedSlot = Multicharacter.slots,
-            Locale = Locales[Config.Locale].UI,
+            Locale = localeData,
         }
     })
 

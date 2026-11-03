@@ -21,5 +21,12 @@ Locales["de"] = {
         ["title"] = "CHARAKTERAUSWAHL",
         ["char_info_title"] = "Charakterinformation",
         ["play"] = "SPIELEN",
+        ["action_failed"] = "Aktion fehlgeschlagen. Bitte erneut versuchen.",
+        ["action_pending"] = "Eine Aktion wird bereits ausgeführt...",
+        ["relog_busy"] = "Charakterwechsel wird verarbeitet...",
+        ["relog_rate_limited"] = "Bitte warte einen Moment vor dem nächsten Charakterwechsel.",
+        ["relog_not_loaded"] = "Charakterdaten noch nicht vollständig geladen.",
+        ["relog_disabled"] = "Charakterwechsel ist derzeit deaktiviert.",
+        ["relog_stale_session"] = "Sitzung abgelaufen. Bitte erneut verbinden.",
     }
 }

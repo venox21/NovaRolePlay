@@ -20,15 +20,17 @@
 
 .dialog {
   font-family: "Poppins", sans-serif;
-  background: #212121;
+  background: linear-gradient(155deg, rgba(15, 12, 30, 0.95), rgba(9, 8, 20, 0.97));
   color: #fff;
   position: absolute;
-  border-radius: 0.46vh;
+  border-radius: 1.4vh;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 28px rgba(168, 85, 247, 0.22);
   overflow: hidden;
   top: 50%;
   left: 50%;
   width: 55.6vh;
-  height: 14.1vh;
+  height: 15.2vh;
   padding-bottom: 1vh;
   transform: translate(-50%, -50%);
 }
@@ -38,20 +40,22 @@
   flex-basis: 100%;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  font-size: 1.6vh;
-  font-weight: 500;
+  color: #f3e8ff;
+  font-size: 1.5vh;
+  font-weight: 700;
+  letter-spacing: 0.12vh;
   text-transform: uppercase;
 }
 
 .dialog.big {
-  height: 18.5vh;
+  height: 19.5vh;
 }
 
 .dialog .head {
-  background: #161616;
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.24), rgba(6, 182, 212, 0.18));
+  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
   text-align: center;
-  height: 3.7vh;
+  height: 4.0vh;
 }
 
 .dialog .head span::before {
@@ -88,14 +92,14 @@
 
 .dialog button[name="submit"] {
   width: 17.6%;
-  height: 2.96vh;
+  height: 3.1vh;
   margin-left: 14.8vh;
-  font-weight: 500;
-
-  color: #fb9b04;
-  border-radius: 0.5vh;
+  font-weight: 700;
+  color: #ffffff;
+  border-radius: 0.7vh;
   font-size: 1.2vh;
-  background: #fb9c0433;
+  background: linear-gradient(135deg, #a855f7, #06b6d4);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
   outline: 0;
   border: none;
   transition: all 0.2s ease-in-out;

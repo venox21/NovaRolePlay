@@ -3,7 +3,7 @@
 
 Config = {}
 
-Config.Locale = GetConvar("esx:locale", "en")
+Config.Locale = "de"
 
 ---@type GarageSettings
 Config.Settings = {

@@ -73,6 +73,17 @@ function Weapon.Equip(item, data, noWeaponAnim)
 	end
 
 	local ammo = item.metadata.ammo or item.throwable and 1 or 0
+	if item.ammo and PlayerData and PlayerData.inventory then
+		local invAmmo = 0
+		for _, slotItem in pairs(PlayerData.inventory) do
+			if slotItem and slotItem.name == item.ammo then
+				invAmmo = invAmmo + (slotItem.count or 0)
+			end
+		end
+		ammo = invAmmo + (item.metadata.ammo or 0)
+		item.metadata.ammo = ammo
+		item.lastInvAmmo = ammo
+	end
 
 	SetCurrentPedWeapon(playerPed, data.hash, true)
 	SetPedCurrentWeaponVisible(playerPed, true, false, false, false)

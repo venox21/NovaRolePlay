@@ -89,12 +89,12 @@
 
 .chat-input .prefix.any:before {
     content: '[';
-    color: #fb9b04;
+    color: #a855f7;
 }
 
 .chat-input .prefix.any:after {
     content: ']';
-    color: #fb9b04;
+    color: #a855f7;
     margin-right: 1%;
 }
 

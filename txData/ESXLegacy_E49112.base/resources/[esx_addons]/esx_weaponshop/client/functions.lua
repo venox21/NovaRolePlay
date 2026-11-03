@@ -31,16 +31,21 @@ local CATEGORY_ORDER = {
 ---@param weaponName string
 ---@return string
 function GetItemLabel(weaponName)
-	local label = ESX.GetWeaponLabel(weaponName)
-
 	if Config.OxInventory and GetResourceState('ox_inventory') == 'started' then
-		local oxItem = exports.ox_inventory:Items(weaponName)
-		if oxItem then
-			label = oxItem.label
+		local searched, oxItem = pcall(function()
+			return exports.ox_inventory:Items(weaponName)
+		end)
+		if searched and oxItem and oxItem.label then
+			return oxItem.label
 		end
 	end
 
-	return label
+	local ok, label = pcall(ESX.GetWeaponLabel, weaponName)
+	if ok and label and label ~= '' then
+		return label
+	end
+
+	return weaponName
 end
 
 ---Gets image URL for a weapon item
@@ -68,6 +73,9 @@ end
 ---@param weaponName string
 ---@return string
 function GetWeaponCategory(weaponName)
+	if type(weaponName) == 'string' and string.sub(string.lower(weaponName), 1, 6) == 'armour' then
+		return 'misc'
+	end
 	local group = GetWeapontypeGroup(joaat(weaponName))
 	return WEAPON_CATEGORIES[group] or 'misc'
 end
@@ -179,7 +187,8 @@ local function BuildOxInventoryWeaponState(weaponName)
 	end
 
 	local metadata = type(slot.metadata) == 'table' and slot.metadata or {}
-	state.owned = true
+	local isWeapon = type(weaponName) == 'string' and string.sub(string.upper(weaponName), 1, 7) == 'WEAPON_'
+	state.owned = isWeapon
 	state.tintIndex = NormalizeAmmoValue(metadata.tint) or 0
 
 	if not ammoItemName then

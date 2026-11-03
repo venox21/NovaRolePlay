@@ -70,9 +70,12 @@ function formatPlayerNameTag(i, templateStr)
     }
 
     if IsDuplicityVersion() then
-        context.id = i
+        local pState = Player and Player(i) and Player(i).state
+        context.id = (pState and pState.charId) or i
     else
-        context.id = GetPlayerServerId(i)
+        local sId = GetPlayerServerId(i)
+        local pState = Player and Player(sId) and Player(sId).state
+        context.id = (pState and pState.charId) or sId
     end
 
     TriggerEvent('playernames:extendContext', i, function(k, v)

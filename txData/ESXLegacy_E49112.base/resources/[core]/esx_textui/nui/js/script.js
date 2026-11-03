@@ -33,7 +33,7 @@ const codes = {
     "~c~": "grey",
     "~m~": "#212121",
     "~u~": "black",
-    "~o~": "#fb9b04",
+    "~o~": "#a855f7",
 };
 
 w.addEventListener("message", (event) => {

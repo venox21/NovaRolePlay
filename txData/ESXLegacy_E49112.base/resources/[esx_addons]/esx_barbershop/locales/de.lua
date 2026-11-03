@@ -9,4 +9,6 @@ Locales['de'] = {
   ['press_access'] = 'Drücke ~INPUT_CONTEXT~ um das Menü zu öffnen',
   ['barber_blip'] = 'Friseur',
   ['you_paid'] = 'Du bezahlst %s€',
+
+    ['purchase_failed'] = 'Kauf konnte nicht abgeschlossen werden.',
 }

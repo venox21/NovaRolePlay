@@ -788,6 +788,46 @@ local function appendSearchCondition(scopeSql, params, search)
     return scopeSql .. " AND (`plate` LIKE ? ESCAPE '\\\\' OR `custom_name` LIKE ? ESCAPE '\\\\')"
 end
 
+--- Stellt sicher, dass Fahrzeuge, die nicht mehr in der Welt existieren (geloescht via /dv, Crash, Despawn),
+--- automatisch wieder als 'stored = 1' markiert werden, damit der Spieler sie sofort normal ausparken kann.
+---@param identifier string
+local function reconcileDeletedVehicles(identifier)
+    pcall(function()
+        local unparked = MySQL.query.await("SELECT `plate`, `vehicle` FROM `owned_vehicles` WHERE `owner` = ? AND (`stored` = 0 OR `pound` IS NOT NULL)", { identifier })
+        if not unparked or #unparked == 0 then return end
+
+        local allVehs = GetAllVehicles()
+        local activePlates = {}
+        for i = 1, #allVehs do
+            local ent = allVehs[i]
+            if DoesEntityExist(ent) then
+                local p = normPlate(GetVehicleNumberPlateText(ent) or "")
+                if p ~= "" then
+                    activePlates[p] = true
+                end
+            end
+        end
+
+        local platesToRestore = {}
+        for i = 1, #unparked do
+            local row = unparked[i]
+            local key = normPlate(row.plate)
+            local existing = ESX.GetExtendedVehicleFromPlate(row.plate)
+            local ent = existing and existing:getEntity()
+            local existsInWorld = (ent and ent > 0 and DoesEntityExist(ent)) or activePlates[key]
+            if not existsInWorld then
+                platesToRestore[#platesToRestore + 1] = row.plate
+            end
+        end
+
+        if #platesToRestore > 0 then
+            for i = 1, #platesToRestore do
+                MySQL.update.await("UPDATE `owned_vehicles` SET `stored` = 1, `parking` = NULL, `pound` = NULL WHERE `owner` = ? AND `plate` = ?", { identifier, platesToRestore[i] })
+            end
+        end
+    end)
+end
+
 xLib.callback.registerCompat("esx_garage:getVehicles", function(source, cb, data)
     if rejectRateLimited(source, cb, "esx_garage:getVehicles") then
         return
@@ -807,6 +847,8 @@ xLib.callback.registerCompat("esx_garage:getVehicles", function(source, cb, data
     if not xPlayer then
         return cb(false)
     end
+
+    reconcileDeletedVehicles(xPlayer.identifier)
 
     local request = type(data) == "table" and data or { garageId = data }
     local garageId = request.garageId
@@ -962,27 +1004,30 @@ xLib.callback.registerCompat("esx_garage:retrieveVehicle", function(source, cb, 
 
         if rowPound then
             if not impound then
-                return { success = false, error = "use_impound" }
-            end
-            if rowPound ~= data.garageId then
-                return { success = false, error = "wrong_impound" }
+                -- Erlaube Ausparken auch an normalen Garagen
+                local lot = Impounds[rowPound]
+                fee = (lot and lot.cost) or Config.Settings.defaultImpoundFee
+            else
+                if rowPound ~= data.garageId then
+                    return { success = false, error = "wrong_impound" }
+                end
+                local lot = Impounds[rowPound]
+                fee = (lot and lot.cost) or Config.Settings.defaultImpoundFee
             end
             if hasWorldVehicle then
                 return { success = false, error = "not_stored" }
             end
-
-            local lot = Impounds[rowPound]
-            fee = (lot and lot.cost) or Config.Settings.defaultImpoundFee
         elseif not isStored(row.stored) then
             if hasWorldVehicle then
                 return { success = false, error = "not_stored" }
             end
             if not impound then
-                return { success = false, error = "use_impound" }
+                -- Fahrzeug existiert nicht in der Welt (gelöscht/despawnt) -> normales Ausparken in Garage erlaubt
+                fee = 0
+            else
+                local lot = Impounds[data.garageId]
+                fee = (lot and lot.cost) or Config.Settings.defaultImpoundFee
             end
-
-            local lot = Impounds[data.garageId]
-            fee = (lot and lot.cost) or Config.Settings.defaultImpoundFee
         else
             if impound then
                 return { success = false, error = "not_impounded" }
@@ -1597,8 +1642,7 @@ local function impoundOutVehiclesOnStop()
     end
 
     local ok, affected = pcall(MySQL.update.await,
-        "UPDATE `owned_vehicles` SET `stored` = 1, `pound` = ?, `parking` = NULL WHERE `stored` = 0",
-        { lotId })
+        "UPDATE `owned_vehicles` SET `stored` = 1, `pound` = NULL, `parking` = NULL WHERE `stored` = 0")
 
     if not ok then
         print(("[esx_garage] impoundOutVehiclesOnStop: failed to impound out vehicles: %s"):format(tostring(affected)))

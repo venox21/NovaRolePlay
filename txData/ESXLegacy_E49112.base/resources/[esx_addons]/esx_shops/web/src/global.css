@@ -20,16 +20,16 @@
   --base-font-size: 16px;
 
   /* ESX UI Kit - Color Palette */
-  --brand-color: #FB9B04;
-  --brand-color-rgb: 251, 155, 4;
+  --brand-color: #a855f7;
+  --brand-color-rgb: 168, 85, 247;
 
-  --darkest-color: #161616;
+  --darkest-color: #0b0917;
   --darkest-color-rgb: 22, 22, 22;
 
-  --dark-color: #252525;
+  --dark-color: #15122a;
   --dark-color-rgb: 37, 37, 37;
 
-  --mid-color: #383838;
+  --mid-color: #1f1a3d;
   --mid-color-rgb: 56, 56, 56;
 
   --light-color: #969696;

@@ -1,22 +1,1191 @@
 <!doctype html>
-<!--
-  SPDX-License-Identifier: GPL-3.0-only
-  Copyright (C) 2022-2026 ESX Framework
--->
-
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <title>ESX · Legacy HUD</title>
+    <title>NOVA Roleplay · Full Cyber HUD</title>
     <script type="module" crossorigin src="./assets/index.4a9e5890.js"></script>
     <link rel="stylesheet" href="./assets/index.dedf5203.css">
-  </head>
+    <style>
+      /* ==========================================================================
+         1. ALTE ESX-HUD ELEMENTE KOMPLETT AUSBLENDEN & SETTINGS STYLEN
+         ========================================================================== */
+      .hud-root {
+        --brand: #a855f7 !important;
+        --surface-rgb: 12, 10, 24 !important;
+        --secondary: #0d0b1a !important;
+        --mid: #241d3d !important;
+      }
+      /* Verstecke alle originalen ESX-HUD-Container (nur der Einstellungs-Dialog bleibt nutzbar) */
+      aside.identity,
+      div.player-cluster,
+      div.voice-chip,
+      section.telemetry {
+        display: none !important;
+      }
+
+      /* Settings-Dialog (/hudsettings) auf NOVA Cyber-Design umstylen */
+      .settings-dialog {
+        background: linear-gradient(155deg, rgba(16, 14, 32, 0.97), rgba(9, 8, 18, 0.98)) !important;
+        border: 1px solid rgba(168, 85, 247, 0.4) !important;
+        box-shadow: 0 24px 90px rgba(0, 0, 0, 0.85), 0 0 40px rgba(168, 85, 247, 0.22) !important;
+        border-radius: 24px !important;
+      }
+      .settings-layout nav {
+        background: rgba(11, 9, 22, 0.9) !important;
+      }
+      .settings-layout nav > button.active {
+        background: linear-gradient(90deg, rgba(168, 85, 247, 0.22), rgba(6, 182, 212, 0.12)) !important;
+        border-color: rgba(168, 85, 247, 0.5) !important;
+        color: #e9d5ff !important;
+      }
+      .save-button {
+        background: linear-gradient(135deg, #a855f7, #06b6d4) !important;
+        color: #fff !important;
+      }
+
+      /* ==========================================================================
+         2. NOVA ROLEPLAY · KOMPLETTES EIGENES HUD-SYSTEM
+         ========================================================================== */
+      #nova-hud-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 4;
+        font-family: 'Gilroy', 'Segoe UI', system-ui, sans-serif;
+        font-variant-numeric: tabular-nums;
+        user-select: none;
+        transition: opacity 0.25s ease;
+      }
+      #nova-hud-layer.hidden {
+        opacity: 0;
+      }
+
+      /* --- OBEN RECHTS: NOVA SERVER-HEADER, GELD, JOB & WAFFE --- */
+      .nova-top-right {
+        position: absolute;
+        top: 2.4%;
+        right: 2.0%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+      }
+
+      .nova-brand-pill {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 7px 14px 7px 10px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(16, 13, 32, 0.90), rgba(10, 9, 20, 0.92));
+        border: 1px solid rgba(168, 85, 247, 0.38);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 18px rgba(168, 85, 247, 0.16);
+      }
+
+      .nova-brand-logo {
+        width: 38px;
+        height: 38px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
+      }
+
+      .nova-brand-text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .nova-brand-title {
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1.8px;
+        background: linear-gradient(90deg, #ffffff, #d8b4fe, #67e8f9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nova-brand-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+
+      .nova-pulse-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 8px #10b981;
+      }
+
+      .nova-id-tag {
+        padding: 1px 7px;
+        border-radius: 6px;
+        background: rgba(168, 85, 247, 0.2);
+        border: 1px solid rgba(168, 85, 247, 0.4);
+        color: #e9d5ff;
+      }
+
+      /* GELD-KARTEN (BARGELD & BANK) */
+      .nova-accounts-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .nova-acc-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 13px;
+        border-radius: 13px;
+        background: rgba(12, 11, 24, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      }
+
+      .nova-acc-chip.cash {
+        border-left: 3px solid #10b981;
+      }
+
+      .nova-acc-chip.bank {
+        border-left: 3px solid #06b6d4;
+      }
+
+      .nova-acc-icon {
+        font-size: 13px;
+      }
+
+      .nova-acc-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .nova-acc-lbl {
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        color: #9ca3af;
+        text-transform: uppercase;
+      }
+
+      .nova-acc-val {
+        font-size: 14px;
+        font-weight: 800;
+        color: #f9fafb;
+      }
+
+      /* JOB BADGE */
+      .nova-job-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 13px;
+        border-radius: 12px;
+        background: linear-gradient(90deg, rgba(168, 85, 247, 0.18), rgba(12, 11, 24, 0.88));
+        border: 1px solid rgba(168, 85, 247, 0.35);
+        color: #f3e8ff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      /* WAFFEN-ANZEIGE */
+      .nova-weapon-chip {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 14px;
+        border-radius: 13px;
+        background: rgba(15, 12, 28, 0.9);
+        border: 1px solid rgba(236, 72, 153, 0.45);
+        box-shadow: 0 0 16px rgba(236, 72, 153, 0.2);
+      }
+      .nova-weapon-chip.hidden {
+        display: none;
+      }
+      .nova-weapon-name {
+        font-size: 10px;
+        font-weight: 700;
+        color: #fbcfe8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .nova-weapon-ammo {
+        font-size: 16px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+      .nova-weapon-ammo small {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+
+      /* --- UNTEN LINKS: STATUS-HEXAGONS / BARS & KOMPASS --- */
+      .nova-bottom-left {
+        position: absolute;
+        left: clamp(22px, 1.5vw, 38px);
+        bottom: 21.5%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .nova-location-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px 8px 9px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(14, 12, 28, 0.9), rgba(9, 8, 19, 0.92));
+        border: 1px solid rgba(6, 182, 212, 0.32);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        min-width: 260px;
+      }
+
+      .nova-compass-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.22), rgba(168, 85, 247, 0.22));
+        border: 1px solid rgba(6, 182, 212, 0.5);
+        color: #67e8f9;
+        font-size: 11px;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      .nova-loc-texts {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .nova-street {
+        font-size: 12px;
+        font-weight: 800;
+        color: #f9fafb;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .nova-zone {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #9ca3af;
+        text-transform: uppercase;
+      }
+
+      .nova-status-row {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .nova-stat-pill {
+        width: 46px;
+        padding: 7px 5px 6px;
+        border-radius: 13px;
+        background: rgba(12, 10, 24, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nova-stat-pill.hidden {
+        display: none;
+      }
+
+      .nova-stat-icon {
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .nova-stat-val {
+        font-size: 10px;
+        font-weight: 800;
+        color: #f3f4f6;
+      }
+
+      .nova-stat-bar {
+        width: 100%;
+        height: 4px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .nova-stat-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.25s ease;
+      }
+
+      /* --- UNTEN MITTE: NOVA VOICE & FUNK CHIP --- */
+      .nova-voice-dock {
+        position: absolute;
+        bottom: 2.6%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: rgba(12, 10, 24, 0.9);
+        border: 1px solid rgba(168, 85, 247, 0.3);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+        color: #d1d5db;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        transition: all 0.18s ease;
+      }
+
+      .nova-voice-dock.speaking {
+        border-color: #06b6d4;
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.45);
+        color: #67e8f9;
+      }
+
+      .nova-voice-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 12px;
+      }
+
+      .nova-voice-bars i {
+        width: 3px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .nova-voice-bars i:nth-child(1) { height: 5px; }
+      .nova-voice-bars i:nth-child(2) { height: 8px; }
+      .nova-voice-bars i:nth-child(3) { height: 12px; }
+      .nova-voice-bars i.on {
+        background: linear-gradient(180deg, #06b6d4, #a855f7);
+        box-shadow: 0 0 6px rgba(168, 85, 247, 0.6);
+      }
+
+      /* ==========================================================================
+         3. NOVA ROLEPLAY · CYBER-SPORT COCKPIT TACHO (UNTEN RECHTS)
+         ========================================================================== */
+      #nova-speedo {
+        position: absolute;
+        right: 2.0%;
+        bottom: 2.6%;
+        width: 340px;
+        pointer-events: none;
+        transform-origin: bottom right;
+        transition: opacity 0.22s ease, transform 0.22s ease;
+      }
+      #nova-speedo.hidden {
+        opacity: 0;
+        transform: translateY(18px) scale(0.95);
+        pointer-events: none;
+      }
+
+      .nova-cockpit-card {
+        position: relative;
+        background: radial-gradient(circle at 50% 38%, rgba(88, 28, 135, 0.28) 0%, rgba(11, 10, 22, 0.90) 68%),
+                    linear-gradient(160deg, rgba(20, 18, 38, 0.92), rgba(9, 9, 17, 0.95));
+        border: 1px solid rgba(168, 85, 247, 0.35);
+        border-radius: 28px;
+        padding: 16px 18px 14px;
+        box-shadow:
+          0 16px 42px rgba(0, 0, 0, 0.65),
+          0 0 28px rgba(168, 85, 247, 0.16),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .nova-cockpit-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 18%;
+        right: 18%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #06b6d4, #a855f7, #ec4899, transparent);
+        opacity: 0.9;
+      }
+
+      .nova-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        padding: 0 4px;
+      }
+
+      .nova-turn-btn {
+        width: 30px;
+        height: 24px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        color: rgba(255, 255, 255, 0.18);
+        font-size: 13px;
+        transition: all 0.15s ease;
+      }
+
+      .nova-turn-btn.active {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.18);
+        border-color: rgba(16, 185, 129, 0.55);
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+        animation: nova-blink 0.65s steps(2, start) infinite;
+      }
+
+      @keyframes nova-blink {
+        50% { opacity: 0.25; }
+      }
+
+      .nova-mode-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: rgba(168, 85, 247, 0.14);
+        border: 1px solid rgba(168, 85, 247, 0.35);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 2.2px;
+        color: #e9d5ff;
+        text-transform: uppercase;
+      }
+
+      .nova-mode-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #06b6d4;
+        box-shadow: 0 0 8px #06b6d4;
+      }
+
+      .nova-dial-grid {
+        display: grid;
+        grid-template-columns: 44px 1fr 44px;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .nova-side-bar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .nova-side-track {
+        width: 8px;
+        height: 112px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        padding: 1px;
+      }
+
+      .nova-side-fill {
+        width: 100%;
+        border-radius: 99px;
+        transition: height 0.2s ease, background 0.2s ease;
+      }
+
+      .nova-side-fill.fuel {
+        background: linear-gradient(180deg, #06b6d4, #a855f7);
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.55);
+      }
+
+      .nova-side-fill.fuel.low {
+        background: linear-gradient(180deg, #f97316, #ef4444);
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+      }
+
+      .nova-side-fill.engine {
+        background: linear-gradient(180deg, #10b981, #06b6d4);
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+      }
+
+      .nova-side-fill.engine.warn {
+        background: linear-gradient(180deg, #fbbf24, #f97316);
+      }
+
+      .nova-side-fill.engine.danger {
+        background: linear-gradient(180deg, #f43f5e, #ef4444);
+      }
+
+      .nova-side-val {
+        font-size: 11px;
+        font-weight: 800;
+        color: #f3f4f6;
+      }
+
+      .nova-side-lbl {
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #9ca3af;
+        text-transform: uppercase;
+      }
+
+      .nova-gauge-center {
+        position: relative;
+        width: 210px;
+        height: 175px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .nova-gauge-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .nova-arc-bg {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.08);
+        stroke-width: 10;
+        stroke-linecap: round;
+      }
+
+      .nova-arc-rpm {
+        fill: none;
+        stroke: url(#novaRpmGrad);
+        stroke-width: 10;
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.55));
+        transition: stroke-dashoffset 0.07s linear;
+      }
+
+      .nova-arc-rpm.redline {
+        stroke: url(#novaRedlineGrad);
+        filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.85));
+      }
+
+      .nova-center-readout {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 14px;
+      }
+
+      .nova-gear-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 2px 11px;
+        border-radius: 999px;
+        background: rgba(6, 182, 212, 0.16);
+        border: 1px solid rgba(6, 182, 212, 0.45);
+        color: #67e8f9;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+        box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+      }
+
+      .nova-gear-badge.shift {
+        background: rgba(239, 68, 68, 0.26);
+        border-color: rgba(239, 68, 68, 0.75);
+        color: #fca5a5;
+        box-shadow: 0 0 14px rgba(239, 68, 68, 0.65);
+      }
+
+      .nova-speed-digits {
+        font-size: 60px;
+        font-weight: 800;
+        line-height: 0.92;
+        letter-spacing: -2.5px;
+        color: #ffffff;
+        text-shadow: 0 0 22px rgba(168, 85, 247, 0.45);
+      }
+
+      .nova-speed-digits .ghost {
+        color: rgba(255, 255, 255, 0.14);
+        text-shadow: none;
+      }
+
+      .nova-speed-unit {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 5px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.4px;
+        color: #a5b4fc;
+      }
+
+      .nova-odo {
+        font-size: 10px;
+        font-weight: 600;
+        color: #9ca3af;
+        letter-spacing: 0.6px;
+        margin-top: 4px;
+      }
+
+      .nova-rpm-segments {
+        display: grid;
+        grid-template-columns: repeat(24, 1fr);
+        gap: 3px;
+        height: 6px;
+        margin: 4px 6px 10px;
+      }
+
+      .nova-rpm-segments i {
+        display: block;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.09);
+        transform: skewX(-18deg);
+        transition: background 0.08s ease, box-shadow 0.08s ease;
+      }
+
+      .nova-rpm-segments i.lit {
+        background: linear-gradient(180deg, #06b6d4, #a855f7);
+        box-shadow: 0 0 6px rgba(168, 85, 247, 0.6);
+      }
+
+      .nova-rpm-segments i.hot.lit {
+        background: linear-gradient(180deg, #f97316, #ef4444);
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+      }
+
+      .nova-bottom-dock {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nova-ind-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 6px 4px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        color: rgba(255, 255, 255, 0.32);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        transition: all 0.18s ease;
+      }
+
+      .nova-ind-pill.active {
+        background: rgba(168, 85, 247, 0.16);
+        border-color: rgba(168, 85, 247, 0.45);
+        color: #f3e8ff;
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.22);
+      }
+
+      .nova-ind-pill.ok {
+        background: rgba(16, 185, 129, 0.16);
+        border-color: rgba(16, 185, 129, 0.45);
+        color: #6ee7b7;
+      }
+
+      .nova-ind-pill.danger {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.55);
+        color: #fca5a5;
+        animation: nova-pulse-danger 1.2s ease-in-out infinite;
+      }
+
+      @keyframes nova-pulse-danger {
+        50% { box-shadow: 0 0 14px rgba(239, 68, 68, 0.55); }
+      }
+    </style>
+  <style id="nova-cyber-ui">
+  :root {
+    --brand: #a855f7 !important;
+    --brand-color: #a855f7 !important;
+    --brand-bright: #06b6d4 !important;
+    --brand-rgb: 168, 85, 247 !important;
+    --accent: #a855f7 !important;
+    --accent-rgb: 168, 85, 247 !important;
+    --accent-shade: #4f46e5 !important;
+    --bg: #0b0917 !important;
+    --base: #0b0917 !important;
+    --darkest-color: #0b0917 !important;
+    --dark-color: #131026 !important;
+    --panel: #131026 !important;
+    --panel-soft: #1b1636 !important;
+    --raised: #1e193b !important;
+    --mid-color: #1e193b !important;
+  }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: rgba(11, 9, 23, 0.6); }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #06b6d4); border-radius: 99px; }
+</style>
+</head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
-    
+    <!-- ========================================================================
+         NOVA ROLEPLAY · KOMPLETTES EIGENES OVERLAY-HUD
+         ======================================================================== -->
+    <div id="nova-hud-layer">
+      <!-- 1. OBEN RECHTS: SERVER-HEADER, GELD, BERUF & WAFFE -->
+      <div class="nova-top-right">
+        <div class="nova-brand-pill">
+          <img id="nova-logo-img" class="nova-brand-logo" src="./assets/logo.png" alt="" onerror="this.style.display='none';document.getElementById('nova-svg-logo').style.display='grid';" />
+          <div id="nova-svg-logo" style="display:none;width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#a855f7,#6366f1,#06b6d4);place-items:center;font-weight:900;font-size:20px;color:#fff;box-shadow:0 0 14px rgba(168,85,247,0.65);flex-shrink:0;">N</div>
+          <div class="nova-brand-text">
+            <span class="nova-brand-title">NOVA ROLEPLAY</span>
+            <div class="nova-brand-meta">
+              <span class="nova-pulse-dot"></span>
+              <span id="nova-online-count">1 ONLINE</span>
+              <span id="nova-player-id" class="nova-id-tag">ID #1</span>
+              <span id="nova-game-time">12:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nova-accounts-row">
+          <div class="nova-acc-chip cash">
+            <span class="nova-acc-icon">💵</span>
+            <div class="nova-acc-info">
+              <span class="nova-acc-lbl">Bargeld</span>
+              <span id="nova-cash-val" class="nova-acc-val">$0</span>
+            </div>
+          </div>
+          <div class="nova-acc-chip bank">
+            <span class="nova-acc-icon">🏦</span>
+            <div class="nova-acc-info">
+              <span class="nova-acc-lbl">Bankkonto</span>
+              <span id="nova-bank-val" class="nova-acc-val">$0</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="nova-job-box" class="nova-job-chip">
+          <span>💼</span>
+          <span id="nova-job-val">Arbeitslos</span>
+        </div>
+
+        <div id="nova-weapon-box" class="nova-weapon-chip hidden">
+          <div>
+            <div id="nova-weapon-name" class="nova-weapon-name">WAFFE</div>
+            <div id="nova-weapon-ammo" class="nova-weapon-ammo">0 <small>/ 0</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. UNTEN LINKS: ENTFERNT (WIRD IM INVENTAR ANGEZEIGT) -->
+      <div class="nova-bottom-left" style="display: none !important;">
+        <div class="nova-status-row">
+          <div id="nova-stat-health" class="nova-stat-pill">
+            <span class="nova-stat-icon">❤️</span>
+            <span id="nova-val-health" class="nova-stat-val">100%</span>
+            <div class="nova-stat-bar"><div id="nova-bar-health" class="nova-stat-fill" style="width:100%;background:#ef4444;"></div></div>
+          </div>
+          <div id="nova-stat-armor" class="nova-stat-pill">
+            <span class="nova-stat-icon">🛡️</span>
+            <span id="nova-val-armor" class="nova-stat-val">0%</span>
+            <div class="nova-stat-bar"><div id="nova-bar-armor" class="nova-stat-fill" style="width:0%;background:#3b82f6;"></div></div>
+          </div>
+          <div id="nova-stat-food" class="nova-stat-pill">
+            <span class="nova-stat-icon">🍔</span>
+            <span id="nova-val-food" class="nova-stat-val">100%</span>
+            <div class="nova-stat-bar"><div id="nova-bar-food" class="nova-stat-fill" style="width:100%;background:#f59e0b;"></div></div>
+          </div>
+          <div id="nova-stat-drink" class="nova-stat-pill">
+            <span class="nova-stat-icon">💧</span>
+            <span id="nova-val-drink" class="nova-stat-val">100%</span>
+            <div class="nova-stat-bar"><div id="nova-bar-drink" class="nova-stat-fill" style="width:100%;background:#06b6d4;"></div></div>
+          </div>
+          <div id="nova-stat-stamina" class="nova-stat-pill">
+            <span class="nova-stat-icon">⚡</span>
+            <span id="nova-val-stamina" class="nova-stat-val">100%</span>
+            <div class="nova-stat-bar"><div id="nova-bar-stamina" class="nova-stat-fill" style="width:100%;background:#10b981;"></div></div>
+          </div>
+          <div id="nova-stat-oxygen" class="nova-stat-pill hidden">
+            <span class="nova-stat-icon">🫧</span>
+            <span id="nova-val-oxygen" class="nova-stat-val">100%</span>
+            <div class="nova-stat-bar"><div id="nova-bar-oxygen" class="nova-stat-fill" style="width:100%;background:#38bdf8;"></div></div>
+          </div>
+        </div>
+
+        <div class="nova-location-bar">
+          <div id="nova-compass" class="nova-compass-badge">N</div>
+          <div class="nova-loc-texts">
+            <span id="nova-street" class="nova-street">Los Santos</span>
+            <span id="nova-zone" class="nova-zone">San Andreas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. UNTEN MITTE: VOICE & FUNK -->
+      <div id="nova-voice-chip" class="nova-voice-dock">
+        <span id="nova-voice-icon">🎙️</span>
+        <span id="nova-voice-label">NORMAL</span>
+        <div class="nova-voice-bars">
+          <i id="nova-vbar-1" class="on"></i>
+          <i id="nova-vbar-2" class="on"></i>
+          <i id="nova-vbar-3"></i>
+        </div>
+      </div>
+
+      <!-- 4. UNTEN RECHTS: NOVA CYBER-SPORT COCKPIT TACHO -->
+      <div id="nova-speedo" class="hidden" aria-label="NOVA Fahrzeug-Cockpit">
+        <div class="nova-cockpit-card">
+          <div class="nova-top-bar">
+            <div id="nova-turn-left" class="nova-turn-btn" title="Blinker Links">◀</div>
+            <div class="nova-mode-pill">
+              <span class="nova-mode-dot"></span>
+              <span id="nova-drive-mode">NOVA SPORT</span>
+            </div>
+            <div id="nova-turn-right" class="nova-turn-btn" title="Blinker Rechts">▶</div>
+          </div>
+
+          <div class="nova-dial-grid">
+            <div class="nova-side-bar">
+              <span id="nova-fuel-val" class="nova-side-val">100%</span>
+              <div class="nova-side-track">
+                <div id="nova-fuel-bar" class="nova-side-fill fuel" style="height: 100%;"></div>
+              </div>
+              <span class="nova-side-lbl">⛽ TANK</span>
+            </div>
+
+            <div class="nova-gauge-center">
+              <svg class="nova-gauge-svg" viewBox="0 0 210 175">
+                <defs>
+                  <linearGradient id="novaRpmGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#06b6d4" />
+                    <stop offset="55%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#ec4899" />
+                  </linearGradient>
+                  <linearGradient id="novaRedlineGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#a855f7" />
+                    <stop offset="50%" stop-color="#f97316" />
+                    <stop offset="100%" stop-color="#ef4444" />
+                  </linearGradient>
+                </defs>
+                <path class="nova-arc-bg" d="M 33 148 A 82 82 0 1 1 177 148" pathLength="100" />
+                <path
+                  id="nova-arc-fill"
+                  class="nova-arc-rpm"
+                  d="M 33 148 A 82 82 0 1 1 177 148"
+                  pathLength="100"
+                  stroke-dasharray="100"
+                  stroke-dashoffset="100"
+                />
+              </svg>
+
+              <div class="nova-center-readout">
+                <div id="nova-gear-pill" class="nova-gear-badge">GANG N</div>
+                <div id="nova-speed-num" class="nova-speed-digits">
+                  <span class="ghost">00</span>0
+                </div>
+                <div class="nova-speed-unit">
+                  <span id="nova-unit-text">KM/H</span>
+                </div>
+                <div id="nova-odo-text" class="nova-odo">0.0 km</div>
+              </div>
+            </div>
+
+            <div class="nova-side-bar">
+              <span id="nova-eng-val" class="nova-side-val">100%</span>
+              <div class="nova-side-track">
+                <div id="nova-eng-bar" class="nova-side-fill engine" style="height: 100%;"></div>
+              </div>
+              <span class="nova-side-lbl">🔧 MOTOR</span>
+            </div>
+          </div>
+
+          <div id="nova-rpm-bars" class="nova-rpm-segments"></div>
+
+          <div class="nova-bottom-dock">
+            <div id="nova-ind-belt" class="nova-ind-pill danger">🛡️ GURT</div>
+            <div id="nova-ind-light" class="nova-ind-pill">💡 LICHT</div>
+            <div id="nova-ind-lock" class="nova-ind-pill">🔒 LOCK</div>
+            <div id="nova-ind-cruise" class="nova-ind-pill">⚡ CRUISE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const hudLayer = document.getElementById('nova-hud-layer');
+        const speedoEl = document.getElementById('nova-speedo');
+        const rpmBarsContainer = document.getElementById('nova-rpm-bars');
+        const TOTAL_BARS = 24;
+
+        for (let i = 0; i < TOTAL_BARS; i++) {
+          const seg = document.createElement('i');
+          if (i >= 19) seg.classList.add('hot');
+          rpmBarsContainer.appendChild(seg);
+        }
+        const segEls = Array.from(rpmBarsContainer.children);
+
+        let hudVisible = true;
+        let vehShow = false;
+        let voiceRange = 2;
+
+        function clampVal(n, min, max) {
+          const v = Number(n) || 0;
+          return Math.max(min, Math.min(max, v));
+        }
+
+        function fmtMoney(n) {
+          return '$' + Math.round(Number(n) || 0).toLocaleString('de-DE');
+        }
+
+        function updateVisibility() {
+          let prefs = {};
+          try {
+            prefs = JSON.parse(localStorage.getItem('esx_hud:preferences') || '{}') || {};
+          } catch {}
+          const rootShow = hudVisible && !prefs.cinematic;
+          hudLayer.classList.toggle('hidden', !rootShow);
+          const shouldShowVeh = rootShow && vehShow && !prefs.Vehicle;
+          speedoEl.classList.toggle('hidden', !shouldShowVeh);
+        }
+
+        function updateVoiceBars(r) {
+          voiceRange = clampVal(r, 1, 3);
+          const labels = ['FLÜSTERN', 'NORMAL', 'SCHREIEN'];
+          document.getElementById('nova-voice-label').textContent = labels[voiceRange - 1] || 'NORMAL';
+          document.getElementById('nova-vbar-1').classList.toggle('on', voiceRange >= 1);
+          document.getElementById('nova-vbar-2').classList.toggle('on', voiceRange >= 2);
+          document.getElementById('nova-vbar-3').classList.toggle('on', voiceRange >= 3);
+        }
+
+        function renderNovaHudData(d) {
+          if (!d || typeof d !== 'object') return;
+          if (d.onlinePlayers !== undefined) {
+            document.getElementById('nova-online-count').textContent = d.onlinePlayers + ' ONLINE';
+          }
+          if (d.playerId !== undefined) {
+            document.getElementById('nova-player-id').textContent = 'ID #' + d.playerId;
+          }
+          if (d.gameTime) {
+            document.getElementById('nova-game-time').textContent = d.gameTime;
+          }
+          if (d.moneys) {
+            document.getElementById('nova-cash-val').textContent = fmtMoney(d.moneys.money);
+            document.getElementById('nova-bank-val').textContent = fmtMoney(d.moneys.bank);
+          }
+          if (d.job) {
+            document.getElementById('nova-job-val').textContent = d.job;
+          }
+          if (d.streetName) {
+            document.getElementById('nova-street').textContent = d.streetName;
+          }
+          if (d.zoneName !== undefined) {
+            document.getElementById('nova-zone').textContent = d.zoneName || 'San Andreas';
+          }
+          if (d.heading !== undefined) {
+            const dirs = ['N', 'NW', 'W', 'SW', 'S', 'SO', 'O', 'NO'];
+            const idx = Math.round(clampVal(d.heading, 0, 360) / 45) % 8;
+            document.getElementById('nova-compass').textContent = dirs[idx];
+          }
+          if (d.voice) {
+            if (d.voice.range) updateVoiceBars(d.voice.range);
+            const vChip = document.getElementById('nova-voice-chip');
+            const isSpeaking = Boolean(d.voice.mic || d.voice.radio);
+            vChip.classList.toggle('speaking', isSpeaking);
+            document.getElementById('nova-voice-icon').textContent = d.voice.radio ? '📻' : '🎙️';
+            if (d.voice.radio) {
+              document.getElementById('nova-voice-label').textContent = 'FUNK';
+            }
+          }
+          if (d.weaponData) {
+            const wBox = document.getElementById('nova-weapon-box');
+            wBox.classList.toggle('hidden', !d.weaponData.use);
+            if (d.weaponData.use) {
+              document.getElementById('nova-weapon-name').textContent = d.weaponData.name || 'WAFFE';
+              document.getElementById('nova-weapon-ammo').innerHTML = d.weaponData.isWeaponMelee
+                ? 'MELEE'
+                : (d.weaponData.currentAmmo || 0) + ' <small>/ ' + (d.weaponData.maxAmmo || 0) + '</small>';
+            }
+          }
+        }
+
+        function renderNovaStatus(s) {
+          if (!s || typeof s !== 'object') return;
+          const map = [
+            ['healthBar', 'health'],
+            ['armorBar', 'armor'],
+            ['foodBar', 'food'],
+            ['drinkBar', 'drink'],
+            ['staminaBar', 'stamina'],
+            ['oxygenBar', 'oxygen']
+          ];
+          map.forEach(([srcKey, domKey]) => {
+            if (s[srcKey] !== undefined) {
+              const pct = Math.round(clampVal(s[srcKey], 0, 100));
+              document.getElementById('nova-val-' + domKey).textContent = pct + '%';
+              document.getElementById('nova-bar-' + domKey).style.width = pct + '%';
+            }
+          });
+          if (s.underwater !== undefined) {
+            document.getElementById('nova-stat-oxygen').classList.toggle('hidden', !s.underwater);
+          }
+        }
+
+        function renderNovaVehicle(v) {
+          if (!v || typeof v !== 'object') return;
+          vehShow = Boolean(v.show);
+          updateVisibility();
+          if (!vehShow) return;
+
+          const speed = Math.round(clampVal(v.speed, 0, 999));
+          const isKmh = v.kmh !== false;
+          const vehType = v.vehType || 'LAND';
+          const ind = v.defaultIndicators || {};
+
+          const sStr = String(speed).padStart(3, '0');
+          let ghostPart = '';
+          let solidPart = sStr;
+          if (speed === 0) {
+            ghostPart = '00';
+            solidPart = '0';
+          } else if (speed < 10) {
+            ghostPart = '00';
+            solidPart = String(speed);
+          } else if (speed < 100) {
+            ghostPart = '0';
+            solidPart = String(speed);
+          }
+          document.getElementById('nova-speed-num').innerHTML =
+            (ghostPart ? '<span class="ghost">' + ghostPart + '</span>' : '') + solidPart;
+          document.getElementById('nova-unit-text').textContent = isKmh ? 'KM/H' : 'MPH';
+
+          const gearPill = document.getElementById('nova-gear-pill');
+          if (vehType === 'AIR') {
+            gearPill.textContent = 'ALT ' + Math.round(v.rpm || 0) + 'M';
+          } else if (v.gear === 0) {
+            gearPill.textContent = speed > 1 ? 'GANG R' : 'GANG N';
+          } else {
+            gearPill.textContent = 'GANG ' + (v.gear || 1);
+          }
+
+          const modeEl = document.getElementById('nova-drive-mode');
+          if (ind.leftIndex && ind.rightIndex) {
+            modeEl.textContent = 'WARNBLINKER';
+          } else if (vehType === 'AIR') {
+            modeEl.textContent = 'NOVA FLIGHT';
+          } else if (vehType === 'BOAT') {
+            modeEl.textContent = 'NOVA MARINE';
+          } else if (ind.tempomat) {
+            modeEl.textContent = 'TEMPOMAT';
+          } else if (speed >= 160) {
+            modeEl.textContent = 'RACE MODE';
+          } else {
+            modeEl.textContent = 'NOVA SPORT';
+          }
+
+          let rpmRatio = 0;
+          if (vehType === 'LAND' || vehType === 'MOTO') {
+            rpmRatio = clampVal((Number(v.rpm) || 0) / 450, 0, 1);
+          } else {
+            rpmRatio = clampVal(speed / 300, 0, 1);
+          }
+
+          const arcEl = document.getElementById('nova-arc-fill');
+          arcEl.style.strokeDashoffset = String(100 - Math.round(rpmRatio * 100));
+          const isRedline = rpmRatio >= 0.84;
+          arcEl.classList.toggle('redline', isRedline);
+          gearPill.classList.toggle('shift', isRedline);
+
+          const activeBars = Math.round(rpmRatio * TOTAL_BARS);
+          segEls.forEach((el, idx) => {
+            el.classList.toggle('lit', idx < activeBars);
+          });
+
+          let fuelPct = 100;
+          if (v.fuel && typeof v.fuel === 'object') {
+            const maxL = Number(v.fuel.maxLevel) || 100;
+            fuelPct = clampVal(((Number(v.fuel.level) || 0) / maxL) * 100, 0, 100);
+          } else if (typeof v.fuel === 'number') {
+            fuelPct = clampVal(v.fuel, 0, 100);
+          }
+          const fuelRound = Math.round(fuelPct);
+          document.getElementById('nova-fuel-val').textContent = fuelRound + '%';
+          const fuelBar = document.getElementById('nova-fuel-bar');
+          fuelBar.style.height = fuelRound + '%';
+          fuelBar.classList.toggle('low', fuelRound <= 15);
+
+          const engRound = Math.round(clampVal(v.damage ?? 100, 0, 100));
+          document.getElementById('nova-eng-val').textContent = engRound + '%';
+          const engBar = document.getElementById('nova-eng-bar');
+          engBar.style.height = engRound + '%';
+          engBar.classList.toggle('warn', engRound <= 60 && engRound > 30);
+          engBar.classList.toggle('danger', engRound <= 30);
+
+          const odo = Number(v.mileage || 0).toFixed(1);
+          document.getElementById('nova-odo-text').textContent = odo + (isKmh ? ' km' : ' mi');
+
+          document.getElementById('nova-turn-left').classList.toggle('active', Boolean(ind.leftIndex));
+          document.getElementById('nova-turn-right').classList.toggle('active', Boolean(ind.rightIndex));
+
+          const beltEl = document.getElementById('nova-ind-belt');
+          const beltOn = Boolean(ind.seatbelt);
+          beltEl.classList.toggle('ok', beltOn);
+          beltEl.classList.toggle('danger', !beltOn && vehType === 'LAND');
+          beltEl.textContent = beltOn ? '🛡️ GURT AN' : '⚠️ GURT AUS';
+
+          document.getElementById('nova-ind-light').classList.toggle('active', Boolean(ind.light));
+          document.getElementById('nova-ind-lock').classList.toggle('ok', Boolean(ind.door));
+          document.getElementById('nova-ind-cruise').classList.toggle('active', Boolean(ind.tempomat));
+        }
+
+        window.addEventListener('message', function (event) {
+          const data = event.data || {};
+          if (data.type === 'SHOW') {
+            hudVisible = Boolean(data.value);
+            updateVisibility();
+          } else if (data.type === 'HUD_DATA') {
+            renderNovaHudData(data.value);
+          } else if (data.type === 'STATUS_HUD') {
+            renderNovaStatus(data.value);
+          } else if (data.type === 'VEH_HUD') {
+            renderNovaVehicle(data.value);
+          } else if (data.type === 'VOICE_RANGE') {
+            updateVoiceBars(data.value);
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

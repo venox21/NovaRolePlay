@@ -16,4 +16,6 @@ Locales["de"] = {
     needUpdateResource = "Du musst die letze Version downloaden! Installiere die neuste Version!",
     errorGetCurrentVersion = "Ein Fehler kam als die Versionsabfrage durchgeführt wurde!",
     job_off_duty = " (Außer Dienst)",
+
+    ['indicatorHazard'] = 'Warnblinker',
 }
